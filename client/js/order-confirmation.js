@@ -18,10 +18,18 @@ async function loadConfirmation() {
 
     main.innerHTML = `
       <div class="text-center mb-4" data-reveal="hero">
-        <span style="font-size: 3rem; color: var(--gold);" aria-hidden="true">&#10004;</span>
+        <span class="confirmation-check" aria-hidden="true">&#10004;</span>
         <h1 class="mt-2">Thank you, ${order.shipping_name.split(' ')[0]}!</h1>
-        <p style="color:#6b5a58;">Your order <span class="mono">#${order.id}</span> has been placed and will be paid via Cash on Delivery.</p>
+        <p style="color:#5A5348;">Your order has been placed and will be paid via Cash on Delivery.</p>
       </div>
+
+      <div class="order-id-callout" data-reveal="hero">
+        <span class="order-id-label">Your order ID</span>
+        <span class="order-id-value">SX-${order.id}</span>
+        <span class="order-id-hint">Save this — you'll need it (with your phone number) to track your order anytime.</span>
+        <a href="/pages/track-order.html?order=${order.id}&phone=${encodeURIComponent(order.shipping_phone || '')}" class="btn btn-plum mt-2">Track this order</a>
+      </div>
+
       <div class="filter-panel" data-reveal="hero">
         <h2 class="h5 mb-3">Order summary</h2>
         ${itemsHtml}
@@ -29,18 +37,18 @@ async function loadConfirmation() {
         ${Number(order.discount_total) > 0 ? `
           <div class="d-flex justify-content-between mb-2">
             <span>Discount ${order.promo_code ? `(${order.promo_code})` : ''}</span>
-            <span class="price" style="color: var(--gold);">- ${formatPrice(order.discount_total)}</span>
+            <span class="price" style="color: var(--plum);">- ${formatPrice(order.discount_total)}</span>
           </div>
         ` : ''}
         <div class="d-flex justify-content-between fw-semibold mb-3">
           <span>Total</span>
           <span class="price">${formatPrice(order.total)}</span>
         </div>
-        <p class="mb-1" style="color:#6b5a58;">${order.shipping_address}, ${order.shipping_city}</p>
-        <p class="mb-0" style="color:#6b5a58;">${order.shipping_phone}</p>
+        <p class="mb-1" style="color:#5A5348;">${order.shipping_address}, ${order.shipping_city}</p>
+        <p class="mb-0" style="color:#5A5348;">${order.shipping_phone}</p>
       </div>
       <div class="text-center mt-4" data-reveal="hero">
-        <a href="/pages/shop.html" class="btn btn-plum">Continue shopping</a>
+        <a href="/pages/shop.html" class="btn btn-outline-plum">Continue shopping</a>
       </div>
     `;
 

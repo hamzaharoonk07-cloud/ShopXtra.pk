@@ -1,5 +1,15 @@
-document.getElementById('track-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
+function statusMessage(status) {
+  const messages = {
+    pending: 'We\'ve received your order and it\'s being reviewed before packing begins.',
+    processing: 'Your order is confirmed and is now being packed for dispatch.',
+    shipped: 'Your order is on its way with the courier.',
+    delivered: 'This order has been delivered. We hope you love it.',
+    cancelled: 'This order was cancelled.',
+  };
+  return messages[status] || 'We are processing your order.';
+}
+
+async function submitTrackForm() {
   const errorEl = document.getElementById('track-error');
   const resultEl = document.getElementById('track-result');
   errorEl.classList.add('d-none');
@@ -36,11 +46,9 @@ document.getElementById('track-form').addEventListener('submit', async (e) => {
           <span class="track-status-pill">${order.status}</span>
         </div>
         ${statusTimelineHtml(order.status)}
-        ${order.status !== 'cancelled' && order.status !== 'delivered' ? `
-          <div class="track-arriving-banner">
-            <span>Your order is on its way — have ${formatPrice(order.total)} ready for the rider.</span>
-          </div>
-        ` : ''}
+        <div class="track-arriving-banner ${order.status === 'cancelled' ? 'track-banner-cancelled' : ''}">
+          <span>${statusMessage(order.status)}</span>
+        </div>
         <hr>
         ${itemsHtml}
         <div class="d-flex justify-content-between fw-semibold mt-2">
@@ -54,4 +62,18 @@ document.getElementById('track-form').addEventListener('submit', async (e) => {
     errorEl.textContent = err.message;
     errorEl.classList.remove('d-none');
   }
+}
+
+document.getElementById('track-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  submitTrackForm();
 });
+
+(() => {
+  const params = new URLSearchParams(window.location.search);
+  const orderParam = params.get('order');
+  const phoneParam = params.get('phone');
+  if (orderParam) document.getElementById('track-order-id').value = `SX-${orderParam}`;
+  if (phoneParam) document.getElementById('track-phone').value = phoneParam;
+  if (orderParam && phoneParam) submitTrackForm();
+})();
