@@ -1,6 +1,5 @@
 :root {
-  /* Editorial redesign palette — ink/paper/cream base, tea-pink accent
-     (replaces the mockup's lime-green accent per brand direction). */
+  /* Editorial redesign palette — ink/paper/cream base, tea-pink accent. */
   --ivory-blush: #F5F1E8;
   --paper: #FDFBF7;
   --tea-pink: #E8B4B8;
@@ -37,9 +36,13 @@ body {
 }
 
 h1, h2, h3, h4, .display-serif {
-  font-family: 'Instrument Serif', serif;
-  font-style: italic;
+  font-family: 'Bricolage Grotesque', sans-serif;
   color: var(--plum);
+  font-weight: 700;
+}
+
+h1 {
+  font-family: 'Lalezar', 'Bricolage Grotesque', sans-serif;
   font-weight: 400;
 }
 
@@ -60,9 +63,8 @@ a {
 }
 
 .navbar-shopxtra .navbar-brand {
-  font-family: 'Instrument Serif', serif;
-  font-style: italic;
-  font-weight: 400;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 700;
   font-size: 1.8rem;
   color: var(--plum);
   padding: 0;
@@ -303,9 +305,8 @@ a {
 
 .product-card .product-name {
   font-size: 1.15rem;
-  font-weight: 400;
-  font-family: 'Instrument Serif', serif;
-  font-style: italic;
+  font-weight: 700;
+  font-family: 'Bricolage Grotesque', sans-serif;
   color: var(--plum);
 }
 
@@ -1219,8 +1220,7 @@ select:focus-visible {
 }
 
 .price-seal-mid {
-  font-family: 'Instrument Serif', serif;
-  font-style: italic;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 1.5rem;
   line-height: 1.05;
   color: var(--tea-pink);
@@ -1322,8 +1322,7 @@ select:focus-visible {
 }
 
 .import-value-num {
-  font-family: 'Instrument Serif', serif;
-  font-style: italic;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 1.1rem;
   color: var(--tea-pink);
 }
@@ -1379,8 +1378,7 @@ select:focus-visible {
 }
 
 .category-tile-name {
-  font-family: 'Instrument Serif', serif;
-  font-style: italic;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 1.2rem;
   color: var(--plum);
 }
@@ -1461,8 +1459,7 @@ select:focus-visible {
 }
 
 .bestseller-card-name {
-  font-family: 'Instrument Serif', serif;
-  font-style: italic;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 1.15rem;
   color: var(--plum);
 }
@@ -1521,8 +1518,7 @@ select:focus-visible {
 }
 
 .trust-band-title {
-  font-family: 'Instrument Serif', serif;
-  font-style: italic;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 1.4rem;
   color: var(--plum);
 }
@@ -1596,8 +1592,7 @@ select:focus-visible {
 }
 
 .review-quote {
-  font-family: 'Instrument Serif', serif;
-  font-style: italic;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 1.05rem;
   color: var(--plum);
   margin: 0;
@@ -1648,8 +1643,7 @@ select:focus-visible {
 }
 
 .footer-newsletter-copy h3 {
-  font-family: 'Instrument Serif', serif;
-  font-style: italic;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 1.7rem;
   color: var(--plum);
   margin: 0 0 0.35rem;
@@ -1998,7 +1992,7 @@ select:focus-visible {
 .pdp-accordion-item summary::after {
   content: '+';
   float: right;
-  font-family: 'Instrument Serif', serif;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 1.3rem;
 }
 
@@ -2057,8 +2051,7 @@ select:focus-visible {
 }
 
 .pdp-related-name {
-  font-family: 'Instrument Serif', serif;
-  font-style: italic;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 1.05rem;
   color: var(--plum);
 }
@@ -2087,8 +2080,7 @@ select:focus-visible {
 }
 
 .checkout-header-brand {
-  font-family: 'Instrument Serif', serif;
-  font-style: italic;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 1.6rem;
   color: var(--plum);
 }
@@ -2278,8 +2270,7 @@ select:focus-visible {
 }
 
 .checkout-summary-item-name {
-  font-family: 'Instrument Serif', serif;
-  font-style: italic;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 0.95rem;
   color: var(--plum);
 }
@@ -2422,8 +2413,7 @@ select:focus-visible {
 }
 
 .bundle-card-name {
-  font-family: 'Instrument Serif', serif;
-  font-style: italic;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 1.5rem;
   color: var(--plum);
 }
@@ -2496,7 +2486,7 @@ select:focus-visible {
 }
 
 .bundles-how-num {
-  font-family: 'Instrument Serif', serif;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 1.8rem;
   color: var(--plum);
 }
@@ -2526,8 +2516,7 @@ select:focus-visible {
   align-items: center;
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid var(--hairline);
-  font-family: 'Instrument Serif', serif;
-  font-style: italic;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 1.4rem;
   color: var(--plum);
 }
@@ -2580,8 +2569,7 @@ select:focus-visible {
 }
 
 .cart-drawer-item-name {
-  font-family: 'Instrument Serif', serif;
-  font-style: italic;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 1rem;
   color: var(--plum);
 }
@@ -2881,8 +2869,7 @@ select:focus-visible {
 }
 
 .admin-sidebar-caption {
-  font-family: 'Instrument Serif', serif;
-  font-style: italic;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 1.1rem;
   color: var(--tea-pink);
 }
@@ -3015,7 +3002,7 @@ select:focus-visible {
 }
 
 .admin-stat-value {
-  font-family: 'Instrument Serif', serif;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 1.8rem;
   color: var(--plum);
 }
