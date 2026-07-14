@@ -1,0 +1,104 @@
+<title>Checkout — ShopXtra</title>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="/css/vendor/bootstrap.min.css" rel="stylesheet">
+<link href="/css/style.css" rel="stylesheet">
+
+<div id="navbar-slot"></div>
+
+<div class="checkout-header">
+  <a href="/index.html" class="checkout-header-brand">ShopXtra</a>
+  <span class="checkout-header-secure">
+    <svg width="12" height="14" viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3.5 6V4.5a2.5 2.5 0 0 1 5 0V6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    Secure checkout
+  </span>
+</div>
+
+<main class="checkout-grid">
+  <form id="checkout-form" class="checkout-steps">
+    <div class="checkout-step">
+      <h2>1 &middot; Contact</h2>
+      <div class="checkout-field-row">
+        <div class="checkout-field">
+          <label for="ship-phone">Phone number</label>
+          <input type="tel" id="ship-phone" required placeholder="03xxxxxxxxx">
+        </div>
+        <div class="checkout-field">
+          <label for="ship-email">Email (optional — for the receipt)</label>
+          <input type="email" id="ship-email" placeholder="you@example.com">
+        </div>
+      </div>
+      <span class="checkout-hint">We'll text order updates to this number — it's also how the rider reaches you.</span>
+    </div>
+
+    <div class="checkout-step">
+      <h2>2 &middot; Delivery</h2>
+      <div class="checkout-field-row">
+        <div class="checkout-field">
+          <label for="ship-name">Full name</label>
+          <input type="text" id="ship-name" required>
+        </div>
+        <div class="checkout-field">
+          <label for="ship-city">City</label>
+          <input type="text" id="ship-city" required>
+        </div>
+      </div>
+      <div class="checkout-field">
+        <label for="ship-address">Street address</label>
+        <input type="text" id="ship-address" required>
+      </div>
+    </div>
+
+    <div class="checkout-step">
+      <h2>3 &middot; Payment</h2>
+      <div class="checkout-payment-options">
+        <div class="checkout-payment-card selected">
+          <div class="checkout-payment-head">
+            <span>Cash on Delivery</span>
+            <span class="checkout-payment-check">&#10003;</span>
+          </div>
+          <p>Pay the rider in cash when your order arrives. Exact change appreciated.</p>
+        </div>
+        <div class="checkout-payment-card disabled">
+          <div class="checkout-payment-head">
+            <span>Card / wallet</span>
+            <span class="checkout-payment-soon">Coming soon</span>
+          </div>
+          <p>Debit/credit cards and JazzCash arriving shortly.</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="text-danger d-none" id="checkout-error"></p>
+  </form>
+
+  <aside class="checkout-summary">
+    <h2>Order summary</h2>
+    <div id="checkout-items"></div>
+    <div class="checkout-promo-row">
+      <input type="text" id="promo-input" placeholder="Discount code" style="text-transform: uppercase;">
+      <button type="button" id="promo-apply-btn">Apply</button>
+    </div>
+    <p class="d-none mb-2" id="promo-message"></p>
+    <div class="checkout-totals">
+      <div><span>Subtotal</span><span id="checkout-subtotal">Rs 0</span></div>
+      <div class="d-none" id="promo-discount-row"><span>Discount</span><span id="checkout-discount">- Rs 0</span></div>
+      <div class="checkout-total-line"><span>Total</span><span id="checkout-total">Rs 0</span></div>
+    </div>
+    <button type="submit" form="checkout-form" class="btn btn-plum w-100" id="place-order-btn">Place order — pay on delivery</button>
+    <span class="checkout-summary-note">No payment now. You'll get an order confirmation right away.</span>
+  </aside>
+</main>
+
+<div id="footer-slot"></div>
+
+<script src="/js/vendor/bootstrap.bundle.min.js"></script>
+<script src="/js/vendor/gsap.min.js"></script>
+<script src="/js/vendor/ScrollTrigger.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/layout.js"></script>
+<script src="/js/search.js"></script>
+<script src="/js/cart.js"></script>
+<script src="/js/motion.js"></script>
+<script src="/js/checkout.js"></script>

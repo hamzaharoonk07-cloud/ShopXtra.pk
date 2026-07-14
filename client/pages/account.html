@@ -1,0 +1,174 @@
+<title>Account — ShopXtra</title>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="/css/vendor/bootstrap.min.css" rel="stylesheet">
+<link href="/css/style.css" rel="stylesheet">
+
+<div id="navbar-slot"></div>
+
+<main class="container py-4">
+  <div id="account-loading" class="text-center py-5">Loading…</div>
+
+  <div id="account-logged-out" class="d-none mx-auto" style="max-width: 480px;">
+    <ul class="nav nav-pills justify-content-center mb-4" id="auth-tabs">
+      <li class="nav-item"><button class="nav-link active" data-tab="login">Log in</button></li>
+      <li class="nav-item"><button class="nav-link" data-tab="signup">Sign up</button></li>
+    </ul>
+
+    <form id="login-form" class="filter-panel">
+      <h2 class="h4 mb-3">Log in</h2>
+      <div class="mb-3">
+        <label class="form-label" for="login-email">Email</label>
+        <input type="email" class="form-control" id="login-email" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="login-password">Password</label>
+        <input type="password" class="form-control" id="login-password" required>
+      </div>
+      <p class="text-danger mb-3 d-none" id="login-error"></p>
+      <button type="submit" class="btn btn-plum w-100">Log in</button>
+    </form>
+
+    <form id="signup-form" class="filter-panel d-none">
+      <h2 class="h4 mb-3">Create an account</h2>
+      <div class="mb-3">
+        <label class="form-label" for="signup-name">Full name</label>
+        <input type="text" class="form-control" id="signup-name" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="signup-email">Email</label>
+        <input type="email" class="form-control" id="signup-email" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="signup-phone">Phone (optional)</label>
+        <input type="tel" class="form-control" id="signup-phone">
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="signup-password">Password</label>
+        <input type="password" class="form-control" id="signup-password" required minlength="8">
+        <div class="form-text">At least 8 characters.</div>
+      </div>
+      <p class="text-danger mb-3 d-none" id="signup-error"></p>
+      <button type="submit" class="btn btn-plum w-100">Create account</button>
+    </form>
+  </div>
+
+  <div id="account-logged-in" class="d-none">
+    <div class="row g-4">
+      <div class="col-lg-3">
+        <div class="filter-panel text-center mb-3">
+          <div class="dashboard-avatar mb-2" id="account-avatar"></div>
+          <h1 class="h6 mb-0" id="account-name"></h1>
+          <p class="mono mb-0" style="font-size: 0.72rem; color:#6b5a58; word-break: break-all;" id="account-email"></p>
+          <a href="/pages/admin.html" id="admin-panel-link" class="btn btn-plum btn-sm w-100 mt-3 d-none">Go to Admin Panel</a>
+        </div>
+        <nav class="filter-panel p-2" id="dashboard-nav">
+          <button type="button" class="dashboard-nav-btn active" data-tab="overview">Overview</button>
+          <button type="button" class="dashboard-nav-btn" data-tab="orders">Orders &amp; Tracking</button>
+          <button type="button" class="dashboard-nav-btn" data-tab="addresses">Addresses</button>
+          <button type="button" class="dashboard-nav-btn" data-tab="wishlist">Wishlist</button>
+          <button type="button" class="dashboard-nav-btn" data-tab="profile">Profile</button>
+          <hr class="my-2">
+          <button type="button" class="dashboard-nav-btn" id="logout-btn" style="color:#b3413a;">Log out</button>
+        </nav>
+      </div>
+
+      <div class="col-lg-9">
+        <section class="dashboard-pane" id="dash-overview">
+          <div class="row g-3 mb-3">
+            <div class="col-6 col-md-3">
+              <div class="filter-panel text-center">
+                <div class="stat-number" style="font-size:1.8rem;" id="stat-order-count">0</div>
+                <div class="stat-label">Orders</div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="filter-panel text-center">
+                <div class="stat-number" style="font-size:1.8rem;" id="stat-wishlist-count">0</div>
+                <div class="stat-label">Wishlist</div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="filter-panel text-center">
+                <div class="stat-number" style="font-size:1.8rem;" id="stat-address-count">0</div>
+                <div class="stat-label">Addresses</div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="filter-panel text-center">
+                <div class="stat-number" style="font-size:1.8rem;" id="stat-total-spent">Rs 0</div>
+                <div class="stat-label">Total spent</div>
+              </div>
+            </div>
+          </div>
+          <div class="filter-panel">
+            <h2 class="h5 mb-3">Latest order</h2>
+            <div id="overview-latest-order"><p style="color:#6b5a58;">No orders yet.</p></div>
+          </div>
+        </section>
+
+        <section class="dashboard-pane d-none" id="dash-orders">
+          <div class="filter-panel">
+            <h2 class="h5 mb-3">Orders &amp; Tracking</h2>
+            <div id="order-history"><p style="color:#6b5a58;">No orders yet.</p></div>
+          </div>
+        </section>
+
+        <section class="dashboard-pane d-none" id="dash-addresses">
+          <div class="filter-panel">
+            <h2 class="h5 mb-3">Addresses</h2>
+            <div id="address-list" class="mb-3"></div>
+            <form id="address-form" class="row g-2">
+              <div class="col-md-6"><input class="form-control" id="addr-line1" placeholder="Street address" required></div>
+              <div class="col-md-4"><input class="form-control" id="addr-city" placeholder="City" required></div>
+              <div class="col-md-2"><input class="form-control" id="addr-postal" placeholder="Postal code"></div>
+              <div class="col-12">
+                <button type="submit" class="btn btn-outline-plum btn-sm">Add address</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <section class="dashboard-pane d-none" id="dash-wishlist">
+          <div class="filter-panel">
+            <h2 class="h5 mb-3">Wishlist</h2>
+            <div id="wishlist-items" class="row g-3"><p style="color:#6b5a58;">Loading…</p></div>
+          </div>
+        </section>
+
+        <section class="dashboard-pane d-none" id="dash-profile">
+          <div class="filter-panel">
+            <h2 class="h5 mb-3">Edit profile</h2>
+            <form id="profile-form" class="row g-2">
+              <div class="col-md-6">
+                <label class="form-label mono" style="font-size:0.8rem;" for="profile-name">Full name</label>
+                <input type="text" class="form-control" id="profile-name" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label mono" style="font-size:0.8rem;" for="profile-phone">Phone</label>
+                <input type="tel" class="form-control" id="profile-phone">
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn btn-plum">Save changes</button>
+                <span class="ms-2 d-none" id="profile-saved" style="color: var(--gold);">Saved.</span>
+              </div>
+            </form>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="footer-slot"></div>
+
+<script src="/js/vendor/bootstrap.bundle.min.js"></script>
+<script src="/js/vendor/gsap.min.js"></script>
+<script src="/js/vendor/ScrollTrigger.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/layout.js"></script>
+<script src="/js/search.js"></script>
+<script src="/js/cart.js"></script>
+<script src="/js/motion.js"></script>
+<script src="/js/auth.js"></script>

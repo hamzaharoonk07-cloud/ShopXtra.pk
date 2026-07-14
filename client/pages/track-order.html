@@ -1,0 +1,36 @@
+<title>Track Order — ShopXtra</title>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="/css/vendor/bootstrap.min.css" rel="stylesheet">
+<link href="/css/style.css" rel="stylesheet">
+
+<div id="navbar-slot"></div>
+
+<main class="container py-5" style="max-width: 640px;">
+  <div class="text-center mb-4">
+    <h1>Track your order</h1>
+    <p style="color:#6b5a58;">Enter your order ID and the phone number used at checkout.</p>
+  </div>
+
+  <form id="track-form" class="track-form-row">
+    <input type="text" class="track-pill-input" id="track-order-id" placeholder="Order ID e.g. SX-6" required>
+    <input type="tel" class="track-pill-input" id="track-phone" placeholder="0300 1234567" required>
+    <button type="submit" class="btn btn-plum">Track</button>
+  </form>
+  <p class="text-danger d-none mb-3 text-center" id="track-error"></p>
+
+  <div id="track-result" class="mt-4"></div>
+</main>
+
+<div id="footer-slot"></div>
+
+<script src="/js/vendor/bootstrap.bundle.min.js"></script>
+<script src="/js/vendor/gsap.min.js"></script>
+<script src="/js/vendor/ScrollTrigger.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/layout.js"></script>
+<script src="/js/search.js"></script>
+<script src="/js/cart.js"></script>
+<script src="/js/motion.js"></script>
+<script src="/js/track-order.js"></script>

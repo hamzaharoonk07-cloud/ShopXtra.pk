@@ -1,0 +1,234 @@
+<title>ShopXtra — Look after yourself, every single day.</title>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<meta name="description" content="Electrolytes, coffee, hair & body care and cosmetics — authentic, PKR-priced, and delivered to your door with Cash on Delivery.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="/css/vendor/bootstrap.min.css" rel="stylesheet">
+<link href="/css/style.css" rel="stylesheet">
+
+<div id="navbar-slot"></div>
+
+<div class="modal fade" id="saleBannerModal" tabindex="-1" aria-labelledby="saleBannerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content sale-banner-modal">
+      <button type="button" class="btn-close sale-banner-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div id="sale-banner-image-wrap"></div>
+      <div class="sale-banner-body">
+        <h2 id="saleBannerModalLabel"></h2>
+        <p id="sale-banner-message"></p>
+        <a href="#" id="sale-banner-link" class="btn btn-plum">Shop now</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="home-hero">
+    <div class="container">
+      <div class="home-hero-grid">
+        <div class="home-hero-copy">
+          <span class="eyebrow" data-reveal="hero">Everyday essentials · Made in Pakistan for Pakistan</span>
+          <h1 data-reveal="hero">Look after yourself, every single day.</h1>
+          <p class="lead" data-reveal="hero">Electrolytes, coffee, hair &amp; body care and cosmetics — authentic, PKR-priced, and delivered to your door with Cash on Delivery.</p>
+          <div class="d-flex gap-3 flex-wrap" data-reveal="hero">
+            <a href="/pages/shop.html" class="btn btn-plum">Shop all products</a>
+            <a href="/pages/bundles.html" class="btn btn-outline-plum">Explore kits</a>
+          </div>
+          <div class="hero-trust-row" data-reveal="hero">
+            <span>&#9733; 4.8 rated</span>
+            <span class="hero-trust-dot" aria-hidden="true"></span>
+            <span>12,000+ orders delivered</span>
+            <span class="hero-trust-dot" aria-hidden="true"></span>
+            <span>COD nationwide</span>
+          </div>
+        </div>
+        <div class="home-hero-visual" data-reveal="hero">
+          <div class="hero-collage" id="hero-collage"></div>
+          <div class="price-seal">
+            <span class="price-seal-top">Cheaper than</span>
+            <span class="price-seal-mid">Amazon</span>
+            <span class="price-seal-bottom">Imported &amp; Authentic</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="import-value-strip">
+    <div class="container import-value-inner">
+      <div class="import-value-copy">
+        <span class="eyebrow" style="color:var(--tea-pink);">Why ShopXtra</span>
+        <h2>Imported. Authentic. <span class="import-value-highlight">Priced better than Amazon.</span></h2>
+        <p>We import the same trusted brands you'd find on Amazon — then cut out the middlemen and import markups. That means genuine products at a fairer price, with Cash on Delivery and no customs guesswork.</p>
+      </div>
+      <div class="import-value-points">
+        <div class="import-value-point">
+          <span class="import-value-num">01</span>
+          <span class="import-value-title">Imported, not local knock-offs</span>
+          <span class="import-value-desc">Sourced directly from the same brands sold internationally.</span>
+        </div>
+        <div class="import-value-point">
+          <span class="import-value-num">02</span>
+          <span class="import-value-title">Lower prices than Amazon</span>
+          <span class="import-value-desc">No international shipping fees or customs duty passed to you.</span>
+        </div>
+        <div class="import-value-point">
+          <span class="import-value-num">03</span>
+          <span class="import-value-title">Cash on Delivery, always</span>
+          <span class="import-value-desc">Pay when it arrives — no card, no import risk.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-5">
+    <div class="container">
+      <div class="section-head">
+        <h2>Shop by category</h2>
+        <a href="/pages/shop.html" class="section-head-link">View all &rarr;</a>
+      </div>
+      <div class="category-grid" id="category-grid" data-reveal-group></div>
+    </div>
+  </section>
+
+  <section class="py-5">
+    <div class="container">
+      <div class="section-head">
+        <h2>Bestsellers</h2>
+        <a href="/pages/shop.html" class="section-head-link">View all &rarr;</a>
+      </div>
+      <div class="row g-4" id="bestseller-grid" data-reveal-group>
+        <p class="text-center py-5" style="color:var(--muted-body);">Loading products…</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="trust-band-strip">
+    <div class="container trust-band-inner">
+      <div class="trust-band-item">
+        <span class="trust-band-title">Cash on Delivery</span>
+        <span class="trust-band-sub">Pay when your order arrives. Cards coming soon.</span>
+      </div>
+      <div class="trust-band-item">
+        <span class="trust-band-title">2–3 day delivery</span>
+        <span class="trust-band-sub">Nationwide across Pakistan, tracked door to door.</span>
+      </div>
+      <div class="trust-band-item">
+        <span class="trust-band-title">100% authentic</span>
+        <span class="trust-band-sub">Full ingredient lists on every product page.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-5">
+    <div class="container">
+      <div class="kits-split">
+        <div class="kits-visual" data-reveal="up">
+          <div class="kits-visual-inner">
+            <span class="mono" style="font-size:0.75rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold);">Ritual Bundle</span>
+            <div class="kits-visual-emoji">&#10024;</div>
+          </div>
+        </div>
+        <div class="kits-copy" data-reveal="up">
+          <span class="eyebrow">Kits &amp; savings</span>
+          <h2>Better together. Bundles that save you 10%.</h2>
+          <p class="lead">Curated pairings of our most-loved products — one add to bag, one delivery, one lower price.</p>
+          <a href="/pages/bundles.html" class="btn btn-plum">Shop kits</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-5">
+    <div class="container">
+      <h2 class="mb-4" data-reveal="up">What customers say</h2>
+      <div class="review-grid" data-reveal-group>
+        <div class="review-card-v2" data-reveal="item">
+          <span class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+          <p class="review-quote">"The electrolyte mix genuinely wakes me up faster than coffee alone. Citrus Sunrise is my morning non-negotiable now."</p>
+          <div class="review-author-row">
+            <span class="review-avatar">A</span>
+            <div class="d-flex flex-column">
+              <span class="review-author-name">Ayesha K.</span>
+              <span class="review-author-meta">Verified buyer · Electrolytes</span>
+            </div>
+          </div>
+        </div>
+        <div class="review-card-v2" data-reveal="item">
+          <span class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+          <p class="review-quote">"Ordered the Midday Ritual Bundle on a whim — the tea rose shampoo smells incredible and the soap doesn't dry out my skin."</p>
+          <div class="review-author-row">
+            <span class="review-avatar">S</span>
+            <div class="d-flex flex-column">
+              <span class="review-author-name">Sana R.</span>
+              <span class="review-author-meta">Verified buyer · Midday Bundle</span>
+            </div>
+          </div>
+        </div>
+        <div class="review-card-v2" data-reveal="item">
+          <span class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
+          <p class="review-quote">"COD made it an easy first order and delivery to Lahore took two days. The lipstick shade matched exactly what I expected."</p>
+          <div class="review-author-row">
+            <span class="review-avatar">M</span>
+            <div class="d-flex flex-column">
+              <span class="review-author-name">Momina H.</span>
+              <span class="review-author-meta">Verified buyer · Cosmetics</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-4" data-reveal="up">Frequently asked questions</h2>
+      <div class="accordion mx-auto" id="faq-accordion" style="max-width: 760px;" data-reveal="up">
+        <div class="accordion-item">
+          <h3 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">Do you offer Cash on Delivery?</button>
+          </h3>
+          <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faq-accordion">
+            <div class="accordion-body">Yes — every order ships Cash on Delivery nationwide across Pakistan. Card payments are coming soon.</div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h3 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">How do I track my order?</button>
+          </h3>
+          <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faq-accordion">
+            <div class="accordion-body">Use the <a href="/pages/track-order.html">Track Order</a> page with your order ID and the phone number used at checkout, or check your order history if you're logged in.</div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h3 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">Are the products authentic?</button>
+          </h3>
+          <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faq-accordion">
+            <div class="accordion-body">All ShopXtra products are sourced and sold as authentic, with ingredient lists listed on every product page.</div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h3 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">What's a Ritual Bundle?</button>
+          </h3>
+          <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faq-accordion">
+            <div class="accordion-body">Curated product pairs grouped by when you'd use them — morning, midday, or evening — bundled together at a discount. See <a href="/pages/bundles.html">Ritual Bundles</a>.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+
+<script src="/js/vendor/bootstrap.bundle.min.js"></script>
+<script src="/js/vendor/gsap.min.js"></script>
+<script src="/js/vendor/ScrollTrigger.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/layout.js"></script>
+<script src="/js/search.js"></script>
+<script src="/js/cart.js"></script>
+<script src="/js/motion.js"></script>
+<script src="/js/home.js"></script>

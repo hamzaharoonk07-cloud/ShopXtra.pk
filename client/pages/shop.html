@@ -1,0 +1,83 @@
+<title>Shop — ShopXtra</title>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="/css/vendor/bootstrap.min.css" rel="stylesheet">
+<link href="/css/style.css" rel="stylesheet">
+
+<div id="navbar-slot"></div>
+
+<main class="container py-4">
+  <nav class="shop-breadcrumb" aria-label="Breadcrumb"><a href="/index.html">Home</a> / Shop</nav>
+
+  <div class="shop-title-row">
+    <h1 id="shop-title" class="mb-0">Shop all</h1>
+    <span class="shop-count" id="shop-count"></span>
+  </div>
+
+  <div class="shop-controls-row">
+    <div class="shop-pill-filters" id="category-pills">
+      <button type="button" class="shop-pill active" data-category="">All</button>
+      <button type="button" class="shop-pill" data-category="electrolytes">Electrolytes</button>
+      <button type="button" class="shop-pill" data-category="coffee">Coffee</button>
+      <button type="button" class="shop-pill" data-category="shampoo">Shampoo</button>
+      <button type="button" class="shop-pill" data-category="soaps">Soaps</button>
+      <button type="button" class="shop-pill" data-category="cosmetics">Cosmetics</button>
+    </div>
+    <div class="d-flex gap-2 align-items-center">
+      <select id="f-sort" class="shop-sort-pill" aria-label="Sort products">
+        <option value="newest">Sort: Newest</option>
+        <option value="bestseller">Sort: Popular</option>
+        <option value="price_asc">Sort: Price low to high</option>
+        <option value="price_desc">Sort: Price high to low</option>
+      </select>
+      <button type="button" class="filter-toggle-btn" data-bs-toggle="offcanvas" data-bs-target="#filterDrawer" aria-controls="filterDrawer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="4" y1="7" x2="20" y2="7"/><circle cx="9" cy="7" r="2.2" fill="var(--ivory-blush)"/>
+          <line x1="4" y1="17" x2="20" y2="17"/><circle cx="15" cy="17" r="2.2" fill="var(--ivory-blush)"/>
+        </svg>
+        Search &amp; price
+      </button>
+    </div>
+  </div>
+
+  <div class="row g-4" id="product-grid" data-reveal-group>
+    <p class="text-center py-5">Loading products…</p>
+  </div>
+</main>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="filterDrawer" aria-labelledby="filterDrawerLabel">
+  <div class="offcanvas-header">
+    <h2 class="h5 mb-0" id="filterDrawerLabel">Search &amp; price</h2>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <form id="filter-form">
+      <div class="mb-3">
+        <label class="form-label mono" for="f-search" style="font-size:0.8rem;">Search</label>
+        <input type="search" id="f-search" class="form-control" placeholder="Search products…">
+      </div>
+      <input type="hidden" id="f-category">
+      <div class="mb-3">
+        <label class="form-label mono" style="font-size:0.8rem;">Price range (PKR)</label>
+        <div class="d-flex gap-2">
+          <input type="number" id="f-min" class="form-control" placeholder="Min" min="0">
+          <input type="number" id="f-max" class="form-control" placeholder="Max" min="0">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-plum w-100">Apply</button>
+    </form>
+  </div>
+</div>
+
+<div id="footer-slot"></div>
+
+<script src="/js/vendor/bootstrap.bundle.min.js"></script>
+<script src="/js/vendor/gsap.min.js"></script>
+<script src="/js/vendor/ScrollTrigger.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/layout.js"></script>
+<script src="/js/search.js"></script>
+<script src="/js/cart.js"></script>
+<script src="/js/motion.js"></script>
+<script src="/js/shop.js"></script>

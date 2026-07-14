@@ -1,0 +1,310 @@
+<title>Admin — ShopXtra</title>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="/css/vendor/bootstrap.min.css" rel="stylesheet">
+<link href="/css/style.css" rel="stylesheet">
+
+<div id="admin-loading" class="text-center py-5">Loading…</div>
+<div id="admin-denied" class="d-none filter-panel text-center py-5" style="max-width: 480px; margin: 3rem auto;">
+  <h1 class="h4 mb-2">Admins only</h1>
+  <p style="color:#6b5a58;">Log in with an admin account to view this page.</p>
+  <a href="/pages/account.html" class="btn btn-plum">Log in</a>
+</div>
+
+<div id="admin-app" class="d-none admin-shell">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-brand">
+      <img src="/assets/logo-full.png" alt="ShopXtra" class="admin-sidebar-logo">
+      <span class="admin-sidebar-caption">Admin</span>
+    </div>
+    <nav class="admin-sidebar-nav" id="admin-tabs">
+      <button class="admin-nav-link active" data-tab="overview">Overview</button>
+      <button class="admin-nav-link" data-tab="products">Products</button>
+      <button class="admin-nav-link" data-tab="orders">Orders</button>
+      <button class="admin-nav-link" data-tab="promo">Promo codes</button>
+      <button class="admin-nav-link" data-tab="banner">Sale banner</button>
+      <button class="admin-nav-link" data-tab="users">Users</button>
+    </nav>
+    <div class="admin-sidebar-foot">
+      <span id="admin-whoami" class="admin-whoami"></span>
+      <a href="/index.html" class="admin-view-site">View site &rarr;</a>
+      <button type="button" id="logout-btn" class="admin-logout-btn">Log out</button>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <section id="tab-overview">
+      <div class="admin-page-head">
+        <h1>Overview</h1>
+        <span class="admin-page-sub" id="overview-updated"></span>
+      </div>
+      <div class="admin-stat-grid" id="overview-stats"></div>
+
+      <div class="admin-panel-row">
+        <div class="admin-panel">
+          <h2>Orders by status</h2>
+          <div id="overview-status-bars"></div>
+        </div>
+        <div class="admin-panel">
+          <h2>Top products</h2>
+          <div id="overview-top-products"></div>
+        </div>
+      </div>
+
+      <div class="admin-panel mt-4">
+        <h2>Recent orders</h2>
+        <div class="table-responsive">
+          <table class="table align-middle admin-table">
+            <thead>
+              <tr><th>#</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr>
+            </thead>
+            <tbody id="overview-recent-orders"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-products" class="d-none">
+      <div class="admin-page-head">
+        <h1>Products</h1>
+        <button type="button" class="admin-export-btn" id="export-products-btn">Export CSV</button>
+      </div>
+
+      <div class="admin-panel mb-4">
+        <h2>Add product</h2>
+        <form id="add-product-form" class="row g-2">
+          <div class="col-md-4"><input class="form-control" id="np-name" placeholder="Name" required></div>
+          <div class="col-md-2">
+            <select class="form-select" id="np-category" required>
+              <option value="">Category</option>
+              <option value="electrolytes">Electrolytes</option>
+              <option value="coffee">Coffee</option>
+              <option value="shampoo">Shampoo</option>
+              <option value="soaps">Soaps</option>
+              <option value="cosmetics">Cosmetics</option>
+            </select>
+          </div>
+          <div class="col-md-2"><input type="number" class="form-control" id="np-price" placeholder="Price" min="0" required></div>
+          <div class="col-md-2"><input type="number" class="form-control" id="np-stock" placeholder="Stock" min="0" value="0"></div>
+          <div class="col-md-2"><button type="submit" class="btn btn-plum w-100">Add</button></div>
+          <div class="col-8"><input class="form-control" id="np-description" placeholder="Description (optional)"></div>
+          <div class="col-4">
+            <label class="form-label mono d-block" style="font-size:0.75rem;" for="np-image">Product image (optional)</label>
+            <input type="file" class="form-control form-control-sm" id="np-image" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
+          </div>
+        </form>
+        <p class="text-danger d-none mt-2" id="add-product-error"></p>
+      </div>
+
+      <div class="admin-panel">
+        <div class="admin-table-toolbar">
+          <input type="search" id="product-search" class="admin-table-search" placeholder="Search products…">
+          <span class="admin-table-count" id="product-count"></span>
+        </div>
+        <div class="table-responsive">
+          <table class="table align-middle admin-table">
+            <thead>
+              <tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th></th></tr>
+            </thead>
+            <tbody id="products-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-orders" class="d-none">
+      <div class="admin-page-head">
+        <h1>Orders</h1>
+        <button type="button" class="admin-export-btn" id="export-orders-btn">Export CSV</button>
+      </div>
+      <div class="admin-panel">
+        <div class="admin-table-toolbar">
+          <input type="search" id="order-search" class="admin-table-search" placeholder="Search by customer…">
+          <div class="admin-pill-filters" id="order-status-filters">
+            <button type="button" class="admin-pill active" data-status="">All</button>
+            <button type="button" class="admin-pill" data-status="pending">Pending</button>
+            <button type="button" class="admin-pill" data-status="processing">Processing</button>
+            <button type="button" class="admin-pill" data-status="shipped">Shipped</button>
+            <button type="button" class="admin-pill" data-status="delivered">Delivered</button>
+            <button type="button" class="admin-pill" data-status="cancelled">Cancelled</button>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table align-middle admin-table">
+            <thead>
+              <tr><th>#</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr>
+            </thead>
+            <tbody id="orders-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-promo" class="d-none">
+      <div class="admin-page-head"><h1>Promo codes</h1></div>
+      <div class="admin-panel mb-4">
+        <h2>Email newsletter subscribers</h2>
+        <form id="broadcast-form" class="row g-2">
+          <div class="col-md-4"><input class="form-control" id="broadcast-subject" placeholder="Subject, e.g. Weekend Sale — 20% off Coffee" required></div>
+          <div class="col-md-6"><input class="form-control" id="broadcast-message" placeholder="Message" required></div>
+          <div class="col-md-2"><button type="submit" class="btn btn-plum w-100">Send</button></div>
+        </form>
+        <p class="d-none mt-2" id="broadcast-status"></p>
+      </div>
+      <div class="admin-panel mb-4">
+        <h2>Create promo code</h2>
+        <form id="add-promo-form" class="row g-2">
+          <div class="col-md-3"><input class="form-control" id="promo-code-input" placeholder="CODE" style="text-transform:uppercase;" required></div>
+          <div class="col-md-3">
+            <select class="form-select" id="promo-type-input">
+              <option value="percent">Percent off</option>
+              <option value="flat">Flat amount off</option>
+            </select>
+          </div>
+          <div class="col-md-3"><input type="number" class="form-control" id="promo-value-input" placeholder="Value" min="0" required></div>
+          <div class="col-md-3"><button type="submit" class="btn btn-plum w-100">Create</button></div>
+        </form>
+        <p class="text-danger d-none mt-2" id="add-promo-error"></p>
+      </div>
+      <div class="admin-panel">
+        <div class="table-responsive">
+          <table class="table align-middle admin-table">
+            <thead>
+              <tr><th>Code</th><th>Type</th><th>Value</th><th>Status</th></tr>
+            </thead>
+            <tbody id="promo-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-banner" class="d-none">
+      <div class="admin-page-head"><h1>Sale banner</h1></div>
+      <div class="admin-panel mb-4">
+        <h2>New banner</h2>
+        <p style="color:#7A7266; font-size:0.85rem; margin-top:-0.5rem;">Shown as a popup to visitors the first time they open the homepage. Only one banner can be active at a time.</p>
+        <form id="add-banner-form" class="row g-2">
+          <div class="col-md-6"><input class="form-control" id="bn-title" placeholder="Title, e.g. Weekend Sale" required></div>
+          <div class="col-md-6"><input class="form-control" id="bn-link" placeholder="Link (optional), e.g. /pages/sale.html"></div>
+          <div class="col-12"><input class="form-control" id="bn-message" placeholder="Message, e.g. 20% off all coffee this weekend only."></div>
+          <div class="col-md-8">
+            <label class="form-label mono d-block" style="font-size:0.75rem;" for="bn-image">Banner image (optional)</label>
+            <input type="file" class="form-control form-control-sm" id="bn-image" accept="image/jpeg,image/png,image/webp,image/gif">
+          </div>
+          <div class="col-md-2 d-flex align-items-end">
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="bn-active" checked>
+              <label class="form-check-label" for="bn-active" style="font-size:0.85rem;">Active</label>
+            </div>
+          </div>
+          <div class="col-md-2"><button type="submit" class="btn btn-plum w-100">Create</button></div>
+        </form>
+        <p class="text-danger d-none mt-2" id="add-banner-error"></p>
+      </div>
+      <div class="admin-panel">
+        <div id="banner-list"></div>
+      </div>
+    </section>
+
+    <section id="tab-users" class="d-none">
+      <div class="admin-page-head"><h1>Users</h1></div>
+      <div class="admin-panel">
+        <div class="admin-table-toolbar">
+          <input type="search" id="user-search" class="admin-table-search" placeholder="Search users…">
+          <span class="admin-table-count" id="user-count"></span>
+        </div>
+        <div class="table-responsive">
+          <table class="table align-middle admin-table">
+            <thead>
+              <tr><th>Name</th><th>Email</th><th>Phone</th><th>Role</th><th>Signed up</th><th></th></tr>
+            </thead>
+            <tbody id="users-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="modal fade" id="userDetailModal" tabindex="-1" aria-labelledby="userDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title h5" id="userDetailModalLabel">User detail</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="user-detail-body">Loading…</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title h5" id="editProductModalLabel">Edit product</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="edit-product-form">
+        <div class="modal-body">
+          <input type="hidden" id="ep-id">
+          <div class="row g-2 mb-2">
+            <div class="col-md-8">
+              <label class="form-label mono" style="font-size:0.75rem;">Name</label>
+              <input class="form-control" id="ep-name" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label mono" style="font-size:0.75rem;">Category</label>
+              <select class="form-select" id="ep-category" required>
+                <option value="electrolytes">Electrolytes</option>
+                <option value="coffee">Coffee</option>
+                <option value="shampoo">Shampoo</option>
+                <option value="soaps">Soaps</option>
+                <option value="cosmetics">Cosmetics</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-2">
+            <label class="form-label mono" style="font-size:0.75rem;">Description</label>
+            <textarea class="form-control" id="ep-description" rows="2"></textarea>
+          </div>
+          <div class="mb-2">
+            <label class="form-label mono" style="font-size:0.75rem;">Ingredients</label>
+            <input class="form-control" id="ep-ingredients">
+          </div>
+          <div class="row g-2 mb-2">
+            <div class="col-md-4">
+              <label class="form-label mono" style="font-size:0.75rem;">Price (Rs)</label>
+              <input type="number" class="form-control" id="ep-price" min="0" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label mono" style="font-size:0.75rem;">Compare-at price <span style="font-weight:400; text-transform:none;">— shows a % off badge</span></label>
+              <input type="number" class="form-control" id="ep-compare-price" min="0" placeholder="Optional">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label mono" style="font-size:0.75rem;">Stock</label>
+              <input type="number" class="form-control" id="ep-stock" min="0" required>
+            </div>
+          </div>
+          <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" id="ep-bestseller">
+            <label class="form-check-label" for="ep-bestseller">Mark as bestseller</label>
+          </div>
+          <label class="form-label mono" style="font-size:0.75rem;">Images</label>
+          <div class="admin-edit-image-grid" id="ep-image-grid"></div>
+          <input type="file" class="form-control form-control-sm mt-2" id="ep-new-images" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
+          <p class="text-danger d-none mt-2" id="edit-product-error"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-plum" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-plum">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="/js/vendor/bootstrap.bundle.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/admin.js"></script>

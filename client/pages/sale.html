@@ -1,0 +1,80 @@
+<title>Ritual Sale — ShopXtra</title>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="/css/vendor/bootstrap.min.css" rel="stylesheet">
+<link href="/css/style.css" rel="stylesheet">
+
+<div id="navbar-slot"></div>
+
+<section class="sale-hero text-center position-relative overflow-hidden">
+  <div id="hero-3d" class="sale-hero-orb d-none d-lg-block" data-reveal="hero"></div>
+  <span class="category-tint tint-cosmetics mb-3 d-inline-block" data-reveal="hero">Limited-time</span>
+  <h1 data-reveal="hero">Ritual Sale</h1>
+  <p class="lead" data-reveal="hero" id="sale-hero-subtitle">Save across electrolytes, coffee, shampoo, soaps &amp; cosmetics.</p>
+</section>
+
+<main class="container py-4">
+  <div class="d-flex flex-wrap gap-2 justify-content-center mb-4" id="sale-pills">
+    <button type="button" class="sale-pill active" data-category="">All Sale Items</button>
+    <button type="button" class="sale-pill" data-category="electrolytes">Electrolytes</button>
+    <button type="button" class="sale-pill" data-category="coffee">Coffee</button>
+    <button type="button" class="sale-pill" data-category="shampoo">Shampoo</button>
+    <button type="button" class="sale-pill" data-category="soaps">Soaps</button>
+    <button type="button" class="sale-pill" data-category="cosmetics">Cosmetics</button>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <span class="mono" style="font-size:0.85rem; color:#6b5a58;" id="sale-count">Loading…</span>
+    <select id="sale-sort" class="form-select form-select-sm" style="width: auto;">
+      <option value="newest">Newest</option>
+      <option value="price_asc">Price: Low to High</option>
+      <option value="price_desc">Price: High to Low</option>
+    </select>
+  </div>
+
+  <div class="row g-4" id="sale-grid" data-reveal-group>
+    <p class="text-center py-5">Loading sale items…</p>
+  </div>
+
+  <div class="row g-4 text-center mt-5 pt-4" data-reveal-group>
+    <div class="col-6 col-md-3" data-reveal="item">
+      <div class="value-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="15" height="12" rx="2"/><path d="M17 10h3l2 3v4h-5"/><circle cx="7.5" cy="19.5" r="1.5"/><circle cx="17.5" cy="19.5" r="1.5"/></svg>
+      </div>
+      <div class="value-label">Cash on Delivery</div>
+    </div>
+    <div class="col-6 col-md-3" data-reveal="item">
+      <div class="value-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="value-label">Nationwide Delivery</div>
+    </div>
+    <div class="col-6 col-md-3" data-reveal="item">
+      <div class="value-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6l-9-4z"/><path d="m9 12 2 2 4-4"/></svg>
+      </div>
+      <div class="value-label">Authentic Products</div>
+    </div>
+    <div class="col-6 col-md-3" data-reveal="item">
+      <div class="value-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      </div>
+      <div class="value-label">Daily Ritual, Every Day</div>
+    </div>
+  </div>
+</main>
+
+<div id="footer-slot"></div>
+
+<script src="/js/vendor/bootstrap.bundle.min.js"></script>
+<script src="/js/vendor/gsap.min.js"></script>
+<script src="/js/vendor/ScrollTrigger.min.js"></script>
+<script src="/js/vendor/three.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/layout.js"></script>
+<script src="/js/search.js"></script>
+<script src="/js/cart.js"></script>
+<script src="/js/motion.js"></script>
+<script src="/js/hero3d.js"></script>
+<script src="/js/sale.js"></script>
