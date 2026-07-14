@@ -56,7 +56,7 @@ a {
 .navbar-shopxtra {
   background-color: var(--sand);
   border-bottom: 1px solid var(--hairline);
-  padding: 0.15rem 0;
+  padding: 0 0;
 }
 
 .navbar-shopxtra .navbar-brand {
@@ -69,13 +69,19 @@ a {
 }
 
 .logo-img {
-  height: 124px;
+  height: 148px;
   width: auto;
   transition: height 0.3s ease;
 }
 
 .navbar-shopxtra.is-scrolled .logo-img {
-  height: 68px;
+  height: 76px;
+}
+
+@media (max-width: 767.98px) {
+  .logo-img {
+    height: 84px;
+  }
 }
 
 .logo-img-footer {
