@@ -124,9 +124,9 @@
     fragmentShader,
     uniforms: {
       uTime: { value: 0 },
-      uColorA: { value: new THREE.Color('#2D2A26') },
-      uColorB: { value: new THREE.Color('#A67C52') },
-      uColorC: { value: new THREE.Color('#E8B4B8') },
+      uColorA: { value: new THREE.Color('#1C231D') },
+      uColorB: { value: new THREE.Color('#C9A24D') },
+      uColorC: { value: new THREE.Color('#5F9B3A') },
     },
   });
   const mesh = new THREE.Mesh(geometry, material);

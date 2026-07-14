@@ -2,10 +2,10 @@ const pool = require('../config/db');
 
 const CATEGORIES = ['electrolytes', 'shampoo', 'soaps', 'coffee', 'cosmetics'];
 const SORT_COLUMNS = {
-  price_asc: 'price ASC',
-  price_desc: 'price DESC',
-  newest: 'created_at DESC',
-  bestseller: 'is_bestseller DESC, created_at DESC',
+  price_asc: 'p.price ASC',
+  price_desc: 'p.price DESC',
+  newest: 'p.created_at DESC',
+  bestseller: 'p.is_bestseller DESC, p.created_at DESC',
 };
 
 async function findAll({ category, minPrice, maxPrice, sort, search, onSale } = {}) {
@@ -36,7 +36,14 @@ async function findAll({ category, minPrice, maxPrice, sort, search, onSale } = 
   const orderBy = SORT_COLUMNS[sort] || SORT_COLUMNS.newest;
 
   const { rows } = await pool.query(
-    `SELECT * FROM products ${where} ORDER BY ${orderBy}`,
+    `SELECT p.*,
+            ROUND(AVG(r.rating)::numeric, 1) AS avg_rating,
+            COUNT(r.id)::int AS review_count
+     FROM products p
+     LEFT JOIN reviews r ON r.product_id = p.id
+     ${where}
+     GROUP BY p.id
+     ORDER BY ${orderBy}`,
     values
   );
   return rows;

@@ -136,6 +136,9 @@ function productCardHtml(product) {
           <div class="product-body">
             <span class="category-tint tint-${product.category}">${categoryLabel(product.category)}</span>
             <div class="product-name">${product.name}</div>
+            ${Number(product.review_count) > 0 ? `
+              <div class="product-card-rating">${starsHtml(product.avg_rating, '0.8rem')}<span class="product-card-rating-count">(${product.review_count})</span></div>
+            ` : ''}
           </div>
         </a>
         <div class="product-card-foot">

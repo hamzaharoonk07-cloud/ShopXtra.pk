@@ -1,9 +1,9 @@
 const HOME_CATEGORIES = [
-  { slug: 'electrolytes', name: 'Electrolytes' },
-  { slug: 'coffee', name: 'Coffee' },
-  { slug: 'shampoo', name: 'Shampoo' },
-  { slug: 'soaps', name: 'Soaps' },
-  { slug: 'cosmetics', name: 'Cosmetics' },
+  { slug: 'electrolytes', name: 'Electrolytes', desc: 'Hydration that wakes you up faster than coffee.' },
+  { slug: 'coffee', name: 'Coffee', desc: 'Rich roasts and cold brew for the daily ritual.' },
+  { slug: 'shampoo', name: 'Shampoo', desc: 'Care that cleans without ever drying you out.' },
+  { slug: 'soaps', name: 'Soaps', desc: 'Everyday bars for a clean, simple routine.' },
+  { slug: 'cosmetics', name: 'Cosmetics', desc: 'Shades and finishes that match what you expect.' },
 ];
 
 async function showSaleBannerIfAny() {
@@ -47,10 +47,11 @@ function renderCategoryGrid() {
   const grid = document.getElementById('category-grid');
   if (!grid) return;
   grid.innerHTML = HOME_CATEGORIES.map((c) => `
-    <a href="/pages/shop.html?category=${c.slug}" class="category-tile" data-reveal="item">
+    <a href="/pages/shop.html?category=${c.slug}" class="category-tile category-tile-${c.slug}" data-reveal="item">
       <div class="category-tile-image">${productIllustration(c.slug)}</div>
       <div class="category-tile-foot">
         <span class="category-tile-name">${c.name}</span>
+        <p class="category-tile-desc">${c.desc}</p>
         <span class="category-tile-link">Shop &rarr;</span>
       </div>
     </a>

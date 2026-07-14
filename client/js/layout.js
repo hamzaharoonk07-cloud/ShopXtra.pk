@@ -1,10 +1,10 @@
 function renderAnnouncementBar() {
   const items = `
-    <span>Free COD on every order</span>
+    <span>Cash on Delivery nationwide</span>
     <span class="dot" aria-hidden="true">&#8226;</span>
-    <span>Use <strong>RITUAL10</strong> for 10% off any Ritual Bundle</span>
+    <span class="announcement-highlight">Free delivery over Rs 3,000</span>
     <span class="dot" aria-hidden="true">&#8226;</span>
-    <span>Nationwide delivery across Pakistan</span>
+    <span>Imported &amp; authentic — priced better than Amazon</span>
     <span class="dot" aria-hidden="true">&#8226;</span>
   `;
   return `
@@ -31,38 +31,35 @@ function renderNavbar(activePath = '') {
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navMain">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item"><a class="nav-link" href="/pages/shop.html">Shop</a></li>
-            <li class="nav-item"><a class="nav-link" href="/pages/bundles.html">Bundles</a></li>
+          <ul class="navbar-nav mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link" href="/pages/shop.html">Shop all</a></li>
             <li class="nav-item"><a class="nav-link" href="/pages/shop.html?category=electrolytes">Electrolytes</a></li>
             <li class="nav-item"><a class="nav-link" href="/pages/shop.html?category=coffee">Coffee</a></li>
             <li class="nav-item"><a class="nav-link" href="/pages/shop.html?category=shampoo">Shampoo</a></li>
             <li class="nav-item"><a class="nav-link" href="/pages/shop.html?category=soaps">Soaps</a></li>
             <li class="nav-item"><a class="nav-link" href="/pages/shop.html?category=cosmetics">Cosmetics</a></li>
+            <li class="nav-item"><a class="nav-link" href="/pages/bundles.html">Bundles</a></li>
           </ul>
-          <div class="d-flex gap-3 align-items-center position-relative">
-            <div class="position-relative">
-              <input type="search" id="nav-search-input" class="form-control form-control-sm" placeholder="Search…"
-                style="width: 180px; border-radius: 999px;" aria-label="Search products" autocomplete="off">
+          <div class="d-flex gap-2 align-items-center position-relative ms-lg-auto">
+            <div class="nav-search-wrap position-relative">
+              <span class="nav-search-icon" aria-hidden="true">&#8981;</span>
+              <input type="search" id="nav-search-input" placeholder="Search products"
+                aria-label="Search products" autocomplete="off">
               <div id="nav-search-results" class="d-none"></div>
             </div>
-            <a href="/pages/track-order.html" class="icon-link" aria-label="Track order">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <a href="/pages/track-order.html" class="nav-icon-btn" aria-label="Track order">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <rect x="1" y="6" width="14" height="11" rx="1.5"/><path d="M15 10h4l3 3.5V17h-7z"/><circle cx="6.5" cy="19" r="1.6"/><circle cx="17.5" cy="19" r="1.6"/>
               </svg>
             </a>
-            <a href="/pages/account.html" class="icon-link" aria-label="Account">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <a href="/pages/account.html" class="nav-icon-btn" aria-label="Account">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <circle cx="12" cy="8" r="4"/>
                 <path d="M4 20c0-4 3.5-6.5 8-6.5s8 2.5 8 6.5"/>
               </svg>
             </a>
-            <a href="/pages/cart.html" class="icon-link position-relative" aria-label="Cart">
-              <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M6 8V6a6 6 0 0 1 12 0v2"/>
-                <rect x="3.5" y="8" width="17" height="13" rx="2.5"/>
-              </svg>
-              <span id="cart-count-badge" class="badge rounded-pill" style="background-color: var(--tea-pink); color: var(--plum); font-size: 0.65rem; vertical-align: top;">0</span>
+            <a href="/pages/cart.html" class="nav-bag-btn" aria-label="Cart">
+              Bag<span id="cart-count-badge">0</span>
             </a>
           </div>
         </div>
@@ -74,51 +71,45 @@ function renderNavbar(activePath = '') {
 function renderFooter() {
   return `
     <footer class="site-footer">
-      <div class="container">
-        <div class="footer-newsletter-row">
-          <div class="footer-newsletter-copy">
-            <h3>Join the list</h3>
-            <p>Early access to new drops and kit discounts. No spam.</p>
+      <div class="footer-main">
+        <div class="footer-brand-col">
+          <div class="footer-brand-row">
+            <img src="/assets/logo-full.png" alt="ShopXtra" class="logo-img logo-img-footer">
           </div>
-          <div>
-            <form id="newsletter-form" class="footer-newsletter-form" novalidate>
-              <input type="email" id="newsletter-email" placeholder="Your email address" required aria-label="Email address">
-              <button type="submit">Subscribe</button>
-            </form>
-            <p id="newsletter-msg" role="status" style="margin: 0.5rem 0 0; font-size: 0.8rem;"></p>
+          <p>Everyday essentials — imported, authentic and PKR-priced. Look after yourself, every single day.</p>
+          <div class="footer-brand-stats">
+            <span>&#9733; 4.8 rated</span>
+            <span>12,000+ orders</span>
           </div>
         </div>
-
-        <div class="footer-link-grid">
-          <div>
-            <img src="/assets/logo-full.png" alt="ShopXtra" class="logo-img logo-img-footer mb-2">
-            <p style="max-width: 30ch; color: #b8b0a4; font-size: 0.85rem;">Authentic everyday essentials, delivered across Pakistan with Cash on Delivery.</p>
-          </div>
-          <div>
-            <span class="footer-col-title">Shop</span>
-            <a href="/pages/shop.html?category=electrolytes">Electrolytes</a>
-            <a href="/pages/shop.html?category=coffee">Coffee</a>
-            <a href="/pages/shop.html?category=shampoo">Shampoo</a>
-            <a href="/pages/shop.html?category=soaps">Soaps</a>
-            <a href="/pages/shop.html?category=cosmetics">Cosmetics</a>
-            <a href="/pages/bundles.html">Kits &amp; bundles</a>
-          </div>
-          <div>
-            <span class="footer-col-title">Help</span>
-            <a href="/pages/track-order.html">Track your order</a>
-            <a href="/pages/contact.html">Contact us</a>
-            <a href="/pages/account.html">Your account</a>
-          </div>
-          <div>
-            <span class="footer-col-title">Company</span>
-            <a href="/pages/about.html">About ShopXtra</a>
-          </div>
+        <div class="footer-col">
+          <h4>Shop</h4>
+          <a href="/pages/shop.html?category=electrolytes">Electrolytes</a>
+          <a href="/pages/shop.html?category=coffee">Coffee</a>
+          <a href="/pages/shop.html?category=shampoo">Shampoo</a>
+          <a href="/pages/shop.html?category=soaps">Soaps</a>
+          <a href="/pages/shop.html?category=cosmetics">Cosmetics</a>
         </div>
-
-        <div class="footer-bottom-bar">
-          <span>&copy; 2026 ShopXtra. All prices in PKR.</span>
-          <span>Made in Pakistan</span>
+        <div class="footer-col">
+          <h4>Help</h4>
+          <a href="/pages/track-order.html">Track order</a>
+          <a href="/pages/contact.html">Contact us</a>
+          <a href="/pages/account.html">Your account</a>
+          <a href="/pages/bundles.html">Kits &amp; bundles</a>
         </div>
+        <div class="footer-col footer-newsletter-col">
+          <h4>Stay in the loop</h4>
+          <p>New drops and kit deals, no spam.</p>
+          <form id="newsletter-form" class="footer-newsletter-form" novalidate>
+            <input type="email" id="newsletter-email" placeholder="Email address" required aria-label="Email address">
+            <button type="submit">Join</button>
+          </form>
+          <p id="newsletter-msg" role="status" style="margin: 0.5rem 0 0; font-size: 0.8rem;"></p>
+        </div>
+      </div>
+      <div class="footer-bottom-bar">
+        <span>&copy; 2026 ShopXtra · Made in Pakistan for Pakistan</span>
+        <span>Cash on Delivery · 2–3 day nationwide delivery</span>
       </div>
     </footer>
   `;
