@@ -199,6 +199,72 @@ function renderVariantList() {
   });
 }
 
+function sampleImageColor(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      try {
+        const size = 40;
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, size, size);
+        const { data } = ctx.getImageData(0, 0, size, size);
+        let r = 0, g = 0, b = 0, count = 0;
+        for (let i = 0; i < data.length; i += 4) {
+          r += data[i]; g += data[i + 1]; b += data[i + 2];
+          count++;
+        }
+        r = Math.round(r / count); g = Math.round(g / count); b = Math.round(b / count);
+        resolve(`#${[r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('')}`);
+      } catch (err) {
+        reject(err);
+      }
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+
+document.getElementById('ev-auto-detect-btn').addEventListener('click', async () => {
+  const errorEl = document.getElementById('edit-variant-error');
+  errorEl.classList.add('d-none');
+  const productId = document.getElementById('ep-id').value;
+  if (!editingProductImages.length) {
+    errorEl.textContent = 'Upload product images first, then auto-create colours from them.';
+    errorEl.classList.remove('d-none');
+    return;
+  }
+  const btn = document.getElementById('ev-auto-detect-btn');
+  btn.disabled = true;
+  btn.textContent = 'Detecting colours…';
+  try {
+    for (let i = 0; i < editingProductImages.length; i++) {
+      const url = editingProductImages[i];
+      const hex = await sampleImageColor(url).catch(() => '#78867D');
+      const formData = new FormData();
+      formData.append('variant_name', `Colour ${i + 1}`);
+      formData.append('color_name', `Colour ${i + 1}`);
+      formData.append('color_hex', hex);
+      formData.append('price_modifier', 0);
+      formData.append('stock', document.getElementById('ep-stock').value || 0);
+      formData.append('image_url', url);
+      const res = await fetch(`/api/products/${productId}/variants`, { method: 'POST', body: formData });
+      const body = await res.json();
+      if (res.ok) editingProductVariants.push(body);
+    }
+    renderVariantList();
+  } catch (err) {
+    errorEl.textContent = err.message || 'Could not auto-create colours.';
+    errorEl.classList.remove('d-none');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Auto-create colours from images';
+  }
+});
+
 document.getElementById('ev-add-btn').addEventListener('click', async () => {
   const errorEl = document.getElementById('edit-variant-error');
   errorEl.classList.add('d-none');
