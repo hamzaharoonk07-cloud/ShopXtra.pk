@@ -84,11 +84,17 @@ function ensureCartDrawer() {
 
 function cartDrawerItemHtml(item) {
   return `
-    <div class="cart-drawer-item">
+    <div class="cart-drawer-item" data-slug="${item.slug}">
       <div class="cart-drawer-thumb">${productMediaHtml(item)}</div>
       <div class="cart-drawer-item-info">
         <span class="cart-drawer-item-name">${item.name}</span>
-        <span class="cart-drawer-item-meta">Qty ${item.qty} &middot; ${formatPrice(item.price)}</span>
+        <span class="cart-drawer-item-meta">${formatPrice(item.price)} each</span>
+        <div class="cart-drawer-qty-stepper">
+          <button type="button" class="cart-drawer-qty-btn" data-action="decrease" aria-label="Decrease quantity">&minus;</button>
+          <span class="cart-drawer-qty-value">${item.qty}</span>
+          <button type="button" class="cart-drawer-qty-btn" data-action="increase" aria-label="Increase quantity">+</button>
+          <button type="button" class="cart-drawer-remove-btn" data-action="remove" aria-label="Remove ${item.name}">Remove</button>
+        </div>
       </div>
       <span class="cart-drawer-item-price">${formatPrice(item.price * item.qty)}</span>
     </div>
@@ -135,6 +141,20 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('click', (e) => {
+  const stepperBtn = e.target.closest('.cart-drawer-qty-btn, .cart-drawer-remove-btn');
+  if (stepperBtn) {
+    const row = stepperBtn.closest('[data-slug]');
+    const slug = row.dataset.slug;
+    const action = stepperBtn.dataset.action;
+    if (action === 'remove') {
+      removeFromCart(slug);
+    } else {
+      const item = getCart().find((i) => i.slug === slug);
+      if (item) updateCartQty(slug, item.qty + (action === 'increase' ? 1 : -1));
+    }
+    return;
+  }
+
   const btn = e.target.closest('.quick-add-btn');
   if (!btn || btn.disabled) return;
   e.preventDefault();
