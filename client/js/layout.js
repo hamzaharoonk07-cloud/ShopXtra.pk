@@ -119,8 +119,7 @@ function renderFooter() {
   `;
 }
 
-// TODO: replace with ShopXtra's real business WhatsApp number (no +, no leading 0 — e.g. 923001234567).
-const SHOPXTRA_WHATSAPP_NUMBER = '923001234567';
+const SHOPXTRA_WHATSAPP_NUMBER = '923272255447';
 
 function whatsappLink(message) {
   const text = message || "Hi ShopXtra, I'd like to ask about an order.";
