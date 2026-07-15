@@ -78,7 +78,7 @@ a {
   background-color: rgba(246, 248, 242, 0.9);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--hairline);
-  padding: 0.2rem 0;
+  padding: 0.35rem 0;
   transition: padding 0.3s ease;
   position: sticky;
   top: 0;
@@ -86,11 +86,12 @@ a {
 }
 
 .navbar-shopxtra.is-scrolled {
-  padding: 0.15rem 0;
+  padding: 0.2rem 0;
 }
 
 .navbar-shopxtra .container {
   align-items: center;
+  overflow: visible;
 }
 
 .navbar-shopxtra .navbar-brand {
@@ -99,25 +100,27 @@ a {
   font-size: 1.8rem;
   color: var(--plum);
   padding: 0;
+  align-self: flex-end;
 }
 
 .logo-img {
-  height: 60px;
+  height: 56px;
   width: auto;
   transition: height 0.3s ease;
+  display: block;
 }
 
 .navbar-shopxtra.is-scrolled .logo-img {
-  height: 50px;
+  height: 48px;
 }
 
 @media (min-width: 992px) {
   .logo-img {
-    height: 76px;
+    height: 128px;
   }
 
   .navbar-shopxtra.is-scrolled .logo-img {
-    height: 52px;
+    height: 60px;
   }
 }
 
