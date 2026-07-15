@@ -37,7 +37,10 @@ CREATE TABLE IF NOT EXISTS product_variants (
   product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
   variant_name VARCHAR(120) NOT NULL,
   price_modifier NUMERIC(10, 2) NOT NULL DEFAULT 0,
-  stock INTEGER NOT NULL DEFAULT 0
+  stock INTEGER NOT NULL DEFAULT 0,
+  color_name VARCHAR(60),
+  color_hex VARCHAR(7),
+  image_url TEXT
 );
 
 CREATE TABLE IF NOT EXISTS orders (

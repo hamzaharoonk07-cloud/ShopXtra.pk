@@ -172,7 +172,69 @@ function renderEditImageGrid() {
   });
 }
 
-function openEditProductModal(product) {
+let editingProductVariants = [];
+
+function renderVariantList() {
+  const list = document.getElementById('ep-variant-list');
+  list.innerHTML = editingProductVariants.length ? editingProductVariants.map((v) => `
+    <div class="admin-variant-row" data-id="${v.id}">
+      <span class="admin-variant-swatch" style="background:${v.color_hex || 'var(--sand)'};"></span>
+      <span class="admin-variant-name">${v.color_name || v.variant_name}</span>
+      <span class="admin-variant-meta">${Number(v.price_modifier) !== 0 ? `${Number(v.price_modifier) > 0 ? '+' : ''}${formatPrice(v.price_modifier)} · ` : ''}${v.stock} in stock</span>
+      <button type="button" class="admin-variant-remove" aria-label="Remove colour">&times;</button>
+    </div>
+  `).join('') : '<p style="color:#a89490; font-size:0.85rem;">No colour variants yet.</p>';
+
+  list.querySelectorAll('.admin-variant-remove').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const row = btn.closest('.admin-variant-row');
+      const variantId = row.dataset.id;
+      const productId = document.getElementById('ep-id').value;
+      const res = await fetch(`/api/products/${productId}/variants/${variantId}`, { method: 'DELETE' });
+      if (res.ok || res.status === 404) {
+        editingProductVariants = editingProductVariants.filter((v) => String(v.id) !== variantId);
+        renderVariantList();
+      }
+    });
+  });
+}
+
+document.getElementById('ev-add-btn').addEventListener('click', async () => {
+  const errorEl = document.getElementById('edit-variant-error');
+  errorEl.classList.add('d-none');
+  const productId = document.getElementById('ep-id').value;
+  const colorName = document.getElementById('ev-color-name').value.trim();
+  if (!colorName) {
+    errorEl.textContent = 'Colour name is required.';
+    errorEl.classList.remove('d-none');
+    return;
+  }
+  try {
+    const formData = new FormData();
+    formData.append('variant_name', colorName);
+    formData.append('color_name', colorName);
+    formData.append('color_hex', document.getElementById('ev-color-hex').value);
+    formData.append('price_modifier', document.getElementById('ev-price-modifier').value || 0);
+    formData.append('stock', document.getElementById('ev-stock').value || 0);
+    const imageFile = document.getElementById('ev-image').files[0];
+    if (imageFile) formData.append('image', imageFile);
+
+    const res = await fetch(`/api/products/${productId}/variants`, { method: 'POST', body: formData });
+    const body = await res.json();
+    if (!res.ok) throw new Error(body.error);
+    editingProductVariants.push(body);
+    renderVariantList();
+    document.getElementById('ev-color-name').value = '';
+    document.getElementById('ev-price-modifier').value = '0';
+    document.getElementById('ev-stock').value = '0';
+    document.getElementById('ev-image').value = '';
+  } catch (err) {
+    errorEl.textContent = err.message;
+    errorEl.classList.remove('d-none');
+  }
+});
+
+async function openEditProductModal(product) {
   document.getElementById('ep-id').value = product.id;
   document.getElementById('ep-name').value = product.name;
   document.getElementById('ep-category').value = product.category;
@@ -184,10 +246,21 @@ function openEditProductModal(product) {
   document.getElementById('ep-bestseller').checked = !!product.is_bestseller;
   document.getElementById('ep-new-images').value = '';
   document.getElementById('edit-product-error').classList.add('d-none');
+  document.getElementById('edit-variant-error').classList.add('d-none');
   editingProductImages = [...(product.images || [])];
   renderEditImageGrid();
+  editingProductVariants = [];
+  renderVariantList();
 
   bootstrap.Modal.getOrCreateInstance(document.getElementById('editProductModal')).show();
+
+  try {
+    const full = await apiGet(`/products/${encodeURIComponent(product.slug)}`);
+    editingProductVariants = full.variants || [];
+    renderVariantList();
+  } catch {
+    // Variant list stays empty if this fetch fails; the rest of the form still works.
+  }
 }
 
 document.getElementById('edit-product-form').addEventListener('submit', async (e) => {

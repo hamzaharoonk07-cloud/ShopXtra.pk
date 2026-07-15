@@ -107,4 +107,50 @@ async function remove(req, res, next) {
   }
 }
 
-module.exports = { list, getBySlug, create, update, remove };
+async function createVariant(req, res, next) {
+  try {
+    const { variant_name, color_name, color_hex, price_modifier, stock } = req.body;
+    if (!variant_name) return res.status(400).json({ error: 'variant_name is required' });
+
+    const image_url = req.file ? await saveImage(req.file) : (req.body.image_url || null);
+
+    const variant = await productModel.createVariant(req.params.id, {
+      variant_name,
+      color_name,
+      color_hex,
+      price_modifier: price_modifier ? Number(price_modifier) : 0,
+      stock: stock ? Number(stock) : 0,
+      image_url,
+    });
+    res.status(201).json(variant);
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function updateVariant(req, res, next) {
+  try {
+    const data = { ...req.body };
+    if (req.file) data.image_url = await saveImage(req.file);
+    if (data.price_modifier != null && data.price_modifier !== '') data.price_modifier = Number(data.price_modifier);
+    if (data.stock != null && data.stock !== '') data.stock = Number(data.stock);
+
+    const variant = await productModel.updateVariant(req.params.variantId, data);
+    if (!variant) return res.status(404).json({ error: 'Variant not found' });
+    res.json(variant);
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function removeVariant(req, res, next) {
+  try {
+    const deleted = await productModel.removeVariant(req.params.variantId);
+    if (!deleted) return res.status(404).json({ error: 'Variant not found' });
+    res.status(204).end();
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { list, getBySlug, create, update, remove, createVariant, updateVariant, removeVariant };

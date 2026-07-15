@@ -306,6 +306,34 @@
           <label class="form-label mono" style="font-size:0.75rem;">Images</label>
           <div class="admin-edit-image-grid" id="ep-image-grid"></div>
           <input type="file" class="form-control form-control-sm mt-2" id="ep-new-images" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
+
+          <label class="form-label mono mt-3" style="font-size:0.75rem;">Colour variants <span style="font-weight:400; text-transform:none;">— shown as clickable swatches on the product page</span></label>
+          <div class="admin-variant-list" id="ep-variant-list"></div>
+          <div class="row g-2 align-items-end admin-variant-add-row">
+            <div class="col-md-3">
+              <label class="form-label mono" style="font-size:0.7rem;">Colour name</label>
+              <input class="form-control form-control-sm" id="ev-color-name" placeholder="e.g. Rose Gold">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label mono" style="font-size:0.7rem;">Swatch</label>
+              <input type="color" class="form-control form-control-sm form-control-color" id="ev-color-hex" value="#3C7A5D">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label mono" style="font-size:0.7rem;">Price +/-</label>
+              <input type="number" class="form-control form-control-sm" id="ev-price-modifier" value="0">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label mono" style="font-size:0.7rem;">Stock</label>
+              <input type="number" class="form-control form-control-sm" id="ev-stock" min="0" value="0">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label mono" style="font-size:0.7rem;">Photo (optional)</label>
+              <input type="file" class="form-control form-control-sm" id="ev-image" accept="image/jpeg,image/png,image/webp,image/gif">
+            </div>
+          </div>
+          <button type="button" class="btn btn-outline-plum btn-sm mt-2" id="ev-add-btn">+ Add colour</button>
+          <p class="text-danger d-none mt-2" id="edit-variant-error"></p>
+
           <p class="text-danger d-none mt-2" id="edit-product-error"></p>
         </div>
         <div class="modal-footer">

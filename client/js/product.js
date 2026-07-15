@@ -12,7 +12,29 @@ async function loadProduct() {
     document.title = `${product.name} — ShopXtra`;
     updateProductSeo(product, slug);
 
-    const variantOptions = (product.variants || [])
+    const variants = product.variants || [];
+    const colorVariants = variants.filter((v) => v.color_hex);
+    const plainVariants = colorVariants.length ? [] : variants;
+
+    const colorSwatchesHtml = colorVariants.length ? `
+      <div class="mb-3">
+        <label class="form-label mono" style="font-size:0.8rem;">Colour</label>
+        <div class="pdp-color-swatches" id="pdp-color-swatches">
+          ${colorVariants.map((v, i) => `
+            <button type="button" class="pdp-color-swatch ${i === 0 ? 'active' : ''}"
+              data-variant-id="${v.id}"
+              data-modifier="${v.price_modifier}"
+              data-image="${v.image_url || ''}"
+              data-stock="${v.stock}"
+              style="background:${v.color_hex};"
+              aria-label="${v.color_name || v.variant_name}" title="${v.color_name || v.variant_name}"></button>
+          `).join('')}
+        </div>
+        <span class="pdp-color-name" id="pdp-color-name">${colorVariants[0].color_name || colorVariants[0].variant_name}</span>
+      </div>
+    ` : '';
+
+    const variantOptions = plainVariants
       .map((v) => `<option value="${v.id}" data-modifier="${v.price_modifier}">${v.variant_name}</option>`)
       .join('');
 
@@ -49,7 +71,9 @@ async function loadProduct() {
           </div>
           <p class="pdp-desc">${product.description || ''}</p>
 
-          ${product.variants && product.variants.length ? `
+          ${colorSwatchesHtml}
+
+          ${plainVariants.length ? `
             <div class="mb-3">
               <label class="form-label mono" style="font-size:0.8rem;" for="variant-select">Variant</label>
               <select id="variant-select" class="form-select" style="max-width: 280px;">
@@ -129,6 +153,38 @@ async function loadProduct() {
       });
     }
 
+    let selectedVariant = colorVariants[0] || null;
+
+    function applyVariantPrice() {
+      const modifier = selectedVariant ? Number(selectedVariant.price_modifier) : 0;
+      const finalPrice = Number(product.price) + modifier;
+      document.getElementById('product-price').textContent = formatPrice(finalPrice);
+      const btn = document.getElementById('add-to-cart-btn');
+      const outOfStock = selectedVariant ? Number(selectedVariant.stock) <= 0 : product.stock <= 0;
+      if (btn) {
+        btn.disabled = outOfStock;
+        btn.textContent = outOfStock ? 'Out of stock' : `Add to bag — ${formatPrice(finalPrice)}`;
+      }
+      return finalPrice;
+    }
+
+    if (colorVariants.length) {
+      main.querySelectorAll('.pdp-color-swatch').forEach((swatch) => {
+        swatch.addEventListener('click', () => {
+          main.querySelectorAll('.pdp-color-swatch').forEach((s) => s.classList.remove('active'));
+          swatch.classList.add('active');
+          selectedVariant = colorVariants.find((v) => String(v.id) === swatch.dataset.variantId);
+          document.getElementById('pdp-color-name').textContent = selectedVariant.color_name || selectedVariant.variant_name;
+          if (swatch.dataset.image) {
+            document.getElementById('pdp-main-image').innerHTML = `<img src="${swatch.dataset.image}" alt="${product.name} — ${selectedVariant.color_name || ''}">`;
+            main.querySelectorAll('.pdp-thumb').forEach((b) => b.classList.remove('active'));
+          }
+          applyVariantPrice();
+        });
+      });
+      applyVariantPrice();
+    }
+
     const qtyInput = document.getElementById('qty-input');
     main.querySelectorAll('.pdp-qty-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -140,7 +196,14 @@ async function loadProduct() {
     const addToCartBtn = document.getElementById('add-to-cart-btn');
     addToCartBtn?.addEventListener('click', (e) => {
       const qty = Number(document.getElementById('qty-input').value) || 1;
-      addToCart(product, qty);
+      const cartProduct = selectedVariant ? {
+        ...product,
+        slug: `${product.slug}::${selectedVariant.id}`,
+        name: `${product.name} — ${selectedVariant.color_name || selectedVariant.variant_name}`,
+        price: Number(product.price) + Number(selectedVariant.price_modifier || 0),
+        images: selectedVariant.image_url ? [selectedVariant.image_url] : product.images,
+      } : product;
+      addToCart(cartProduct, qty);
       const msg = document.getElementById('add-to-cart-msg');
       msg.textContent = 'Added to bag.';
       msg.style.color = 'var(--tea-pink)';

@@ -97,4 +97,47 @@ async function remove(id) {
   return rowCount > 0;
 }
 
-module.exports = { CATEGORIES, findAll, findBySlug, findById, create, update, remove };
+async function createVariant(productId, data) {
+  const { variant_name, price_modifier, stock, color_name, color_hex, image_url } = data;
+  const { rows } = await pool.query(
+    `INSERT INTO product_variants (product_id, variant_name, price_modifier, stock, color_name, color_hex, image_url)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)
+     RETURNING *`,
+    [productId, variant_name, price_modifier || 0, stock || 0, color_name || null, color_hex || null, image_url || null]
+  );
+  return rows[0];
+}
+
+const VARIANT_UPDATABLE_FIELDS = ['variant_name', 'price_modifier', 'stock', 'color_name', 'color_hex', 'image_url'];
+
+async function updateVariant(id, data) {
+  const fields = VARIANT_UPDATABLE_FIELDS.filter((key) => Object.prototype.hasOwnProperty.call(data, key));
+  if (!fields.length) return null;
+
+  const setClauses = fields.map((key, i) => `${key} = $${i + 2}`);
+  const values = fields.map((key) => data[key]);
+
+  const { rows } = await pool.query(
+    `UPDATE product_variants SET ${setClauses.join(', ')} WHERE id = $1 RETURNING *`,
+    [id, ...values]
+  );
+  return rows[0] || null;
+}
+
+async function removeVariant(id) {
+  const { rowCount } = await pool.query('DELETE FROM product_variants WHERE id = $1', [id]);
+  return rowCount > 0;
+}
+
+module.exports = {
+  CATEGORIES,
+  findAll,
+  findBySlug,
+  findById,
+  create,
+  update,
+  remove,
+  createVariant,
+  updateVariant,
+  removeVariant,
+};

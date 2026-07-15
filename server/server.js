@@ -18,8 +18,11 @@ const addressRoutes = require('./routes/addresses');
 const userRoutes = require('./routes/users');
 const bannerRoutes = require('./routes/banner');
 const sitemapRoutes = require('./routes/sitemap');
+const { runMigrations } = require('./config/migrate');
 
 const app = express();
+
+runMigrations().catch((err) => console.error('Migration error:', err.message));
 
 app.use(cors());
 app.use(express.json());
