@@ -10,6 +10,7 @@ async function loadProduct() {
   try {
     const product = await apiGet(`/products/${encodeURIComponent(slug)}`);
     document.title = `${product.name} — ShopXtra`;
+    updateProductSeo(product, slug);
 
     const variantOptions = (product.variants || [])
       .map((v) => `<option value="${v.id}" data-modifier="${v.price_modifier}">${v.variant_name}</option>`)
@@ -20,7 +21,7 @@ async function loadProduct() {
       <div class="pdp-thumb-rail">
         ${images.map((img, i) => `
           <button type="button" class="pdp-thumb ${i === 0 ? 'active' : ''}" data-img="${img}" aria-label="View image ${i + 1}">
-            <img src="${img}" alt="${product.name} ${i + 1}">
+            <img src="${img}" alt="${product.name} ${i + 1}" loading="lazy">
           </button>
         `).join('')}
       </div>
@@ -71,6 +72,11 @@ async function loadProduct() {
             </button>
           </div>
           <p id="add-to-cart-msg" class="mt-2 mb-0" role="status"></p>
+
+          <a href="${whatsappLink(`Hi ShopXtra, I have a question about ${product.name}.`)}" target="_blank" rel="noopener" class="pdp-whatsapp-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.6.1-.3-.1-1.2-.4-2.2-1.4-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.2-.4.1-.2 0-.3 0-.4-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.3-.8.8-.8 1.9s.8 2.2.9 2.4c.1.2 1.6 2.5 4 3.5.6.2 1 .4 1.3.5.6.2 1.1.1 1.5.1.5-.1 1.7-.7 1.9-1.3.2-.6.2-1.1.2-1.2-.1-.2-.3-.2-.6-.4z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.6 1.4 5.1L2 22l5.1-1.3A9.9 9.9 0 0 0 12 22c5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.2c-1.6 0-3.2-.4-4.5-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 20.2 12 8.2 8.2 0 0 1 12 20.2z"/></svg>
+            Ask about this product on WhatsApp
+          </a>
 
           <div class="pdp-cod-chip">
             <span class="pdp-cod-dot" aria-hidden="true"></span>
@@ -169,6 +175,64 @@ async function loadRelatedProducts(product) {
   } catch {
     // Related products are a nice-to-have; fail silently.
   }
+}
+
+function updateProductSeo(product, slug) {
+  const url = `https://shop-xtra-pk.vercel.app/pages/product.html?slug=${encodeURIComponent(slug)}`;
+  const description = (product.description || '').slice(0, 160) ||
+    `${product.name} — authentic, PKR-priced, delivered nationwide across Pakistan with Cash on Delivery.`;
+  const image = (product.images && product.images[0]) || 'https://shop-xtra-pk.vercel.app/assets/logo-full.png';
+
+  const setMeta = (selector, attr, value) => {
+    let el = document.querySelector(selector);
+    if (!el) {
+      el = document.createElement(selector.startsWith('link') ? 'link' : 'meta');
+      if (selector.includes('rel="canonical"')) el.setAttribute('rel', 'canonical');
+      else if (selector.includes('property=')) el.setAttribute('property', selector.match(/property="([^"]+)"/)[1]);
+      else if (selector.includes('name=')) el.setAttribute('name', selector.match(/name="([^"]+)"/)[1]);
+      document.head.appendChild(el);
+    }
+    el.setAttribute(attr, value);
+  };
+
+  setMeta('meta[name="description"]', 'content', description);
+  setMeta('link[rel="canonical"]', 'href', url);
+  setMeta('meta[property="og:title"]', 'content', `${product.name} — ShopXtra`);
+  setMeta('meta[property="og:description"]', 'content', description);
+  setMeta('meta[property="og:url"]', 'content', url);
+  setMeta('meta[property="og:image"]', 'content', image);
+
+  let jsonLd = document.getElementById('product-jsonld');
+  if (!jsonLd) {
+    jsonLd = document.createElement('script');
+    jsonLd.type = 'application/ld+json';
+    jsonLd.id = 'product-jsonld';
+    document.head.appendChild(jsonLd);
+  }
+  jsonLd.textContent = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description,
+    image,
+    sku: String(product.id),
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'PKR',
+      price: product.price,
+      availability: Number(product.stock) > 0
+        ? 'https://schema.org/InStock'
+        : 'https://schema.org/OutOfStock',
+      url,
+    },
+    ...(Number(product.review_count) > 0 ? {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: product.avg_rating,
+        reviewCount: product.review_count,
+      },
+    } : {}),
+  });
 }
 
 async function loadReviews(slug) {

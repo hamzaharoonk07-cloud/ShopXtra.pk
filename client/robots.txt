@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /pages/admin.html
+Disallow: /pages/checkout.html
+Disallow: /pages/cart.html
+Disallow: /pages/account.html
+Disallow: /pages/order-confirmation.html
+
+Sitemap: https://shop-xtra-pk.vercel.app/sitemap.xml

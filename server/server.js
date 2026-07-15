@@ -17,12 +17,14 @@ const bundleRoutes = require('./routes/bundles');
 const addressRoutes = require('./routes/addresses');
 const userRoutes = require('./routes/users');
 const bannerRoutes = require('./routes/banner');
+const sitemapRoutes = require('./routes/sitemap');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+app.use(sitemapRoutes);
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 app.use(express.static(path.join(__dirname, '..', 'client')));
 

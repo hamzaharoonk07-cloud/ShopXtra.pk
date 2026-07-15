@@ -59,7 +59,11 @@ function renderNavbar(activePath = '') {
               </svg>
             </a>
             <a href="/pages/cart.html" class="nav-bag-btn" aria-label="Cart">
-              Bag<span id="cart-count-badge">0</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+              <span id="cart-count-badge">0</span>
             </a>
           </div>
         </div>
@@ -115,9 +119,17 @@ function renderFooter() {
   `;
 }
 
+// TODO: replace with ShopXtra's real business WhatsApp number (no +, no leading 0 — e.g. 923001234567).
+const SHOPXTRA_WHATSAPP_NUMBER = '923001234567';
+
+function whatsappLink(message) {
+  const text = message || "Hi ShopXtra, I'd like to ask about an order.";
+  return `https://wa.me/${SHOPXTRA_WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+}
+
 function renderWhatsAppFloat() {
   const a = document.createElement('a');
-  a.href = 'https://wa.me/923001234567';
+  a.href = whatsappLink();
   a.target = '_blank';
   a.rel = 'noopener';
   a.className = 'whatsapp-float';
@@ -156,4 +168,15 @@ document.addEventListener('DOMContentLoaded', () => {
   if (footerSlot) footerSlot.innerHTML = renderFooter();
   renderWhatsAppFloat();
   renderBackToTop();
+});
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.password-toggle-btn');
+  if (!btn) return;
+  const input = document.getElementById(btn.dataset.target);
+  if (!input) return;
+  const showing = input.type === 'text';
+  input.type = showing ? 'password' : 'text';
+  btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+  btn.classList.toggle('is-active', !showing);
 });

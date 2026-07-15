@@ -1,23 +1,24 @@
 :root {
-  /* Client-approved "ShopXtra Redesign" palette, matched one-to-one from
-     the supplied design doc. Variable names kept as-is (tea-pink/plum/
-     dusty-rose/gold) to avoid touching every reference site-wide —
-     only the values changed to match the doc's exact hex codes. */
-  --ivory-blush: #F6F8F2;
+  /* Lightened, professional take on the green brand palette — deep
+     forest-green surfaces (nav/footer/buttons) moved to a medium sage
+     tone (not near-black, not pale) per client feedback. Variable names
+     kept as-is (tea-pink/plum/dusty-rose/gold) to avoid touching every
+     reference site-wide — only the values changed. */
+  --ivory-blush: #F7F9F6;
   --paper: #FFFFFF;
-  --tea-pink: #1F4D3A;
-  --plum: #17241D;
-  --dusty-rose: #C7EE5A;
+  --tea-pink: #3C7A5D;
+  --plum: #2E4A3D;
+  --dusty-rose: #8FD19E;
   --sand: #EEF3E8;
   --gold: #E6A935;
-  --muted: #78867D;
+  --muted: #77857C;
   --muted-body: #4C5A52;
   --hairline: #E4E9DF;
   --hairline-strong: #D7E0D1;
-  --ink-hover: #2F7D5B;
+  --ink-hover: #2F6B4E;
   --success-bg: #F6FAF1;
   --success-border: #E0ECD4;
-  --success-dot: #1F4D3A;
+  --success-dot: #3C7A5D;
   --success-text: #3A473F;
 
   /* Category tile tints, matched from the doc (Electrolytes/Coffee/
@@ -36,8 +37,8 @@
   --radius-lg: 1.375rem;
   --radius-md: 1.125rem;
   --radius-sm: 0.75rem;
-  --shadow-soft: 0 14px 30px -14px rgba(31, 77, 58, 0.3);
-  --shadow-soft-lg: 0 24px 44px -26px rgba(31, 77, 58, 0.4);
+  --shadow-soft: 0 14px 30px -14px rgba(46, 74, 61, 0.25);
+  --shadow-soft-lg: 0 24px 44px -26px rgba(46, 74, 61, 0.35);
 }
 
 * {
@@ -52,14 +53,14 @@ body {
 }
 
 h1, h2, h3, h4, .display-serif {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   color: var(--plum);
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 
 .price {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-weight: 700;
 }
 
@@ -77,14 +78,18 @@ a {
   background-color: rgba(246, 248, 242, 0.9);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--hairline);
-  padding: 0.15rem 0;
+  padding: 0;
   position: sticky;
   top: 0;
   z-index: 1030;
 }
 
+.navbar-shopxtra .container {
+  overflow: visible;
+}
+
 .navbar-shopxtra .navbar-brand {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-weight: 700;
   font-size: 1.8rem;
   color: var(--plum);
@@ -92,13 +97,28 @@ a {
 }
 
 .logo-img {
-  height: 116px;
+  height: 60px;
   width: auto;
   transition: height 0.3s ease;
 }
 
 .navbar-shopxtra.is-scrolled .logo-img {
   height: 56px;
+}
+
+@media (min-width: 992px) {
+  .navbar-shopxtra .container {
+    height: 68px;
+    align-items: center;
+  }
+
+  .navbar-shopxtra.is-scrolled .container {
+    height: 56px;
+  }
+
+  .logo-img {
+    height: 150px;
+  }
 }
 
 .logo-img-footer {
@@ -180,16 +200,17 @@ a {
 }
 
 .nav-bag-btn {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
   background: var(--tea-pink);
   color: #fff;
-  border-radius: 999px;
-  padding: 0.55rem 1.1rem;
-  font-weight: 600;
-  font-size: 0.88rem;
-  white-space: nowrap;
+  border-radius: 50%;
+  transition: background 0.2s ease;
 }
 
 .nav-bag-btn:hover {
@@ -198,17 +219,21 @@ a {
 }
 
 #cart-count-badge {
+  position: absolute;
+  top: -3px;
+  right: -3px;
   background: var(--dusty-rose);
   color: #173A2B;
   border-radius: 999px;
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   font-weight: 700;
-  min-width: 20px;
-  height: 20px;
+  min-width: 18px;
+  height: 18px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0 0.35rem;
+  padding: 0 0.3rem;
+  border: 2px solid var(--paper);
 }
 
 /* ---------- Hero ---------- */
@@ -318,7 +343,7 @@ a {
 .product-card {
   background-color: var(--paper);
   border: 1px solid var(--hairline);
-  border-radius: var(--radius-lg);
+  border-radius: 0;
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   height: 100%;
@@ -354,7 +379,7 @@ a {
 .product-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .product-card-badge {
@@ -362,7 +387,7 @@ a {
   top: 0.75rem;
   left: 0.75rem;
   background: var(--tea-pink);
-  color: var(--plum);
+  color: #fff;
   border-radius: 999px;
   padding: 0.3rem 0.75rem;
   font-size: 0.68rem;
@@ -400,7 +425,7 @@ a {
 .product-card .product-name {
   font-size: 1.15rem;
   font-weight: 700;
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   color: var(--plum);
 }
 
@@ -472,7 +497,7 @@ a {
 .admin-thumb img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .filter-panel {
@@ -925,10 +950,41 @@ body:has(.sticky-add-bar.visible) .back-to-top {
   box-shadow: 0 0 0 0.2rem rgba(201, 162, 77, 0.25);
 }
 
+.password-field-wrap {
+  position: relative;
+}
+
+.password-field-wrap .form-control {
+  padding-right: 2.75rem;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  top: 50%;
+  right: 0.6rem;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.password-toggle-btn:hover {
+  color: var(--tea-pink);
+}
+
+.password-toggle-btn.is-active {
+  color: var(--tea-pink);
+}
+
 /* ---------- Footer ---------- */
 footer.site-footer {
-  background-color: #152A20;
-  color: #C7D3C9;
+  background-color: var(--plum);
+  color: #A8BFA3;
   margin-top: 1.5rem;
 }
 
@@ -951,7 +1007,7 @@ footer.site-footer {
 .footer-brand-col p {
   font-size: 0.88rem;
   line-height: 1.6;
-  color: #93A698;
+  color: #A8BFA3;
   max-width: 30ch;
   margin: 0 0 1.1rem;
 }
@@ -961,11 +1017,11 @@ footer.site-footer {
   gap: 1rem;
   flex-wrap: wrap;
   font-size: 0.82rem;
-  color: #93A698;
+  color: #A8BFA3;
 }
 
 .footer-col h4 {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-weight: 600;
   color: #fff;
   font-size: 0.95rem;
@@ -974,7 +1030,7 @@ footer.site-footer {
 
 .footer-col a {
   display: block;
-  color: #C7D3C9;
+  color: #A8BFA3;
   font-size: 0.88rem;
   padding: 0.35rem 0;
   text-decoration: none;
@@ -987,12 +1043,12 @@ footer.site-footer {
 
 .footer-newsletter-col p {
   font-size: 0.88rem;
-  color: #93A698;
+  color: #A8BFA3;
   margin: 0 0 0.75rem;
 }
 
 .footer-bottom-bar {
-  border-top: 1px solid #24382D;
+  border-top: 1px solid #3D5C4C;
   max-width: 1200px;
   margin: 0 auto;
   padding: 1.1rem 1.5rem;
@@ -1116,7 +1172,6 @@ select:focus-visible {
 }
 
 .navbar-shopxtra.is-scrolled {
-  padding: 0.55rem 0;
   box-shadow: 0 8px 24px rgba(74, 59, 58, 0.25);
 }
 
@@ -1361,7 +1416,7 @@ select:focus-visible {
 }
 
 .hero-stat-num {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-weight: 700;
   font-size: 1.3rem;
   color: var(--plum);
@@ -1534,7 +1589,7 @@ select:focus-visible {
 }
 
 .why-card-num {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-weight: 700;
   color: var(--dusty-rose);
   font-size: 0.95rem;
@@ -1695,7 +1750,7 @@ select:focus-visible {
 }
 
 .faq-accordion summary {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-weight: 600;
   font-size: 1.05rem;
   cursor: pointer;
@@ -1710,7 +1765,7 @@ select:focus-visible {
 .faq-accordion summary::after {
   content: '+';
   float: right;
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 1.2rem;
   color: var(--tea-pink);
 }
@@ -1780,7 +1835,7 @@ select:focus-visible {
 }
 
 .import-value-num {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 1.1rem;
   color: var(--tea-pink);
 }
@@ -1894,7 +1949,7 @@ select:focus-visible {
 }
 
 .category-tile-name {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-weight: 600;
   font-size: 1.15rem;
   color: var(--plum);
@@ -1985,7 +2040,7 @@ select:focus-visible {
 }
 
 .bestseller-card-name {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 1.15rem;
   color: var(--plum);
 }
@@ -2044,7 +2099,7 @@ select:focus-visible {
 }
 
 .trust-band-title {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 1.4rem;
   color: var(--plum);
 }
@@ -2118,7 +2173,7 @@ select:focus-visible {
 }
 
 .review-quote {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 1.05rem;
   color: var(--plum);
   margin: 0;
@@ -2173,7 +2228,7 @@ select:focus-visible {
 }
 
 .footer-newsletter-form input::placeholder {
-  color: #93A698;
+  color: #A8BFA3;
 }
 
 .footer-newsletter-form button {
@@ -2291,7 +2346,7 @@ select:focus-visible {
 .pdp-main-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .pdp-thumb-rail {
@@ -2318,7 +2373,7 @@ select:focus-visible {
 .pdp-thumb img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .pdp-info {
@@ -2414,6 +2469,22 @@ select:focus-visible {
   margin: 0;
 }
 
+.pdp-whatsapp-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1F8A4C;
+  text-decoration: none;
+}
+
+.pdp-whatsapp-link:hover {
+  color: #166436;
+  text-decoration: underline;
+}
+
 .pdp-cod-chip {
   display: flex;
   align-items: center;
@@ -2459,7 +2530,7 @@ select:focus-visible {
 .pdp-accordion-item summary::after {
   content: '+';
   float: right;
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 1.3rem;
 }
 
@@ -2514,11 +2585,11 @@ select:focus-visible {
 .pdp-related-thumb img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .pdp-related-name {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 1.05rem;
   color: var(--plum);
 }
@@ -2547,7 +2618,7 @@ select:focus-visible {
 }
 
 .checkout-header-brand {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 1.6rem;
   color: var(--plum);
 }
@@ -2726,7 +2797,7 @@ select:focus-visible {
 .checkout-summary-thumb img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .checkout-summary-item-info {
@@ -2737,7 +2808,7 @@ select:focus-visible {
 }
 
 .checkout-summary-item-name {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 0.95rem;
   color: var(--plum);
 }
@@ -2880,7 +2951,7 @@ select:focus-visible {
 }
 
 .bundle-card-name {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 1.5rem;
   color: var(--plum);
 }
@@ -2953,7 +3024,7 @@ select:focus-visible {
 }
 
 .bundles-how-num {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 1.8rem;
   color: var(--plum);
 }
@@ -2983,7 +3054,7 @@ select:focus-visible {
   align-items: center;
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid var(--hairline);
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 1.4rem;
   color: var(--plum);
 }
@@ -3025,7 +3096,7 @@ select:focus-visible {
 .cart-drawer-thumb img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .cart-drawer-item-info {
@@ -3036,7 +3107,7 @@ select:focus-visible {
 }
 
 .cart-drawer-item-name {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 1rem;
   color: var(--plum);
 }
@@ -3336,7 +3407,7 @@ select:focus-visible {
 }
 
 .admin-sidebar-caption {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 1.1rem;
   color: var(--tea-pink);
 }
@@ -3469,7 +3540,7 @@ select:focus-visible {
 }
 
 .admin-stat-value {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 1.8rem;
   color: var(--plum);
 }
@@ -3604,7 +3675,7 @@ select:focus-visible {
 .admin-edit-image-thumb img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .admin-edit-image-remove {
