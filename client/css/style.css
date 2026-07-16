@@ -120,7 +120,7 @@ a {
   .navbar-shopxtra .container {
     height: 60px;
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     column-gap: 1.25rem;
   }
@@ -144,6 +144,19 @@ a {
     grid-row: 1;
     align-self: center;
     justify-self: start;
+    min-width: 0;
+    max-width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .navbar-shopxtra .navbar-collapse > .navbar-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .navbar-shopxtra .navbar-collapse > .navbar-nav .nav-link {
+    white-space: nowrap;
   }
 
   .navbar-shopxtra .navbar-collapse > .d-flex {
