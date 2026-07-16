@@ -117,16 +117,28 @@ a {
 
 @media (min-width: 992px) {
   .navbar-shopxtra .container {
+    height: 66px;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow: visible;
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-rows: 66px;
     align-items: center;
     column-gap: 1.25rem;
+  }
+
+  .navbar-shopxtra.is-scrolled .container {
+    height: 54px;
+    grid-template-rows: 54px;
   }
 
   .navbar-shopxtra .navbar-brand {
     grid-column: 1;
     grid-row: 1;
     justify-self: start;
+    align-self: flex-end;
+    padding-bottom: 6px;
   }
 
   .navbar-shopxtra .navbar-collapse {
@@ -163,11 +175,11 @@ a {
   }
 
   .logo-img {
-    height: 64px;
+    height: 150px;
   }
 
   .navbar-shopxtra.is-scrolled .logo-img {
-    height: 48px;
+    height: 52px;
   }
 }
 
