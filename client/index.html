@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="/css/vendor/bootstrap.min.css" rel="stylesheet">
-<link href="/css/style.css?v=20260720a" rel="stylesheet">
+<link href="/css/style.css?v=20260720b" rel="stylesheet">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -36,17 +36,15 @@
 
 <div id="navbar-slot"></div>
 
-<div class="modal fade" id="saleBannerModal" tabindex="-1" aria-labelledby="saleBannerModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content sale-banner-modal">
-      <button type="button" class="btn-close sale-banner-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      <div id="sale-banner-image-wrap"></div>
-      <div class="sale-banner-body">
-        <h2 id="saleBannerModalLabel"></h2>
-        <p id="sale-banner-message"></p>
-        <a href="#" id="sale-banner-link" class="btn btn-plum">Shop now</a>
-      </div>
-    </div>
+<div class="promo-toast" id="saleBannerToast" role="region" aria-labelledby="saleBannerToastLabel" aria-hidden="true">
+  <button type="button" class="promo-toast-close" id="sale-banner-close" aria-label="Close">
+    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <div id="sale-banner-image-wrap"></div>
+  <div class="promo-toast-body">
+    <h2 id="saleBannerToastLabel"></h2>
+    <p id="sale-banner-message"></p>
+    <a href="#" id="sale-banner-link" class="btn btn-plum btn-sm">Shop now</a>
   </div>
 </div>
 
@@ -64,13 +62,12 @@
         <div class="hero-stat-row" data-reveal="hero">
           <div class="hero-stat"><span class="hero-stat-num">&#9733; 4.8</span><span class="hero-stat-label">Rated by buyers</span></div>
           <div class="hero-stat-divider"></div>
-          <div class="hero-stat"><span class="hero-stat-num">12,000+</span><span class="hero-stat-label">Orders delivered</span></div>
+          <div class="hero-stat"><span class="hero-stat-num" data-counter="12000" data-counter-suffix="+">0</span><span class="hero-stat-label">Orders delivered</span></div>
           <div class="hero-stat-divider"></div>
           <div class="hero-stat"><span class="hero-stat-num">COD</span><span class="hero-stat-label">Nationwide</span></div>
         </div>
       </div>
       <div class="home-hero-visual" data-reveal="hero">
-        <img src="/assets/hero-photo.jpg" alt="" class="hero-photo" onerror="this.style.display='none'">
         <div class="hero-collage" id="hero-collage"></div>
         <div class="hero-float-badge hero-float-badge-1">
           <div class="hero-float-badge-title">Cheaper than Amazon</div>
@@ -164,10 +161,7 @@
           <p>Curated pairings of our most-loved products — one add to bag, one delivery, one lower price.</p>
           <a href="/pages/bundles.html" class="btn btn-plum">Shop kits &rarr;</a>
         </div>
-        <div class="bundles-band-visual">
-          <img src="/assets/bundle-photo.jpg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
-          <span class="mono">RITUAL BUNDLE SHOT</span>
-        </div>
+        <div class="bundles-band-visual" id="bundles-band-visual"></div>
       </div>
     </div>
   </section>

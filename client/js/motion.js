@@ -106,7 +106,7 @@ function initCounters() {
           value: target,
           duration: 1.4,
           ease: 'power2.out',
-          onUpdate: () => { el.textContent = Math.round(counter.value) + suffix; },
+          onUpdate: () => { el.textContent = Math.round(counter.value).toLocaleString('en-US') + suffix; },
         });
       },
     });
