@@ -33,12 +33,8 @@ function renderNavbar(activePath = '') {
         <div class="collapse navbar-collapse" id="navMain">
           <ul class="navbar-nav mb-2 mb-lg-0">
             <li class="nav-item"><a class="nav-link" href="/pages/shop.html">Shop all</a></li>
-            <li class="nav-item"><a class="nav-link" href="/pages/shop.html?category=electrolytes">Electrolytes</a></li>
-            <li class="nav-item"><a class="nav-link" href="/pages/shop.html?category=coffee">Coffee</a></li>
-            <li class="nav-item"><a class="nav-link" href="/pages/shop.html?category=shampoo">Shampoo</a></li>
-            <li class="nav-item"><a class="nav-link" href="/pages/shop.html?category=soaps">Soaps</a></li>
-            <li class="nav-item"><a class="nav-link" href="/pages/shop.html?category=cosmetics">Cosmetics</a></li>
             <li class="nav-item"><a class="nav-link" href="/pages/bundles.html">Bundles</a></li>
+            <li class="nav-item"><a class="nav-link" href="/pages/about.html">About</a></li>
           </ul>
           <div class="d-flex gap-2 align-items-center position-relative ms-lg-auto">
             <div class="nav-search-wrap position-relative">

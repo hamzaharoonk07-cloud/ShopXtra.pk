@@ -1,3 +1,15 @@
+const CATEGORY_ICONS = {
+  electrolytes: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4c4 6 8 11.5 8 16.5A8 8 0 0 1 8 20.5C8 15.5 12 10 16 4z"/></svg>`,
+  coffee: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 11h16v9a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-9z"/><path d="M22 13h2a3 3 0 0 1 0 6h-2"/><path d="M11 6c0 1.2-1 1.2-1 2.4S11 9.6 11 10.8"/><path d="M16 6c0 1.2-1 1.2-1 2.4S16 9.6 16 10.8"/></svg>`,
+  shampoo: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 6h6v3.5l2 3V26a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2V12.5l2-3V6z"/><path d="M13 6V4h6v2"/><line x1="11" y1="17" x2="21" y2="17"/></svg>`,
+  soaps: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="12" width="22" height="14" rx="5"/><path d="M9 12c0-3 2-5 7-5s7 2 7 5"/></svg>`,
+  cosmetics: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 14h6v10a3 3 0 0 1-3 3a3 3 0 0 1-3-3V14z"/><path d="M14 14V9a2 2 0 0 1 2-2a2 2 0 0 1 2 2v5"/></svg>`,
+};
+
+function categoryIcon(slug) {
+  return CATEGORY_ICONS[slug] || '';
+}
+
 const HOME_CATEGORIES = [
   { slug: 'electrolytes', name: 'Electrolytes', desc: 'Hydration that wakes you up faster than coffee.' },
   { slug: 'coffee', name: 'Coffee', desc: 'Rich roasts and cold brew for the daily ritual.' },
@@ -48,7 +60,7 @@ function renderCategoryGrid() {
   if (!grid) return;
   grid.innerHTML = HOME_CATEGORIES.map((c) => `
     <a href="/pages/shop.html?category=${c.slug}" class="category-tile category-tile-${c.slug}" data-reveal="item">
-      <div class="category-tile-image">${productIllustration(c.slug)}</div>
+      <div class="category-tile-image">${categoryIcon(c.slug)}</div>
       <div class="category-tile-foot">
         <span class="category-tile-name">${c.name}</span>
         <p class="category-tile-desc">${c.desc}</p>
