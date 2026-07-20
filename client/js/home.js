@@ -70,8 +70,20 @@ function renderCategoryGrid() {
   `).join('');
 }
 
+function productCardSkeletonHtml() {
+  return `
+    <div class="product-card-skeleton">
+      <div class="skeleton-block skeleton-image"></div>
+      <div class="skeleton-block skeleton-line" style="width:40%;"></div>
+      <div class="skeleton-block skeleton-line" style="width:75%;"></div>
+      <div class="skeleton-block skeleton-line" style="width:35%;"></div>
+    </div>
+  `;
+}
+
 async function loadBestsellers() {
   const grid = document.getElementById('bestseller-grid');
+  grid.innerHTML = Array(4).fill(productCardSkeletonHtml()).join('');
   try {
     const products = await apiGet('/products?sort=bestseller');
     const top = products.slice(0, 4);

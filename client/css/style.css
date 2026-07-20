@@ -37,8 +37,9 @@
   --radius-lg: 1.375rem;
   --radius-md: 1.125rem;
   --radius-sm: 0.75rem;
-  --shadow-soft: 0 14px 30px -14px rgba(46, 74, 61, 0.25);
-  --shadow-soft-lg: 0 24px 44px -26px rgba(46, 74, 61, 0.35);
+  --shadow-soft: 0 1px 2px rgba(46, 74, 61, 0.06), 0 14px 30px -14px rgba(46, 74, 61, 0.25);
+  --shadow-soft-lg: 0 2px 6px rgba(46, 74, 61, 0.07), 0 24px 44px -26px rgba(46, 74, 61, 0.35);
+  --shadow-lift: 0 1px 2px rgba(46, 74, 61, 0.05), 0 32px 60px -28px rgba(46, 74, 61, 0.4);
 }
 
 * {
@@ -404,6 +405,45 @@ a {
 .product-card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-soft-lg);
+}
+
+.product-card-skeleton {
+  background-color: var(--paper);
+  border: 1px solid var(--hairline);
+  height: 100%;
+  padding: 0 0 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.skeleton-block {
+  background: linear-gradient(90deg, var(--sand) 25%, var(--hairline-strong) 37%, var(--sand) 63%);
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+  border-radius: 6px;
+}
+
+.skeleton-image {
+  aspect-ratio: 1 / 1;
+  border-radius: 0;
+  margin-bottom: 0.3rem;
+}
+
+.skeleton-line {
+  height: 0.9rem;
+  margin: 0 1.1rem;
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-block {
+    animation: none;
+  }
 }
 
 .product-card-link {
@@ -1637,22 +1677,44 @@ select:focus-visible {
 }
 
 .why-card {
+  position: relative;
   border: 1px solid var(--hairline);
   border-radius: var(--radius-md);
-  padding: 1.5rem;
-  background: var(--ivory-blush);
+  padding: 1.65rem 1.5rem 1.5rem;
+  background: var(--paper);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+}
+
+.why-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lift);
+  border-color: transparent;
 }
 
 .why-card-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-family: 'Sora', sans-serif;
   font-weight: 700;
-  color: var(--dusty-rose);
-  font-size: 0.95rem;
+  color: var(--tea-pink);
+  background: var(--sand);
+  font-size: 0.8rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  margin-bottom: 0.9rem;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.why-card:hover .why-card-num {
+  background: var(--tea-pink);
+  color: #fff;
 }
 
 .why-card h3 {
   font-size: 1.15rem;
-  margin: 0.5rem 0 0.4rem;
+  margin: 0 0 0.4rem;
 }
 
 .why-card p {
@@ -1697,9 +1759,9 @@ select:focus-visible {
 }
 
 .value-prop-icon {
-  width: 38px;
-  height: 38px;
-  flex: 0 0 38px;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
   border-radius: 50%;
   background: #2C6249;
   color: var(--dusty-rose);
@@ -1707,6 +1769,18 @@ select:focus-visible {
   align-items: center;
   justify-content: center;
   font-weight: 700;
+  transition: background-color 0.25s ease, transform 0.25s ease;
+}
+
+.value-prop-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.value-prop-item:hover .value-prop-icon {
+  background: var(--dusty-rose);
+  color: #173A2B;
+  transform: scale(1.08);
 }
 
 .value-prop-item h3 {
@@ -1802,9 +1876,23 @@ select:focus-visible {
   border: 1px solid var(--hairline);
   border-radius: var(--radius-md);
   padding: 1.1rem 1.35rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.faq-accordion details:hover {
+  border-color: var(--hairline-strong);
+  box-shadow: var(--shadow-soft);
+}
+
+.faq-accordion details[open] {
+  border-color: var(--tea-pink);
 }
 
 .faq-accordion summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   font-family: 'Sora', sans-serif;
   font-weight: 600;
   font-size: 1.05rem;
@@ -1819,14 +1907,25 @@ select:focus-visible {
 
 .faq-accordion summary::after {
   content: '+';
-  float: right;
+  flex-shrink: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--sand);
   font-family: 'Sora', sans-serif;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: var(--tea-pink);
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 .faq-accordion details[open] summary::after {
   content: '\2212';
+  background: var(--tea-pink);
+  color: #fff;
+  transform: rotate(180deg);
 }
 
 .faq-accordion p {
@@ -2216,6 +2315,7 @@ select:focus-visible {
 }
 
 .review-card-v2 {
+  position: relative;
   background: var(--paper);
   border: 1px solid var(--hairline);
   border-radius: var(--radius-lg);
@@ -2224,6 +2324,31 @@ select:focus-visible {
   flex-direction: column;
   gap: 0.85rem;
   height: 100%;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.review-card-v2:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lift);
+}
+
+.review-card-v2::before {
+  content: '\201C';
+  position: absolute;
+  top: 0.4rem;
+  right: 1.1rem;
+  font-family: 'Sora', sans-serif;
+  font-size: 4.5rem;
+  font-weight: 700;
+  color: var(--sand);
+  line-height: 1;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.review-card-v2 > * {
+  position: relative;
+  z-index: 1;
 }
 
 .review-stars {
