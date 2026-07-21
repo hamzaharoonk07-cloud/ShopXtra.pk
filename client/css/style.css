@@ -49,24 +49,24 @@
 body {
   background-color: var(--ivory-blush);
   color: var(--plum);
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   min-height: 100vh;
 }
 
 h1, h2, h3, h4, .display-serif {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   color: var(--plum);
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 
 .price {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
 }
 
 .mono {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'Montserrat', sans-serif;
 }
 
 a {
@@ -90,12 +90,12 @@ a {
   grid-template-columns: auto 1fr auto;
   align-items: center;
   column-gap: 1rem;
-  padding: 0.6rem 0;
+  padding: 0.3rem 0;
   transition: padding 0.3s ease;
 }
 
 .navbar-shopxtra.is-scrolled .navbar-top {
-  padding: 0.35rem 0;
+  padding: 0.2rem 0;
 }
 
 .navbar-toggler-dm {
@@ -112,17 +112,34 @@ a {
   grid-column: 2;
   justify-self: center;
   padding: 0;
+  line-height: 1;
+}
+
+.navbar-brand-text {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 1.9rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--plum);
+  text-transform: uppercase;
+  transition: font-size 0.3s ease;
+}
+
+.navbar-shopxtra.is-scrolled .navbar-brand-text {
+  font-size: 1.45rem;
 }
 
 .logo-img {
-  height: 52px;
+  height: 66px;
   width: auto;
   transition: height 0.3s ease;
   display: block;
 }
 
 .navbar-shopxtra.is-scrolled .logo-img {
-  height: 40px;
+  height: 52px;
 }
 
 .navbar-top-right {
@@ -137,11 +154,17 @@ a {
   .navbar-toggler-dm {
     display: none;
   }
+  .navbar-brand-text {
+    font-size: 2.6rem;
+  }
+  .navbar-shopxtra.is-scrolled .navbar-brand-text {
+    font-size: 1.9rem;
+  }
   .logo-img {
-    height: 64px;
+    height: 92px;
   }
   .navbar-shopxtra.is-scrolled .logo-img {
-    height: 44px;
+    height: 58px;
   }
 }
 
@@ -381,7 +404,7 @@ a {
 }
 
 .ritual-card .ritual-time {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'Montserrat', sans-serif;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   font-size: 0.75rem;
@@ -398,7 +421,7 @@ a {
   padding: 0.3rem 0.85rem;
   border-radius: 999px;
   font-size: 0.75rem;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'Montserrat', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -678,14 +701,14 @@ a {
 }
 
 .offcanvas-header .h5 {
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 /* ---------- Pills / tabs ---------- */
 .nav-pills .nav-link {
   color: var(--plum);
   border-radius: 999px;
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
@@ -757,7 +780,7 @@ a {
   display: block;
   text-align: center;
   padding: 0.6rem;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.8rem;
   color: var(--gold);
   border-top: 1px solid var(--sand);
@@ -765,14 +788,14 @@ a {
 
 /* ---------- Stats ---------- */
 .stat-number {
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 800;
   font-size: clamp(2rem, 4vw, 2.75rem);
   color: var(--gold);
 }
 
 .stat-label {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -796,7 +819,7 @@ a {
 }
 
 .testimonial-author {
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 600;
   color: var(--plum);
   font-size: 0.9rem;
@@ -812,7 +835,7 @@ a {
 }
 
 .accordion-button {
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 600;
   color: var(--plum);
   background-color: #fff;
@@ -847,7 +870,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   font-size: 1.4rem;
 }
@@ -952,7 +975,7 @@ a {
 }
 
 .value-label {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -1165,7 +1188,7 @@ footer.site-footer {
 }
 
 .footer-col h4 {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 600;
   color: #fff;
   font-size: 0.95rem;
@@ -1276,7 +1299,7 @@ select:focus-visible {
   background-color: #fff;
   color: #c0392b;
   border: 1.5px solid #c0392b;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.7rem;
   font-weight: 600;
   padding: 0.2rem 0.55rem;
@@ -1298,7 +1321,7 @@ select:focus-visible {
   z-index: 2;
   background-color: var(--plum);
   color: var(--gold);
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.65rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -1567,7 +1590,7 @@ select:focus-visible {
 
 .hero-slide-eyebrow {
   display: inline-block;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.78rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1695,7 +1718,7 @@ select:focus-visible {
 }
 
 .hero-stat-num {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   font-size: 1.2rem;
   color: var(--plum);
@@ -1791,7 +1814,7 @@ select:focus-visible {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   color: var(--tea-pink);
   background: var(--sand);
@@ -2037,7 +2060,7 @@ select:focus-visible {
 }
 
 .bundle-visual-plus {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   font-size: 1.4rem;
   color: var(--tea-pink);
@@ -2084,7 +2107,7 @@ select:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 600;
   font-size: 1.05rem;
   cursor: pointer;
@@ -2106,7 +2129,7 @@ select:focus-visible {
   justify-content: center;
   border-radius: 50%;
   background: var(--sand);
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.1rem;
   color: var(--tea-pink);
   transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
@@ -2180,7 +2203,7 @@ select:focus-visible {
 }
 
 .import-value-num {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.1rem;
   color: var(--tea-pink);
 }
@@ -2299,7 +2322,7 @@ select:focus-visible {
 }
 
 .category-tile-name {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 600;
   font-size: 1.15rem;
   color: var(--plum);
@@ -2390,7 +2413,7 @@ select:focus-visible {
 }
 
 .bestseller-card-name {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.15rem;
   color: var(--plum);
 }
@@ -2406,7 +2429,7 @@ select:focus-visible {
   font-weight: 600;
   font-size: 0.95rem;
   color: var(--plum);
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .bestseller-add-btn {
@@ -2449,7 +2472,7 @@ select:focus-visible {
 }
 
 .trust-band-title {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.4rem;
   color: var(--plum);
 }
@@ -2528,7 +2551,7 @@ select:focus-visible {
   position: absolute;
   top: 0.4rem;
   right: 1.1rem;
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 4.5rem;
   font-weight: 700;
   color: var(--sand);
@@ -2549,7 +2572,7 @@ select:focus-visible {
 }
 
 .review-quote {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.05rem;
   color: var(--plum);
   margin: 0;
@@ -2840,7 +2863,7 @@ select:focus-visible {
   font-weight: 600;
   font-size: 1.6rem;
   color: var(--plum);
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .pdp-stock {
@@ -2969,7 +2992,7 @@ select:focus-visible {
 .pdp-accordion-item summary::after {
   content: '+';
   float: right;
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.3rem;
 }
 
@@ -3028,7 +3051,7 @@ select:focus-visible {
 }
 
 .pdp-related-name {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.05rem;
   color: var(--plum);
 }
@@ -3057,7 +3080,7 @@ select:focus-visible {
 }
 
 .checkout-header-brand {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.6rem;
   color: var(--plum);
 }
@@ -3247,7 +3270,7 @@ select:focus-visible {
 }
 
 .checkout-summary-item-name {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.95rem;
   color: var(--plum);
 }
@@ -3390,7 +3413,7 @@ select:focus-visible {
 }
 
 .bundle-card-name {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.5rem;
   color: var(--plum);
 }
@@ -3463,7 +3486,7 @@ select:focus-visible {
 }
 
 .bundles-how-num {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.8rem;
   color: var(--plum);
 }
@@ -3493,13 +3516,13 @@ select:focus-visible {
   align-items: center;
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid var(--hairline);
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.4rem;
   color: var(--plum);
 }
 
 .cart-drawer-count {
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-style: normal;
   font-size: 0.9rem;
   color: var(--muted);
@@ -3546,7 +3569,7 @@ select:focus-visible {
 }
 
 .cart-drawer-item-name {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1rem;
   color: var(--plum);
 }
@@ -3676,7 +3699,7 @@ select:focus-visible {
 }
 
 .order-id-value {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'Montserrat', sans-serif;
   font-size: 2rem;
   font-weight: 600;
   color: #fff;
@@ -3942,7 +3965,7 @@ select:focus-visible {
 }
 
 .admin-sidebar-caption {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.1rem;
   color: var(--tea-pink);
 }
@@ -4075,7 +4098,7 @@ select:focus-visible {
 }
 
 .admin-stat-value {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.8rem;
   color: var(--plum);
 }

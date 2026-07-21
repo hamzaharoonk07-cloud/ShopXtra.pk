@@ -30,7 +30,7 @@ function renderNavbar(activePath = '') {
           </svg>
         </button>
         <a class="navbar-brand" href="/index.html">
-          <img src="/assets/logo-full.png" alt="ShopXtra" class="logo-img">
+          <span class="navbar-brand-text">ShopXtra</span>
         </a>
         <div class="navbar-top-right">
           <a href="/pages/track-order.html" class="nav-icon-btn" aria-label="Track order">

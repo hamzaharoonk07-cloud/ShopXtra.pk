@@ -127,8 +127,8 @@ async function loadProduct() {
       </div>
 
       <div class="py-5" id="pdp-related-section" style="display:none;">
-        <h2 class="mb-4">Pairs well with</h2>
-        <div class="pdp-related-grid" id="pdp-related-grid"></div>
+        <h2 class="text-center mb-4">You may also like</h2>
+        <div class="row g-4" id="pdp-related-grid" data-reveal-group></div>
       </div>
 
       <div class="filter-panel mt-4" data-reveal="up">
@@ -222,18 +222,10 @@ async function loadRelatedProducts(product) {
   const grid = document.getElementById('pdp-related-grid');
   try {
     const products = await apiGet(`/products?category=${encodeURIComponent(product.category)}`);
-    const related = products.filter((p) => p.slug !== product.slug).slice(0, 3);
+    const related = products.filter((p) => p.slug !== product.slug).slice(0, 4);
     if (!related.length) return;
-    grid.innerHTML = related.map((item) => `
-      <a href="/pages/product.html?slug=${encodeURIComponent(item.slug)}" class="pdp-related-card">
-        <div class="pdp-related-thumb">${productMediaHtml(item)}</div>
-        <div class="d-flex flex-column gap-1 min-width-0">
-          <span class="pdp-related-name">${item.name}</span>
-          <span class="pdp-related-price">${formatPrice(item.price)}</span>
-          <span class="pdp-related-add">Add to bag</span>
-        </div>
-      </a>
-    `).join('');
+    grid.innerHTML = related.map(productCardHtml).join('');
+    document.dispatchEvent(new CustomEvent('shopxtra:products-rendered'));
     section.style.display = '';
   } catch {
     // Related products are a nice-to-have; fail silently.
