@@ -127,33 +127,33 @@ function productCardHtml(product) {
   return `
     <div class="col-6 col-md-4 col-lg-3" data-reveal="item">
       <div class="product-card h-100 ${outOfStock ? 'is-out-of-stock' : ''}">
-        <a href="/pages/product.html?slug=${encodeURIComponent(product.slug)}" class="product-card-link">
+        <a href="/pages/product.html?slug=${encodeURIComponent(product.slug)}" class="product-card-media-link">
           <div class="product-image">
             ${productMediaHtml(product)}
             ${outOfStock
               ? '<span class="product-card-badge product-card-badge-muted">Out of stock</span>'
-              : discount ? `<span class="product-card-badge">-${discount}%</span>` : product.is_bestseller ? '<span class="product-card-badge">Bestseller</span>' : ''}
+              : discount ? `<span class="product-card-badge">Save ${discount}%</span>` : product.is_bestseller ? '<span class="product-card-badge">Bestseller</span>' : ''}
             ${lowStock ? `<span class="product-card-urgency">Only ${product.stock} left</span>` : ''}
           </div>
+        </a>
+        <button type="button" class="quick-add-btn" aria-label="${outOfStock ? `${product.name} is out of stock` : `Add ${product.name} to bag`}"
+          data-slug="${product.slug}" data-name="${product.name.replace(/"/g, '&quot;')}"
+          data-price="${product.price}" data-category="${product.category}"
+          data-image="${(product.images && product.images[0]) || ''}"
+          ${outOfStock ? 'disabled' : ''}>${outOfStock ? 'Out of stock' : 'Add to cart'}</button>
+        <a href="/pages/product.html?slug=${encodeURIComponent(product.slug)}" class="product-card-link">
           <div class="product-body">
             <span class="category-tint tint-${product.category}">${categoryLabel(product.category)}</span>
             <div class="product-name">${product.name}</div>
+            <div class="product-card-price-row">
+              <span class="price">${formatPrice(product.price)}</span>
+              ${discount ? `<span class="compare-price">${formatPrice(product.compare_at_price)}</span>` : ''}
+            </div>
             ${Number(product.review_count) > 0 ? `
               <div class="product-card-rating">${starsHtml(product.avg_rating, '0.8rem')}<span class="product-card-rating-count">(${product.review_count})</span></div>
             ` : ''}
           </div>
         </a>
-        <div class="product-card-foot">
-          <span class="price">
-            ${formatPrice(product.price)}
-            ${discount ? `<span class="compare-price">${formatPrice(product.compare_at_price)}</span>` : ''}
-          </span>
-          <button type="button" class="quick-add-btn" aria-label="${outOfStock ? `${product.name} is out of stock` : `Add ${product.name} to bag`}"
-            data-slug="${product.slug}" data-name="${product.name.replace(/"/g, '&quot;')}"
-            data-price="${product.price}" data-category="${product.category}"
-            data-image="${(product.images && product.images[0]) || ''}"
-            ${outOfStock ? 'disabled' : ''}>${outOfStock ? 'Out of stock' : 'Add to bag'}</button>
-        </div>
       </div>
     </div>
   `;

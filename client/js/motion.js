@@ -316,7 +316,7 @@ document.addEventListener('shopxtra:products-rendered', () => {
   if (prefersReducedMotion) return;
   initProductTilt();
   if (typeof gsap !== 'undefined') {
-    gsap.utils.toArray('[data-reveal-group] [data-reveal="item"]').forEach((el) => {
+    gsap.utils.toArray('[data-reveal-group] [data-reveal="item"]:has(.product-card)').forEach((el) => {
       if (el.dataset.revealed) return;
       el.dataset.revealed = 'true';
       gsap.from(el, { opacity: 0, y: 28, scale: 0.96, duration: 0.6, ease: 'back.out(1.4)' });
