@@ -74,7 +74,7 @@ a {
   text-decoration: none;
 }
 
-/* ---------- Navbar ---------- */
+/* ---------- Navbar (darimooch-style 3-tier: logo center, icons right, links row) ---------- */
 .navbar-shopxtra {
   background-color: rgba(246, 248, 242, 0.9);
   backdrop-filter: blur(10px);
@@ -85,23 +85,32 @@ a {
   z-index: 1030;
 }
 
-.navbar-shopxtra .container {
-  padding-top: 0.3rem;
-  padding-bottom: 0.3rem;
+.navbar-top {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
+  column-gap: 1rem;
+  padding: 0.6rem 0;
   transition: padding 0.3s ease;
 }
 
-.navbar-shopxtra.is-scrolled .container {
-  padding-top: 0.2rem;
-  padding-bottom: 0.2rem;
+.navbar-shopxtra.is-scrolled .navbar-top {
+  padding: 0.35rem 0;
 }
 
-.navbar-shopxtra .navbar-brand {
-  font-family: 'Sora', sans-serif;
-  font-weight: 700;
-  font-size: 1.8rem;
+.navbar-toggler-dm {
+  grid-column: 1;
+  background: none;
+  border: none;
   color: var(--plum);
+  padding: 0.4rem;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-brand {
+  grid-column: 2;
+  justify-self: center;
   padding: 0;
 }
 
@@ -113,62 +122,26 @@ a {
 }
 
 .navbar-shopxtra.is-scrolled .logo-img {
-  height: 38px;
+  height: 40px;
+}
+
+.navbar-top-right {
+  grid-column: 3;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 @media (min-width: 992px) {
-  .navbar-shopxtra .container {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    column-gap: 1.25rem;
-  }
-
-  .navbar-shopxtra .navbar-brand {
-    grid-column: 1;
-    grid-row: 1;
-    justify-self: start;
-  }
-
-  .navbar-shopxtra .navbar-collapse {
-    display: contents !important;
-  }
-
-  .navbar-shopxtra .navbar-collapse > .navbar-nav {
-    grid-column: 2;
-    grid-row: 1;
-    align-self: center;
-    justify-self: start;
-    min-width: 0;
-    max-width: 100%;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .navbar-shopxtra .navbar-collapse > .navbar-nav::-webkit-scrollbar {
+  .navbar-toggler-dm {
     display: none;
   }
-
-  .navbar-shopxtra .navbar-collapse > .navbar-nav .nav-link {
-    white-space: nowrap;
-  }
-
-  .navbar-shopxtra .navbar-collapse > .d-flex {
-    grid-column: 3;
-    grid-row: 1;
-    align-self: center;
-    justify-self: end;
-    min-width: 0;
-    max-width: 100%;
-  }
-
   .logo-img {
-    height: 76px;
+    height: 64px;
   }
-
   .navbar-shopxtra.is-scrolled .logo-img {
-    height: 46px;
+    height: 44px;
   }
 }
 
@@ -176,32 +149,22 @@ a {
   height: 110px;
 }
 
-.navbar-shopxtra .navbar-nav {
-  gap: 0.15rem;
-  margin-right: 1rem;
+/* search row: hidden until the search icon toggles it open */
+.navbar-search-row {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  border-top: 1px solid transparent;
 }
 
-.navbar-shopxtra .nav-link {
-  color: #3A473F;
-  font-weight: 500;
-  font-size: 0.92rem;
-  padding: 0.5rem 0.7rem;
-  border-radius: 0.5rem;
-  white-space: nowrap;
-  transition: background-color 0.2s ease, color 0.2s ease;
+.navbar-search-row.is-open {
+  max-height: 84px;
+  border-top-color: var(--hairline);
 }
 
-@media (min-width: 992px) and (max-width: 1400px) {
-  .navbar-shopxtra .nav-link {
-    padding: 0.5rem 0.5rem;
-    font-size: 0.85rem;
-  }
-}
-
-.navbar-shopxtra .nav-link:hover,
-.navbar-shopxtra .nav-link:focus-visible {
-  background-color: var(--sand);
-  color: var(--plum);
+.navbar-search-row .container {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
 }
 
 .nav-search-wrap {
@@ -211,10 +174,9 @@ a {
   background: #fff;
   border: 1px solid var(--hairline);
   border-radius: 999px;
-  padding: 0.5rem 0.9rem;
-  min-width: 160px;
-  max-width: 220px;
-  flex: 1;
+  padding: 0.55rem 1rem;
+  max-width: 420px;
+  margin: 0 auto;
 }
 
 .nav-search-icon {
@@ -226,9 +188,66 @@ a {
   border: none;
   outline: none;
   background: none;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   width: 100%;
   color: var(--plum);
+}
+
+/* centered links row, matching darimooch's second nav tier */
+.navbar-links-collapse {
+  border-top: 1px solid var(--hairline);
+}
+
+.navbar-links-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0.6rem 0;
+}
+
+.navbar-links-row a {
+  display: inline-block;
+  color: #3A473F;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.navbar-links-row a:hover,
+.navbar-links-row a:focus-visible {
+  background-color: var(--sand);
+  color: var(--plum);
+}
+
+@media (min-width: 992px) {
+  .navbar-links-collapse {
+    display: block !important;
+    height: auto !important;
+    visibility: visible !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .navbar-links-row {
+    justify-content: flex-start;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+  .navbar-links-row::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .nav-icon-btn {
@@ -392,11 +411,11 @@ a {
 
 /* ---------- Product cards ---------- */
 .product-card {
-  background-color: var(--paper);
-  border: 1px solid var(--hairline);
+  background-color: transparent;
+  border: none;
   border-radius: 0;
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: visible;
+  transition: transform 0.2s ease;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -404,7 +423,6 @@ a {
 
 .product-card:hover {
   transform: translateY(-4px);
-  box-shadow: var(--shadow-soft-lg);
 }
 
 .product-card-skeleton {

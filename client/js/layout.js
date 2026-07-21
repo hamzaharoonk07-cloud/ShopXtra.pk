@@ -21,51 +21,66 @@ function renderAnnouncementBar() {
 function renderNavbar(activePath = '') {
   return `
     ${renderAnnouncementBar()}
-    <nav class="navbar navbar-expand-lg navbar-shopxtra">
-      <div class="container">
+    <nav class="navbar-shopxtra">
+      <div class="navbar-top container">
+        <button class="navbar-toggler-dm" type="button" data-bs-toggle="collapse" data-bs-target="#navLinksRow"
+          aria-controls="navLinksRow" aria-expanded="false" aria-label="Toggle navigation">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
         <a class="navbar-brand" href="/index.html">
           <img src="/assets/logo-full.png" alt="ShopXtra" class="logo-img">
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain"
-          aria-controls="navMain" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navMain">
-          <ul class="navbar-nav mb-2 mb-lg-0">
-            <li class="nav-item"><a class="nav-link" href="/pages/shop.html">Shop all</a></li>
-            <li class="nav-item"><a class="nav-link" href="/pages/shop.html?category=electrolytes">Electrolytes</a></li>
-            <li class="nav-item"><a class="nav-link" href="/pages/shop.html?category=coffee">Coffee</a></li>
-            <li class="nav-item"><a class="nav-link" href="/pages/shop.html?category=shampoo">Shampoo</a></li>
-            <li class="nav-item"><a class="nav-link" href="/pages/shop.html?category=soaps">Soaps</a></li>
-            <li class="nav-item"><a class="nav-link" href="/pages/shop.html?category=cosmetics">Cosmetics</a></li>
-            <li class="nav-item"><a class="nav-link" href="/pages/bundles.html">Bundles</a></li>
-          </ul>
-          <div class="d-flex gap-2 align-items-center position-relative ms-lg-auto">
-            <div class="nav-search-wrap position-relative">
-              <span class="nav-search-icon" aria-hidden="true">&#8981;</span>
-              <input type="search" id="nav-search-input" placeholder="Search products"
-                aria-label="Search products" autocomplete="off">
-              <div id="nav-search-results" class="d-none"></div>
-            </div>
-            <a href="/pages/track-order.html" class="nav-icon-btn" aria-label="Track order">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <rect x="1" y="6" width="14" height="11" rx="1.5"/><path d="M15 10h4l3 3.5V17h-7z"/><circle cx="6.5" cy="19" r="1.6"/><circle cx="17.5" cy="19" r="1.6"/>
-              </svg>
-            </a>
-            <a href="/pages/account.html" class="nav-icon-btn" aria-label="Account">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="12" cy="8" r="4"/>
-                <path d="M4 20c0-4 3.5-6.5 8-6.5s8 2.5 8 6.5"/>
-              </svg>
-            </a>
-            <a href="/pages/cart.html" class="nav-bag-btn" aria-label="Cart">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-              </svg>
-              <span id="cart-count-badge">0</span>
-            </a>
+        <div class="navbar-top-right">
+          <a href="/pages/track-order.html" class="nav-icon-btn" aria-label="Track order">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="1" y="6" width="14" height="11" rx="1.5"/><path d="M15 10h4l3 3.5V17h-7z"/><circle cx="6.5" cy="19" r="1.6"/><circle cx="17.5" cy="19" r="1.6"/>
+            </svg>
+          </a>
+          <a href="/pages/account.html" class="nav-icon-btn" aria-label="Account">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 20c0-4 3.5-6.5 8-6.5s8 2.5 8 6.5"/>
+            </svg>
+          </a>
+          <button type="button" class="nav-icon-btn" id="nav-search-toggle" aria-label="Search" aria-expanded="false" aria-controls="navSearchRow">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
+            </svg>
+          </button>
+          <a href="/pages/cart.html" class="nav-bag-btn" aria-label="Cart">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <span id="cart-count-badge">0</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="navbar-search-row" id="navSearchRow">
+        <div class="container">
+          <div class="nav-search-wrap position-relative">
+            <span class="nav-search-icon" aria-hidden="true">&#8981;</span>
+            <input type="search" id="nav-search-input" placeholder="Search products"
+              aria-label="Search products" autocomplete="off">
+            <div id="nav-search-results" class="d-none"></div>
           </div>
+        </div>
+      </div>
+
+      <div class="collapse navbar-links-collapse" id="navLinksRow">
+        <div class="container">
+          <ul class="navbar-links-row">
+            <li><a href="/pages/shop.html">Shop all</a></li>
+            <li><a href="/pages/shop.html?category=electrolytes">Electrolytes</a></li>
+            <li><a href="/pages/shop.html?category=coffee">Coffee</a></li>
+            <li><a href="/pages/shop.html?category=shampoo">Shampoo</a></li>
+            <li><a href="/pages/shop.html?category=soaps">Soaps</a></li>
+            <li><a href="/pages/shop.html?category=cosmetics">Cosmetics</a></li>
+            <li><a href="/pages/bundles.html">Bundles</a></li>
+          </ul>
         </div>
       </div>
     </nav>
@@ -160,6 +175,17 @@ function renderBackToTop() {
   onScroll();
 }
 
+function initNavSearchToggle() {
+  const toggle = document.getElementById('nav-search-toggle');
+  const row = document.getElementById('navSearchRow');
+  if (!toggle || !row) return;
+  toggle.addEventListener('click', () => {
+    const open = row.classList.toggle('is-open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) row.querySelector('#nav-search-input')?.focus();
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const navSlot = document.getElementById('navbar-slot');
   const footerSlot = document.getElementById('footer-slot');
@@ -167,6 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (footerSlot) footerSlot.innerHTML = renderFooter();
   renderWhatsAppFloat();
   renderBackToTop();
+  initNavSearchToggle();
 });
 
 document.addEventListener('click', (e) => {
