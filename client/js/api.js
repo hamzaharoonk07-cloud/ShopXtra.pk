@@ -123,6 +123,7 @@ function saleDiscountPercent(product) {
 function productCardHtml(product) {
   const discount = saleDiscountPercent(product);
   const outOfStock = product.stock <= 0;
+  const lowStock = !outOfStock && Number(product.stock) <= 5;
   return `
     <div class="col-6 col-md-4 col-lg-3" data-reveal="item">
       <div class="product-card h-100 ${outOfStock ? 'is-out-of-stock' : ''}">
@@ -132,6 +133,7 @@ function productCardHtml(product) {
             ${outOfStock
               ? '<span class="product-card-badge product-card-badge-muted">Out of stock</span>'
               : discount ? `<span class="product-card-badge">-${discount}%</span>` : product.is_bestseller ? '<span class="product-card-badge">Bestseller</span>' : ''}
+            ${lowStock ? `<span class="product-card-urgency">Only ${product.stock} left</span>` : ''}
           </div>
           <div class="product-body">
             <span class="category-tint tint-${product.category}">${categoryLabel(product.category)}</span>

@@ -496,6 +496,18 @@ a {
   color: var(--ivory-blush);
 }
 
+.product-card-urgency {
+  position: absolute;
+  bottom: 0.6rem;
+  left: 0.6rem;
+  background: var(--gold);
+  color: #4A3305;
+  border-radius: 999px;
+  padding: 0.28rem 0.7rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
 .product-card.is-out-of-stock .product-image {
   opacity: 0.55;
   filter: grayscale(0.4);
@@ -2654,6 +2666,11 @@ select:focus-visible {
 .pdp-stock {
   font-size: 0.85rem;
   color: var(--muted);
+}
+
+.pdp-stock-urgent {
+  color: #966B0A;
+  font-weight: 600;
 }
 
 .pdp-desc {

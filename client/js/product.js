@@ -67,7 +67,7 @@ async function loadProduct() {
           <div class="pdp-stars-row" id="reviews-summary-inline"></div>
           <div class="pdp-price-row">
             <span class="pdp-price" id="product-price">${formatPrice(product.price)}</span>
-            <span class="pdp-stock">${product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}</span>
+            <span class="pdp-stock${product.stock > 0 && product.stock <= 5 ? ' pdp-stock-urgent' : ''}">${product.stock > 0 ? (product.stock <= 5 ? `Only ${product.stock} left — order soon` : `${product.stock} in stock`) : 'Out of stock'}</span>
           </div>
           <p class="pdp-desc">${product.description || ''}</p>
 
