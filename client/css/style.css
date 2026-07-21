@@ -2505,32 +2505,42 @@ select:focus-visible {
 }
 
 /* ---------- Shop listing controls ---------- */
+.shop-banner {
+  background: linear-gradient(135deg, var(--plum), #1F332A 85%);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.75rem, 4vw, 2.75rem) clamp(1.5rem, 4vw, 2.5rem);
+  margin-bottom: 2rem;
+}
+
 .shop-breadcrumb {
   font-size: 0.85rem;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.6);
   margin-bottom: 0.75rem;
 }
 
 .shop-breadcrumb a {
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .shop-title-row {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 1.25rem;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
 
 .shop-title-row h1 {
   font-size: clamp(2rem, 4vw, 3rem);
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .shop-count {
   font-size: 0.9rem;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.65);
 }
 
 .shop-controls-row {
