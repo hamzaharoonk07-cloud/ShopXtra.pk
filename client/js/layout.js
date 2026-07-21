@@ -23,15 +23,28 @@ function renderNavbar(activePath = '') {
     ${renderAnnouncementBar()}
     <nav class="navbar-shopxtra">
       <div class="navbar-top container">
+        <a class="navbar-brand" href="/index.html">
+          <img src="/assets/logo-full.png" alt="ShopXtra" class="logo-img">
+        </a>
+
         <button class="navbar-toggler-dm" type="button" data-bs-toggle="collapse" data-bs-target="#navLinksRow"
           aria-controls="navLinksRow" aria-expanded="false" aria-label="Toggle navigation">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
             <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
           </svg>
         </button>
-        <a class="navbar-brand" href="/index.html">
-          <span class="navbar-brand-text">ShopXtra</span>
-        </a>
+
+        <div class="collapse navbar-links-collapse" id="navLinksRow">
+          <ul class="navbar-links-row">
+            <li><a href="/pages/shop.html">Shop all</a></li>
+            <li><a href="/pages/shop.html?category=electrolytes">Electrolytes</a></li>
+            <li><a href="/pages/shop.html?category=coffee">Coffee</a></li>
+            <li><a href="/pages/shop.html?category=shampoo">Shampoo</a></li>
+            <li><a href="/pages/shop.html?category=cosmetics">Cosmetics</a></li>
+            <li><a href="/pages/bundles.html">Bundles</a></li>
+          </ul>
+        </div>
+
         <div class="navbar-top-right">
           <a href="/pages/track-order.html" class="nav-icon-btn" aria-label="Track order">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -67,20 +80,6 @@ function renderNavbar(activePath = '') {
               aria-label="Search products" autocomplete="off">
             <div id="nav-search-results" class="d-none"></div>
           </div>
-        </div>
-      </div>
-
-      <div class="collapse navbar-links-collapse" id="navLinksRow">
-        <div class="container">
-          <ul class="navbar-links-row">
-            <li><a href="/pages/shop.html">Shop all</a></li>
-            <li><a href="/pages/shop.html?category=electrolytes">Electrolytes</a></li>
-            <li><a href="/pages/shop.html?category=coffee">Coffee</a></li>
-            <li><a href="/pages/shop.html?category=shampoo">Shampoo</a></li>
-            <li><a href="/pages/shop.html?category=soaps">Soaps</a></li>
-            <li><a href="/pages/shop.html?category=cosmetics">Cosmetics</a></li>
-            <li><a href="/pages/bundles.html">Bundles</a></li>
-          </ul>
         </div>
       </div>
     </nav>

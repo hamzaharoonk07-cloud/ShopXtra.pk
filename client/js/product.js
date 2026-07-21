@@ -131,11 +131,11 @@ async function loadProduct() {
         <div class="row g-4" id="pdp-related-grid" data-reveal-group></div>
       </div>
 
-      <div class="filter-panel mt-4" data-reveal="up">
-        <h2 class="h4 mb-3">Reviews</h2>
+      <div class="my-5 reviews-section-pdp" data-reveal="up">
+        <h2 class="text-center mb-4">Customer Reviews</h2>
         <div id="reviews-summary" class="mb-4"><p style="color:#6b5a58;">Loading reviews…</p></div>
         <div id="review-form-slot"></div>
-        <div id="reviews-list"></div>
+        <div class="review-grid" id="reviews-list" data-reveal-group></div>
       </div>
     `;
 
@@ -290,6 +290,48 @@ function updateProductSeo(product, slug) {
   });
 }
 
+function animateReviewsSection() {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion || typeof gsap === 'undefined') return;
+
+  const section = document.querySelector('.reviews-section-pdp');
+  if (!section) return;
+
+  const bars = gsap.utils.toArray('.reviews-bar-fill');
+  const cards = gsap.utils.toArray('.review-card-v2');
+
+  ScrollTrigger.create({
+    trigger: section,
+    start: 'top 85%',
+    once: true,
+    onEnter: () => {
+      bars.forEach((bar, i) => {
+        gsap.to(bar, {
+          width: `${bar.dataset.pct}%`,
+          duration: 0.8,
+          delay: i * 0.08,
+          ease: 'power2.out',
+        });
+      });
+      if (cards.length) {
+        gsap.set(cards, { opacity: 0, y: 28, scale: 0.96 });
+        gsap.to(cards, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'back.out(1.4)',
+        });
+      }
+    },
+  });
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => ScrollTrigger.refresh());
+  }
+}
+
 async function loadReviews(slug) {
   const summaryEl = document.getElementById('reviews-summary');
   const listEl = document.getElementById('reviews-list');
@@ -298,9 +340,32 @@ async function loadReviews(slug) {
   try {
     const { reviews, average, count } = await apiGet(`/products/${encodeURIComponent(slug)}/reviews`);
 
-    summaryEl.innerHTML = count > 0
-      ? `<div class="d-flex align-items-center gap-2">${starsHtml(average, '1.3rem')}<span class="fw-semibold">${average}</span><span style="color:#6b5a58;">(${count} review${count === 1 ? '' : 's'})</span></div>`
-      : '<p style="color:#6b5a58;">No reviews yet — be the first.</p>';
+    if (count > 0) {
+      const breakdown = [5, 4, 3, 2, 1].map((star) => {
+        const starCount = reviews.filter((r) => r.rating === star).length;
+        const pct = Math.round((starCount / count) * 100);
+        return `
+          <div class="reviews-bar-row">
+            <span>${star} star</span>
+            <span class="reviews-bar-track"><span class="reviews-bar-fill" data-pct="${pct}" style="width:0%"></span></span>
+            <span>${starCount}</span>
+          </div>
+        `;
+      }).join('');
+
+      summaryEl.innerHTML = `
+        <div class="reviews-overview" id="reviews-summary-anchor">
+          <div class="reviews-overview-score">
+            <span class="reviews-overview-score-num">${average}</span>
+            ${starsHtml(average, '1.1rem')}
+            <span class="reviews-overview-score-count">Based on ${count} review${count === 1 ? '' : 's'}</span>
+          </div>
+          <div class="reviews-overview-bars">${breakdown}</div>
+        </div>
+      `;
+    } else {
+      summaryEl.innerHTML = '<p class="text-center" style="color:#6b5a58;">No reviews yet — be the first.</p>';
+    }
 
     const inlineEl = document.getElementById('reviews-summary-inline');
     if (inlineEl) {
@@ -310,14 +375,20 @@ async function loadReviews(slug) {
     }
 
     listEl.innerHTML = reviews.map((r) => `
-      <div class="py-3 border-bottom">
-        <div class="d-flex justify-content-between align-items-center">
-          <span class="fw-semibold">${r.user_name}</span>
-          ${starsHtml(r.rating, '0.85rem')}
+      <div class="review-card-v2" data-reveal="item">
+        <span class="review-stars">${starsHtml(r.rating)}</span>
+        ${r.comment ? `<p class="review-quote">"${r.comment}"</p>` : ''}
+        <div class="review-author-row">
+          <span class="review-avatar">${(r.user_name || '?').charAt(0).toUpperCase()}</span>
+          <div class="d-flex flex-column">
+            <span class="review-author-name">${r.user_name}</span>
+            <span class="review-author-meta">Verified buyer · ${new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+          </div>
         </div>
-        ${r.comment ? `<p class="mb-0 mt-1" style="color:#6b5a58;">${r.comment}</p>` : ''}
       </div>
     `).join('');
+
+    animateReviewsSection();
 
     const meRes = await fetch('/api/auth/me');
     if (meRes.ok) {
