@@ -19,15 +19,15 @@ const HOME_CATEGORIES = [
 ];
 
 async function showSaleBannerIfAny() {
-  const modalEl = document.getElementById('saleBannerModal');
-  if (!modalEl) return;
+  const toastEl = document.getElementById('saleBannerToast');
+  if (!toastEl) return;
   try {
     const banner = await apiGet('/banner/active');
     if (!banner) return;
     const dismissKey = `shopxtra_banner_dismissed_${banner.id}`;
     if (sessionStorage.getItem(dismissKey)) return;
 
-    document.getElementById('saleBannerModalLabel').textContent = banner.title;
+    document.getElementById('saleBannerToastLabel').textContent = banner.title;
     document.getElementById('sale-banner-message').textContent = banner.message || '';
     const imageWrap = document.getElementById('sale-banner-image-wrap');
     imageWrap.innerHTML = banner.image_url ? `<img src="${banner.image_url}" alt="${banner.title}">` : '';
@@ -39,20 +39,116 @@ async function showSaleBannerIfAny() {
       linkEl.classList.add('d-none');
     }
 
-    const modal = new bootstrap.Modal(modalEl);
-    modalEl.addEventListener('hidden.bs.modal', () => sessionStorage.setItem(dismissKey, '1'), { once: true });
-    modal.show();
+    const dismiss = () => {
+      toastEl.classList.remove('visible');
+      toastEl.setAttribute('aria-hidden', 'true');
+      sessionStorage.setItem(dismissKey, '1');
+    };
+    document.getElementById('sale-banner-close').addEventListener('click', dismiss, { once: true });
+
+    // Non-blocking: no backdrop, no scroll lock. Reveal only once the hero (and its
+    // primary CTAs) has scrolled out of view, so the toast never sits on top of them.
+    const reveal = () => {
+      toastEl.classList.add('visible');
+      toastEl.setAttribute('aria-hidden', 'false');
+    };
+    const heroEl = document.querySelector('.home-hero');
+    if (heroEl && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        if (!entries[0].isIntersecting) {
+          reveal();
+          observer.disconnect();
+        }
+      }, { threshold: 0 });
+      observer.observe(heroEl);
+    } else {
+      setTimeout(reveal, 1400);
+    }
   } catch {
     // No active banner or request failed; fail silently.
   }
 }
 
-function renderHeroCollage() {
-  const el = document.getElementById('hero-collage');
+function initHeroCarousel() {
+  const track = document.getElementById('hero-carousel-track');
+  const carousel = document.getElementById('hero-carousel');
+  const dotsWrap = document.getElementById('hero-carousel-dots');
+  const prevBtn = document.getElementById('hero-prev');
+  const nextBtn = document.getElementById('hero-next');
+  if (!track || !carousel) return;
+
+  document.querySelectorAll('.hero-slide-icon[data-icon]').forEach((el) => {
+    el.innerHTML = categoryIcon(el.dataset.icon);
+  });
+
+  const slides = Array.from(track.children);
+  const dots = dotsWrap ? Array.from(dotsWrap.children) : [];
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let index = 0;
+  let timer = null;
+
+  function goTo(i) {
+    index = (i + slides.length) % slides.length;
+    track.style.transform = `translateX(-${index * 100}%)`;
+    dots.forEach((d, di) => {
+      d.classList.toggle('active', di === index);
+      d.setAttribute('aria-selected', di === index ? 'true' : 'false');
+    });
+  }
+  function next() { goTo(index + 1); }
+  function prev() { goTo(index - 1); }
+
+  function stopAutoplay() {
+    if (timer) clearInterval(timer);
+    timer = null;
+  }
+  function startAutoplay() {
+    if (prefersReducedMotion || slides.length < 2) return;
+    stopAutoplay();
+    timer = setInterval(next, 5500);
+  }
+
+  prevBtn?.addEventListener('click', () => { prev(); startAutoplay(); });
+  nextBtn?.addEventListener('click', () => { next(); startAutoplay(); });
+  dots.forEach((dot, di) => dot.addEventListener('click', () => { goTo(di); startAutoplay(); }));
+
+  carousel.addEventListener('mouseenter', stopAutoplay);
+  carousel.addEventListener('mouseleave', startAutoplay);
+  carousel.addEventListener('focusin', stopAutoplay);
+  carousel.addEventListener('focusout', startAutoplay);
+
+  carousel.setAttribute('tabindex', '0');
+  carousel.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') { prev(); startAutoplay(); }
+    if (e.key === 'ArrowRight') { next(); startAutoplay(); }
+  });
+
+  let touchStartX = null;
+  carousel.addEventListener('pointerdown', (e) => { touchStartX = e.clientX; });
+  carousel.addEventListener('pointerup', (e) => {
+    if (touchStartX === null) return;
+    const delta = e.clientX - touchStartX;
+    touchStartX = null;
+    if (Math.abs(delta) < 40) return;
+    if (delta < 0) next(); else prev();
+    startAutoplay();
+  });
+
+  goTo(0);
+  startAutoplay();
+}
+
+function renderBundlesVisual() {
+  const el = document.getElementById('bundles-band-visual');
   if (!el) return;
-  el.innerHTML = HOME_CATEGORIES.map((c, i) => `
-    <div class="hero-collage-tile t${i + 1}">${productIllustration(c.slug)}</div>
-  `).join('');
+  el.innerHTML = `
+    <div class="bundle-visual-pair">
+      <div class="bundle-visual-item">${productIllustration('shampoo')}</div>
+      <span class="bundle-visual-plus">+</span>
+      <div class="bundle-visual-item">${productIllustration('electrolytes')}</div>
+    </div>
+    <span class="mono bundle-visual-label">Midday Ritual Bundle</span>
+  `;
 }
 
 function renderCategoryGrid() {
@@ -120,7 +216,8 @@ document.addEventListener('submit', async (e) => {
   }
 });
 
-renderHeroCollage();
+initHeroCarousel();
 renderCategoryGrid();
+renderBundlesVisual();
 loadBestsellers();
 showSaleBannerIfAny();

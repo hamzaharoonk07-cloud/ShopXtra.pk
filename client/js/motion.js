@@ -117,7 +117,7 @@ function initGsapAnimations() {
   if (typeof gsap === 'undefined') return;
   gsap.registerPlugin(ScrollTrigger);
 
-  const heroTargets = gsap.utils.toArray('.hero [data-reveal="hero"], .sale-hero [data-reveal="hero"]');
+  const heroTargets = gsap.utils.toArray('[data-reveal="hero"]');
   if (heroTargets.length) {
     gsap.set(heroTargets, { opacity: 0, y: 34, scale: 0.97 });
     gsap.to(heroTargets, {
@@ -174,6 +174,57 @@ function initGsapAnimations() {
     document.fonts.ready.then(() => ScrollTrigger.refresh());
   }
   window.addEventListener('load', () => ScrollTrigger.refresh());
+}
+
+function initFaqAccordion() {
+  if (typeof gsap === 'undefined') return;
+  document.querySelectorAll('.faq-accordion details').forEach((details) => {
+    if (details.dataset.faqBound) return;
+    details.dataset.faqBound = 'true';
+    const summary = details.querySelector('summary');
+    const content = details.querySelector('p');
+    if (!summary || !content) return;
+    let animating = false;
+
+    summary.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (animating) return;
+      animating = true;
+
+      if (details.open) {
+        gsap.to(content, {
+          height: 0,
+          opacity: 0,
+          marginTop: 0,
+          duration: 0.26,
+          ease: 'power2.inOut',
+          onComplete: () => {
+            details.open = false;
+            gsap.set(content, { clearProps: 'height,opacity,marginTop,overflow' });
+            animating = false;
+          },
+        });
+      } else {
+        details.open = true;
+        const targetHeight = content.scrollHeight;
+        gsap.fromTo(
+          content,
+          { height: 0, opacity: 0, marginTop: 0, overflow: 'hidden' },
+          {
+            height: targetHeight,
+            opacity: 1,
+            marginTop: '0.75rem',
+            duration: 0.32,
+            ease: 'power2.out',
+            onComplete: () => {
+              gsap.set(content, { clearProps: 'height,opacity,marginTop,overflow' });
+              animating = false;
+            },
+          }
+        );
+      }
+    });
+  });
 }
 
 function initProductTilt() {
@@ -258,6 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initGsapAnimations();
   initProductTilt();
   initMagneticButtons();
+  initFaqAccordion();
 });
 
 document.addEventListener('shopxtra:products-rendered', () => {
