@@ -1606,6 +1606,31 @@ select:focus-visible {
   background: linear-gradient(135deg, var(--tea-pink), var(--ink-hover) 85%);
 }
 
+.hero-slide-coffee {
+  background: #1a1310;
+}
+
+.hero-slide-photo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-slide-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  display: block;
+}
+
+.hero-slide-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(10, 7, 5, 0.88) 0%, rgba(10, 7, 5, 0.62) 42%, rgba(10, 7, 5, 0.18) 75%);
+}
+
 .hero-slide-icon {
   position: absolute;
   right: -6%;
