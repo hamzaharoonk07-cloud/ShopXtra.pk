@@ -4077,6 +4077,7 @@ select:focus-visible {
   position: sticky;
   top: 0;
   height: 100vh;
+  overflow-y: auto;
 }
 
 .admin-sidebar-brand {
@@ -4375,6 +4376,46 @@ select:focus-visible {
   color: #fff;
   border: none;
   font-size: 0.7rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-image-preview-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+}
+
+.admin-image-preview-thumb {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--sand);
+  border: 1.5px solid var(--tea-pink);
+}
+
+.admin-image-preview-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.admin-image-preview-remove {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(28, 35, 29, 0.75);
+  color: #fff;
+  border: none;
+  font-size: 0.65rem;
   line-height: 1;
   display: flex;
   align-items: center;

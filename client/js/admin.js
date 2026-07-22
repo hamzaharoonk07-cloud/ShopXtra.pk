@@ -12,10 +12,47 @@ document.querySelectorAll('#admin-tabs [data-tab]').forEach((btn) => {
   });
 });
 
+initImagePreview('np-image', 'np-image-preview');
+initImagePreview('ep-new-images', 'ep-new-images-preview');
+
 document.getElementById('logout-btn').addEventListener('click', async () => {
   await fetch('/api/auth/logout', { method: 'POST' });
   window.location.href = '/pages/account.html';
 });
+
+function initImagePreview(inputId, previewId) {
+  const input = document.getElementById(inputId);
+  const preview = document.getElementById(previewId);
+  if (!input || !preview) return;
+
+  input.addEventListener('change', () => {
+    preview.innerHTML = '';
+    const files = [...input.files];
+    if (!files.length) return;
+
+    files.forEach((file, i) => {
+      const url = URL.createObjectURL(file);
+      const thumb = document.createElement('div');
+      thumb.className = 'admin-image-preview-thumb';
+      thumb.innerHTML = `
+        <img src="${url}" alt="Preview">
+        <button type="button" class="admin-image-preview-remove" aria-label="Remove this image">&times;</button>
+      `;
+      thumb.querySelector('.admin-image-preview-remove').addEventListener('click', () => {
+        const dt = new DataTransfer();
+        [...input.files].forEach((f, fi) => { if (fi !== i) dt.items.add(f); });
+        input.files = dt.files;
+        input.dispatchEvent(new Event('change'));
+      });
+      preview.appendChild(thumb);
+    });
+  });
+}
+
+function clearImagePreview(previewId) {
+  const preview = document.getElementById(previewId);
+  if (preview) preview.innerHTML = '';
+}
 
 function downloadCsv(filename, rows) {
   const csv = rows.map((row) => row.map((cell) => `"${String(cell ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
@@ -311,6 +348,7 @@ async function openEditProductModal(product) {
   document.getElementById('ep-stock').value = product.stock;
   document.getElementById('ep-bestseller').checked = !!product.is_bestseller;
   document.getElementById('ep-new-images').value = '';
+  clearImagePreview('ep-new-images-preview');
   document.getElementById('edit-product-error').classList.add('d-none');
   document.getElementById('edit-variant-error').classList.add('d-none');
   editingProductImages = [...(product.images || [])];
@@ -351,6 +389,7 @@ document.getElementById('edit-product-form').addEventListener('submit', async (e
     const body = await res.json();
     if (!res.ok) throw new Error(body.error);
     bootstrap.Modal.getInstance(document.getElementById('editProductModal')).hide();
+    clearImagePreview('ep-new-images-preview');
     loadProducts();
   } catch (err) {
     errorEl.textContent = err.message;
@@ -393,6 +432,7 @@ document.getElementById('add-product-form').addEventListener('submit', async (e)
     const body = await res.json();
     if (!res.ok) throw new Error(body.error);
     document.getElementById('add-product-form').reset();
+    clearImagePreview('np-image-preview');
     loadProducts();
   } catch (err) {
     errorEl.textContent = err.message;
