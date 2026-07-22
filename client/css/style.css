@@ -363,6 +363,7 @@ a {
   border: 2px solid var(--paper);
 }
 
+
 /* ---------- Hero ---------- */
 .hero {
   background: linear-gradient(135deg, var(--ivory-blush) 0%, var(--sand) 60%, var(--tea-pink) 130%);
@@ -1290,8 +1291,11 @@ select:focus-visible {
   gap: 0.5rem;
   width: max-content;
   white-space: nowrap;
-  animation: announcement-scroll 26s linear infinite;
+  animation: announcement-scroll 22s linear infinite;
   color: var(--gold);
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 .announcement-marquee-track:hover {
@@ -3197,7 +3201,7 @@ select:focus-visible {
 }
 
 .checkout-header-logo {
-  height: 44px;
+  height: 68px;
   width: auto;
   display: block;
 }
