@@ -14,6 +14,8 @@ document.querySelectorAll('#admin-tabs [data-tab]').forEach((btn) => {
 
 initImagePreview('np-image', 'np-image-preview');
 initImagePreview('ep-new-images', 'ep-new-images-preview');
+initVideoPreview('np-video', 'np-video-preview');
+initVideoPreview('ep-new-video', 'ep-new-video-preview');
 
 document.getElementById('logout-btn').addEventListener('click', async () => {
   await fetch('/api/auth/logout', { method: 'POST' });
@@ -90,6 +92,27 @@ function clearImagePreview(previewId, inputId) {
   const preview = document.getElementById(previewId);
   if (preview) preview.innerHTML = '';
   if (inputId) imagePreviewFiles[inputId] = [];
+}
+
+function initVideoPreview(inputId, previewId) {
+  const input = document.getElementById(inputId);
+  const preview = document.getElementById(previewId);
+  if (!input || !preview) return;
+
+  input.addEventListener('change', () => {
+    preview.innerHTML = '';
+    const file = input.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    preview.innerHTML = `<video src="${url}" controls muted style="max-width:220px; border-radius:8px; display:block; margin-top:0.5rem;"></video>`;
+  });
+}
+
+function clearVideoPreview(previewId, inputId) {
+  const preview = document.getElementById(previewId);
+  if (preview) preview.innerHTML = '';
+  const input = document.getElementById(inputId);
+  if (input) input.value = '';
 }
 
 function downloadCsv(filename, rows) {
@@ -228,6 +251,26 @@ function renderProductsTable() {
 }
 
 let editingProductImages = [];
+let editingProductVideoUrl = null;
+let editingProductVideoRemoved = false;
+
+function renderCurrentVideo() {
+  const wrap = document.getElementById('ep-video-current');
+  if (!editingProductVideoUrl || editingProductVideoRemoved) {
+    wrap.innerHTML = '<p style="color:#a89490; font-size:0.85rem; margin:0;">No video yet.</p>';
+    return;
+  }
+  wrap.innerHTML = `
+    <div class="admin-video-preview">
+      <video src="${editingProductVideoUrl}" controls muted style="max-width:220px; border-radius:8px; display:block;"></video>
+      <button type="button" class="btn btn-outline-plum btn-sm mt-2" id="ep-remove-video-btn">Remove video</button>
+    </div>
+  `;
+  document.getElementById('ep-remove-video-btn').addEventListener('click', () => {
+    editingProductVideoRemoved = true;
+    renderCurrentVideo();
+  });
+}
 
 function renderEditImageGrid() {
   const grid = document.getElementById('ep-image-grid');
@@ -391,6 +434,10 @@ async function openEditProductModal(product) {
   document.getElementById('edit-variant-error').classList.add('d-none');
   editingProductImages = [...(product.images || [])];
   renderEditImageGrid();
+  editingProductVideoUrl = product.video_url || null;
+  editingProductVideoRemoved = false;
+  renderCurrentVideo();
+  clearVideoPreview('ep-new-video-preview', 'ep-new-video');
   editingProductVariants = [];
   renderVariantList();
 
@@ -422,12 +469,16 @@ document.getElementById('edit-product-form').addEventListener('submit', async (e
     formData.append('is_bestseller', document.getElementById('ep-bestseller').checked);
     formData.append('existingImages', JSON.stringify(editingProductImages));
     [...document.getElementById('ep-new-images').files].forEach((file) => formData.append('images', file));
+    const videoFile = document.getElementById('ep-new-video').files[0];
+    if (videoFile) formData.append('video', videoFile);
+    else if (editingProductVideoRemoved) formData.append('removeVideo', 'true');
 
     const res = await fetch(`/api/products/${id}`, { method: 'PUT', body: formData });
     const body = await res.json();
     if (!res.ok) throw new Error(body.error);
     bootstrap.Modal.getInstance(document.getElementById('editProductModal')).hide();
     clearImagePreview('ep-new-images-preview', 'ep-new-images');
+    clearVideoPreview('ep-new-video-preview', 'ep-new-video');
     loadProducts();
   } catch (err) {
     errorEl.textContent = err.message;
@@ -465,12 +516,15 @@ document.getElementById('add-product-form').addEventListener('submit', async (e)
     formData.append('stock', document.getElementById('np-stock').value || '0');
     formData.append('description', document.getElementById('np-description').value);
     [...document.getElementById('np-image').files].forEach((file) => formData.append('images', file));
+    const videoFile = document.getElementById('np-video').files[0];
+    if (videoFile) formData.append('video', videoFile);
 
     const res = await fetch('/api/products', { method: 'POST', body: formData });
     const body = await res.json();
     if (!res.ok) throw new Error(body.error);
     document.getElementById('add-product-form').reset();
     clearImagePreview('np-image-preview', 'np-image');
+    clearVideoPreview('np-video-preview', 'np-video');
     loadProducts();
   } catch (err) {
     errorEl.textContent = err.message;

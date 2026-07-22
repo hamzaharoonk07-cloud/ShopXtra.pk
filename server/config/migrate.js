@@ -7,6 +7,10 @@ async function runMigrations() {
       ADD COLUMN IF NOT EXISTS color_hex VARCHAR(7),
       ADD COLUMN IF NOT EXISTS image_url TEXT
   `);
+  await pool.query(`
+    ALTER TABLE products
+      ADD COLUMN IF NOT EXISTS video_url TEXT
+  `);
 }
 
 module.exports = { runMigrations };

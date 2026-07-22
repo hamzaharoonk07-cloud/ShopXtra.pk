@@ -66,17 +66,17 @@ async function findById(id) {
 }
 
 async function create(data) {
-  const { name, slug, category, description, price, compare_at_price, stock, images, ingredients, is_bestseller } = data;
+  const { name, slug, category, description, price, compare_at_price, stock, images, video_url, ingredients, is_bestseller } = data;
   const { rows } = await pool.query(
-    `INSERT INTO products (name, slug, category, description, price, compare_at_price, stock, images, ingredients, is_bestseller)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+    `INSERT INTO products (name, slug, category, description, price, compare_at_price, stock, images, video_url, ingredients, is_bestseller)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
      RETURNING *`,
-    [name, slug, category, description, price, compare_at_price || null, stock || 0, images || [], ingredients, is_bestseller || false]
+    [name, slug, category, description, price, compare_at_price || null, stock || 0, images || [], video_url || null, ingredients, is_bestseller || false]
   );
   return rows[0];
 }
 
-const UPDATABLE_FIELDS = ['name', 'category', 'description', 'price', 'compare_at_price', 'stock', 'images', 'ingredients', 'is_bestseller'];
+const UPDATABLE_FIELDS = ['name', 'category', 'description', 'price', 'compare_at_price', 'stock', 'images', 'video_url', 'ingredients', 'is_bestseller'];
 
 async function update(id, data) {
   const fields = UPDATABLE_FIELDS.filter((key) => Object.prototype.hasOwnProperty.call(data, key));

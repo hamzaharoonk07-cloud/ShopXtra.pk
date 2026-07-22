@@ -39,13 +39,18 @@ async function loadProduct() {
       .join('');
 
     const images = (product.images && product.images.length) ? product.images : [];
-    const thumbRail = images.length > 1 ? `
+    const thumbRail = (images.length > 1 || product.video_url) ? `
       <div class="pdp-thumb-rail">
         ${images.map((img, i) => `
           <button type="button" class="pdp-thumb ${i === 0 ? 'active' : ''}" data-img="${img}" aria-label="View image ${i + 1}">
             <img src="${img}" alt="${product.name} ${i + 1}" loading="lazy">
           </button>
         `).join('')}
+        ${product.video_url ? `
+          <button type="button" class="pdp-thumb pdp-thumb-video" data-video="${product.video_url}" aria-label="Play product video">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="9 7 18 12 9 17 9 7"/></svg>
+          </button>
+        ` : ''}
       </div>
     ` : '';
 
@@ -148,7 +153,12 @@ async function loadProduct() {
         btn.addEventListener('click', () => {
           main.querySelectorAll('.pdp-thumb').forEach((b) => b.classList.remove('active'));
           btn.classList.add('active');
-          document.getElementById('pdp-main-image').innerHTML = `<img src="${btn.dataset.img}" alt="${product.name}">`;
+          const mainImage = document.getElementById('pdp-main-image');
+          if (btn.dataset.video) {
+            mainImage.innerHTML = `<video src="${btn.dataset.video}" controls autoplay muted playsinline></video>`;
+          } else {
+            mainImage.innerHTML = `<img src="${btn.dataset.img}" alt="${product.name}">`;
+          }
         });
       });
     }

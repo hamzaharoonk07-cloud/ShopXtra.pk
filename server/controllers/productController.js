@@ -48,8 +48,10 @@ async function create(req, res, next) {
     if (!productModel.CATEGORIES.includes(category)) {
       return res.status(400).json({ error: `Invalid category: ${category}` });
     }
-    const uploaded = req.files && req.files.length ? await Promise.all(req.files.map(saveImage)) : [];
-    const images = uploaded;
+    const imageFiles = (req.files && req.files.images) || [];
+    const videoFile = req.files && req.files.video && req.files.video[0];
+    const images = imageFiles.length ? await Promise.all(imageFiles.map(saveImage)) : [];
+    const video_url = videoFile ? await saveImage(videoFile) : null;
     const product = await productModel.create({
       name,
       slug: slugify(name),
@@ -59,6 +61,7 @@ async function create(req, res, next) {
       compare_at_price: compare_at_price ? Number(compare_at_price) : null,
       stock: stock ? Number(stock) : 0,
       images,
+      video_url,
       ingredients,
       is_bestseller: is_bestseller === 'true' || is_bestseller === true,
     });
@@ -74,10 +77,18 @@ async function update(req, res, next) {
     const data = { ...req.body };
     const existingImages = data.existingImages ? JSON.parse(data.existingImages) : undefined;
     delete data.existingImages;
-    const uploaded = req.files && req.files.length ? await Promise.all(req.files.map(saveImage)) : [];
+    const imageFiles = (req.files && req.files.images) || [];
+    const videoFile = req.files && req.files.video && req.files.video[0];
+    const uploaded = imageFiles.length ? await Promise.all(imageFiles.map(saveImage)) : [];
     if (existingImages || uploaded.length) {
       data.images = [...(existingImages || []), ...uploaded];
     }
+    if (videoFile) {
+      data.video_url = await saveImage(videoFile);
+    } else if (data.removeVideo === 'true') {
+      data.video_url = null;
+    }
+    delete data.removeVideo;
     if (data.price != null && data.price !== '') data.price = Number(data.price);
     if (data.compare_at_price === '') data.compare_at_price = null;
     else if (data.compare_at_price != null) data.compare_at_price = Number(data.compare_at_price);

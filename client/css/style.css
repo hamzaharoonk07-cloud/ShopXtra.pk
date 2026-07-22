@@ -2876,12 +2876,14 @@ select:focus-visible {
   font-size: 3rem;
 }
 
-.pdp-main-image:has(img) {
+.pdp-main-image:has(img),
+.pdp-main-image:has(video) {
   aspect-ratio: auto;
   display: block;
 }
 
-.pdp-main-image img {
+.pdp-main-image img,
+.pdp-main-image video {
   width: 100%;
   height: auto;
   display: block;
@@ -2902,6 +2904,14 @@ select:focus-visible {
   background: var(--sand);
   outline: 2px solid transparent;
   outline-offset: 2px;
+}
+
+.pdp-thumb-video {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--plum);
+  color: #fff;
 }
 
 .pdp-thumb.active {
@@ -4440,6 +4450,14 @@ select:focus-visible {
   margin: 0;
   font-size: 0.75rem;
   color: var(--muted);
+}
+
+.admin-video-preview:empty {
+  display: none;
+}
+
+.admin-video-preview video {
+  background: #000;
 }
 
 .admin-variant-list {

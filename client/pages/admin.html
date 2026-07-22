@@ -102,9 +102,14 @@
           <div class="col-md-2"><button type="submit" class="btn btn-plum w-100">Add</button></div>
           <div class="col-8"><input class="form-control" id="np-description" placeholder="Description (optional)"></div>
           <div class="col-4">
-            <label class="form-label mono d-block" style="font-size:0.75rem;" for="np-image">Product image (optional)</label>
+            <label class="form-label mono d-block" style="font-size:0.75rem;" for="np-image">Product images (optional)</label>
             <input type="file" class="form-control form-control-sm" id="np-image" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
             <div class="admin-image-preview-grid" id="np-image-preview"></div>
+          </div>
+          <div class="col-4">
+            <label class="form-label mono d-block" style="font-size:0.75rem;" for="np-video">Product video (optional)</label>
+            <input type="file" class="form-control form-control-sm" id="np-video" accept="video/mp4,video/webm,video/quicktime">
+            <div class="admin-video-preview" id="np-video-preview"></div>
           </div>
         </form>
         <p class="text-danger d-none mt-2" id="add-product-error"></p>
@@ -308,6 +313,11 @@
           <div class="admin-edit-image-grid" id="ep-image-grid"></div>
           <input type="file" class="form-control form-control-sm mt-2" id="ep-new-images" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
           <div class="admin-image-preview-grid" id="ep-new-images-preview"></div>
+
+          <label class="form-label mono mt-3" style="font-size:0.75rem;">Video <span style="font-weight:400; text-transform:none;">— shown alongside photos on the product page</span></label>
+          <div id="ep-video-current"></div>
+          <input type="file" class="form-control form-control-sm mt-2" id="ep-new-video" accept="video/mp4,video/webm,video/quicktime">
+          <div class="admin-video-preview" id="ep-new-video-preview"></div>
 
           <label class="form-label mono mt-3" style="font-size:0.75rem;">Colour variants <span style="font-weight:400; text-transform:none;">— shown as clickable swatches on the product page</span></label>
           <p style="font-size:0.8rem; color:var(--muted-body); margin-bottom:0.5rem;">If each uploaded photo above is a different colour of this product, click below to auto-create a colour swatch for each one — no need to fill the form per colour.</p>
