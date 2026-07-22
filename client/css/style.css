@@ -1624,6 +1624,10 @@ select:focus-visible {
   display: block;
 }
 
+.hero-slide-morning .hero-slide-photo img {
+  object-position: center 55%;
+}
+
 .hero-slide-photo::after {
   content: '';
   position: absolute;
