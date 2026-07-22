@@ -12,11 +12,6 @@ document.querySelectorAll('#admin-tabs [data-tab]').forEach((btn) => {
   });
 });
 
-initImagePreview('np-image', 'np-image-preview');
-initImagePreview('ep-new-images', 'ep-new-images-preview');
-initVideoPreview('np-video', 'np-video-preview');
-initVideoPreview('ep-new-video', 'ep-new-video-preview');
-
 document.getElementById('logout-btn').addEventListener('click', async () => {
   await fetch('/api/auth/logout', { method: 'POST' });
   window.location.href = '/pages/account.html';
@@ -114,6 +109,11 @@ function clearVideoPreview(previewId, inputId) {
   const input = document.getElementById(inputId);
   if (input) input.value = '';
 }
+
+initImagePreview('np-image', 'np-image-preview');
+initImagePreview('ep-new-images', 'ep-new-images-preview');
+initVideoPreview('np-video', 'np-video-preview');
+initVideoPreview('ep-new-video', 'ep-new-video-preview');
 
 function downloadCsv(filename, rows) {
   const csv = rows.map((row) => row.map((cell) => `"${String(cell ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
