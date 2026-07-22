@@ -1811,13 +1811,24 @@ select:focus-visible {
 
 @media (max-width: 767.98px) {
   .hero-carousel-track {
-    height: clamp(420px, 92vw, 560px);
+    height: clamp(460px, 130vw, 620px);
   }
   .hero-slide-icon {
     opacity: 0.09;
     width: 70vw;
     height: 70vw;
     right: -18%;
+  }
+  /* Full-bleed photo slides: the slide is much taller/narrower on mobile
+     than the source photos are shot for, so object-fit:cover crops far
+     more aggressively (losing side content a left-to-right desktop
+     gradient assumes is there). A near-uniform dark scrim keeps text
+     legible regardless of exactly what crop lands under it. */
+  .hero-slide-photo::after {
+    background: linear-gradient(180deg, rgba(10, 7, 5, 0.82) 0%, rgba(10, 7, 5, 0.72) 55%, rgba(10, 7, 5, 0.85) 100%);
+  }
+  .hero-slide-copy {
+    max-width: none;
   }
   .hero-slide-copy .lead {
     max-width: none;
