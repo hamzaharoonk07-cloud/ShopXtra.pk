@@ -20,38 +20,76 @@ document.getElementById('logout-btn').addEventListener('click', async () => {
   window.location.href = '/pages/account.html';
 });
 
+const IMAGE_PREVIEW_MAX = 6;
+const imagePreviewFiles = {};
+
+function syncInputFiles(input, files) {
+  const dt = new DataTransfer();
+  files.forEach((f) => dt.items.add(f));
+  input.files = dt.files;
+}
+
+function renderImagePreview(inputId, previewId) {
+  const input = document.getElementById(inputId);
+  const preview = document.getElementById(previewId);
+  const files = imagePreviewFiles[inputId] || [];
+  preview.innerHTML = '';
+
+  files.forEach((file, i) => {
+    const url = URL.createObjectURL(file);
+    const thumb = document.createElement('div');
+    thumb.className = 'admin-image-preview-thumb';
+    thumb.innerHTML = `
+      <img src="${url}" alt="Preview">
+      <button type="button" class="admin-image-preview-remove" aria-label="Remove this image">&times;</button>
+    `;
+    thumb.querySelector('.admin-image-preview-remove').addEventListener('click', () => {
+      imagePreviewFiles[inputId].splice(i, 1);
+      syncInputFiles(input, imagePreviewFiles[inputId]);
+      renderImagePreview(inputId, previewId);
+    });
+    preview.appendChild(thumb);
+  });
+
+  if (files.length >= IMAGE_PREVIEW_MAX) {
+    const note = document.createElement('p');
+    note.className = 'admin-image-preview-limit';
+    note.textContent = `Maximum ${IMAGE_PREVIEW_MAX} images reached.`;
+    preview.appendChild(note);
+  }
+}
+
+// Native <input type="file" multiple> replaces the whole selection every time
+// the picker reopens, so re-selecting to add more images silently drops the
+// ones already chosen. This accumulates across picker sessions (up to the
+// server's 6-image limit) instead, syncing the merged set back into the
+// input itself so the existing submit-time `[...input.files]` code needs no
+// changes.
 function initImagePreview(inputId, previewId) {
   const input = document.getElementById(inputId);
   const preview = document.getElementById(previewId);
   if (!input || !preview) return;
+  imagePreviewFiles[inputId] = [];
 
   input.addEventListener('change', () => {
-    preview.innerHTML = '';
-    const files = [...input.files];
-    if (!files.length) return;
+    const picked = [...input.files];
+    if (!picked.length) return;
 
-    files.forEach((file, i) => {
-      const url = URL.createObjectURL(file);
-      const thumb = document.createElement('div');
-      thumb.className = 'admin-image-preview-thumb';
-      thumb.innerHTML = `
-        <img src="${url}" alt="Preview">
-        <button type="button" class="admin-image-preview-remove" aria-label="Remove this image">&times;</button>
-      `;
-      thumb.querySelector('.admin-image-preview-remove').addEventListener('click', () => {
-        const dt = new DataTransfer();
-        [...input.files].forEach((f, fi) => { if (fi !== i) dt.items.add(f); });
-        input.files = dt.files;
-        input.dispatchEvent(new Event('change'));
-      });
-      preview.appendChild(thumb);
+    const existing = imagePreviewFiles[inputId];
+    picked.forEach((file) => {
+      const isDupe = existing.some((f) => f.name === file.name && f.size === file.size && f.lastModified === file.lastModified);
+      if (!isDupe && existing.length < IMAGE_PREVIEW_MAX) existing.push(file);
     });
+
+    syncInputFiles(input, existing);
+    renderImagePreview(inputId, previewId);
   });
 }
 
-function clearImagePreview(previewId) {
+function clearImagePreview(previewId, inputId) {
   const preview = document.getElementById(previewId);
   if (preview) preview.innerHTML = '';
+  if (inputId) imagePreviewFiles[inputId] = [];
 }
 
 function downloadCsv(filename, rows) {
@@ -348,7 +386,7 @@ async function openEditProductModal(product) {
   document.getElementById('ep-stock').value = product.stock;
   document.getElementById('ep-bestseller').checked = !!product.is_bestseller;
   document.getElementById('ep-new-images').value = '';
-  clearImagePreview('ep-new-images-preview');
+  clearImagePreview('ep-new-images-preview', 'ep-new-images');
   document.getElementById('edit-product-error').classList.add('d-none');
   document.getElementById('edit-variant-error').classList.add('d-none');
   editingProductImages = [...(product.images || [])];
@@ -389,7 +427,7 @@ document.getElementById('edit-product-form').addEventListener('submit', async (e
     const body = await res.json();
     if (!res.ok) throw new Error(body.error);
     bootstrap.Modal.getInstance(document.getElementById('editProductModal')).hide();
-    clearImagePreview('ep-new-images-preview');
+    clearImagePreview('ep-new-images-preview', 'ep-new-images');
     loadProducts();
   } catch (err) {
     errorEl.textContent = err.message;
@@ -432,7 +470,7 @@ document.getElementById('add-product-form').addEventListener('submit', async (e)
     const body = await res.json();
     if (!res.ok) throw new Error(body.error);
     document.getElementById('add-product-form').reset();
-    clearImagePreview('np-image-preview');
+    clearImagePreview('np-image-preview', 'np-image');
     loadProducts();
   } catch (err) {
     errorEl.textContent = err.message;

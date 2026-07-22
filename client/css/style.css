@@ -4435,6 +4435,13 @@ select:focus-visible {
   justify-content: center;
 }
 
+.admin-image-preview-limit {
+  width: 100%;
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
 .admin-variant-list {
   display: flex;
   flex-direction: column;
