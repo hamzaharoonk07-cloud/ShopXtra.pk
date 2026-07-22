@@ -15,8 +15,13 @@ const pool = process.env.DATABASE_URL
     });
 
 pool.on('error', (err) => {
-  console.error('Unexpected error on idle PostgreSQL client', err);
-  process.exit(1);
+  // Idle clients get dropped by the provider routinely (Neon in particular
+  // closes idle connections aggressively) - pg already removes the errored
+  // client from the pool and issues a fresh one on the next query, so this
+  // is recoverable. Exiting the process here was killing the whole server
+  // (and every in-flight request, including the admin panel's parallel
+  // products/users/orders load) on what's normally a harmless event.
+  console.error('PostgreSQL pool error (recovered):', err.message);
 });
 
 module.exports = pool;
