@@ -4382,6 +4382,19 @@ select:focus-visible {
   justify-content: center;
 }
 
+/* #editProductModal wraps its .modal-body/.modal-footer in a <form> (needed
+   so the Save button can submit them together) - that form is a normal
+   block box, so it breaks Bootstrap's modal-dialog-scrollable flex layout,
+   which expects header/body/footer as direct flex children of
+   .modal-content. Without this, once body content grows tall enough
+   (e.g. several image previews), .modal-content's overflow:hidden clips
+   the whole form including the footer, hiding the Save button entirely
+   instead of just scrolling the body. display:contents unwraps the form
+   from layout while keeping it in the DOM for submission. */
+#editProductModal form {
+  display: contents;
+}
+
 .admin-image-preview-grid {
   display: flex;
   flex-wrap: wrap;
