@@ -4600,6 +4600,14 @@ select:focus-visible {
     grid-template-columns: 1fr;
   }
   .footer-main {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .footer-newsletter-form {
+    flex-wrap: wrap;
+  }
+  .footer-newsletter-form input {
+    min-width: 0;
+    flex: 1 1 140px;
   }
 }
