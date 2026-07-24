@@ -212,3 +212,25 @@ document.addEventListener('click', (e) => {
   btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
   btn.classList.toggle('is-active', !showing);
 });
+
+document.addEventListener('submit', async (e) => {
+  if (e.target.id !== 'newsletter-form') return;
+  e.preventDefault();
+  const emailInput = document.getElementById('newsletter-email');
+  const msg = document.getElementById('newsletter-msg');
+  try {
+    const res = await fetch('/api/newsletter', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: emailInput.value }),
+    });
+    const body = await res.json();
+    if (!res.ok) throw new Error(body.error);
+    msg.textContent = 'You\'re on the list — thank you!';
+    msg.style.color = 'var(--tea-pink)';
+    emailInput.value = '';
+  } catch (err) {
+    msg.textContent = err.message || 'Something went wrong.';
+    msg.style.color = '#e8a5a0';
+  }
+});
