@@ -102,6 +102,7 @@ function renderFooter() {
         </div>
         <div class="footer-col">
           <h4>Shop</h4>
+          <a href="/index.html#why-shopxtra">Why ShopXtra?</a>
           <a href="/pages/shop.html?category=electrolytes">Electrolytes</a>
           <a href="/pages/shop.html?category=coffee">Coffee</a>
           <a href="/pages/shop.html?category=shampoo">Shampoo</a>
