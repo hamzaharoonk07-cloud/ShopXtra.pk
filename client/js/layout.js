@@ -96,6 +96,7 @@ function renderFooter() {
           </div>
           <p>Everyday essentials — imported, authentic and PKR-priced. Look after yourself, every single day.</p>
           <p>Why ShopXtra: quality-first and transparent by nature, with every category safety tested, R&amp;D backed and quality PASS checked before it ships. We believe in real care and real results over quick hype — one ritual across five categories, safe and balanced for daily use. Built on trust, not transactions. Quiet luxury, always priced fairly.</p>
+          <p><a href="mailto:shopxtra9@gmail.com" style="color:inherit;">shopxtra9@gmail.com</a></p>
           <div class="footer-brand-stats">
             <span>&#9733; 4.8 rated</span>
             <span>12,000+ orders</span>

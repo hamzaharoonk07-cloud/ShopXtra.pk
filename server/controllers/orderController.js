@@ -35,6 +35,11 @@ async function create(req, res, next) {
         subject: `Order Confirmed #${order.id} — ShopXtra`,
         html: orderConfirmationEmail(fullOrder),
       });
+      sendMail({
+        to: 'shopxtra9@gmail.com',
+        subject: `New order #${order.id} placed — ShopXtra`,
+        html: orderConfirmationEmail(fullOrder),
+      });
     }
   } catch (err) {
     if (err.status) return res.status(err.status).json({ error: err.message });

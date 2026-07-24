@@ -38,7 +38,7 @@ async function sendMail({ to, subject, html }) {
   try {
     const transporter = await getTransporter();
     const info = await transporter.sendMail({
-      from: process.env.MAIL_FROM || '"ShopXtra" <hello@shopxtra.pk>',
+      from: process.env.MAIL_FROM || '"ShopXtra" <shopxtra9@gmail.com>',
       to,
       subject,
       html,
