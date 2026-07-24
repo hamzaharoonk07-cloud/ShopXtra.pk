@@ -1851,80 +1851,21 @@ select:focus-visible {
 }
 
 .why-strip-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-  margin-bottom: 1.6rem;
+  margin-bottom: 1rem;
 }
 
 .why-strip-head h2 {
   font-size: clamp(1.6rem, 3vw, 2.4rem);
-  max-width: 560px;
+  max-width: 640px;
   margin: 0.5rem 0 0;
   line-height: 1.1;
 }
 
-.why-strip-head p {
-  max-width: 330px;
+.why-strip-text {
+  max-width: 720px;
   color: var(--muted-body);
-  font-size: 0.95rem;
-  line-height: 1.55;
-  margin: 0;
-}
-
-.why-strip-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 1.25rem;
-}
-
-.why-card {
-  position: relative;
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-md);
-  padding: 1.65rem 1.5rem 1.5rem;
-  background: var(--paper);
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
-}
-
-.why-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-lift);
-  border-color: transparent;
-}
-
-.why-card-num {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
-  color: var(--tea-pink);
-  background: var(--sand);
-  font-size: 0.8rem;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  margin-bottom: 0.9rem;
-  transition: background-color 0.25s ease, color 0.25s ease;
-}
-
-.why-card:hover .why-card-num {
-  background: var(--tea-pink);
-  color: #fff;
-}
-
-.why-card h3 {
-  font-size: 1.15rem;
-  margin: 0 0 0.4rem;
-}
-
-.why-card p {
-  color: var(--muted);
-  font-size: 0.88rem;
-  line-height: 1.55;
+  font-size: 1rem;
+  line-height: 1.7;
   margin: 0;
 }
 
@@ -2171,68 +2112,62 @@ select:focus-visible {
 }
 
 .faq-accordion details {
-  background: var(--tea-pink);
-  border: none;
-  border-radius: 999px;
-  padding: 0.85rem 1.35rem;
-  transition: border-radius 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  padding: 1.1rem 1.35rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .faq-accordion details:hover {
-  background: var(--ink-hover, var(--tea-pink));
+  border-color: var(--hairline-strong);
   box-shadow: var(--shadow-soft);
 }
 
 .faq-accordion details[open] {
-  border-radius: 1.25rem;
+  border-color: var(--tea-pink);
 }
 
 .faq-accordion summary {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
+  justify-content: space-between;
+  gap: 1rem;
   font-family: 'Montserrat', sans-serif;
   font-weight: 600;
-  font-size: 0.98rem;
+  font-size: 1rem;
   cursor: pointer;
   list-style: none;
-  color: #fff;
+  color: var(--plum);
 }
 
 .faq-accordion summary::-webkit-details-marker {
   display: none;
 }
 
-.faq-accordion summary::before {
-  content: '';
-  flex-shrink: 0;
-  width: 0.85rem;
-  height: 0.85rem;
-  border-radius: 50%;
-  background: #fff;
-}
-
 .faq-accordion summary::after {
-  content: '';
+  content: '+';
   flex-shrink: 0;
-  margin-left: auto;
-  width: 0.5rem;
-  height: 0.5rem;
-  border-right: 2px solid #fff;
-  border-bottom: 2px solid #fff;
-  transform: rotate(45deg);
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.1rem;
+  color: var(--tea-pink);
   transition: transform 0.2s ease;
 }
 
 .faq-accordion details[open] summary::after {
-  transform: rotate(225deg);
+  content: '\2212';
 }
 
 .faq-accordion p {
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--muted-body);
   font-size: 0.92rem;
   line-height: 1.6;
-  margin: 0.9rem 0 0 1.6rem;
+  margin: 0.75rem 0 0;
 }
 
 .reviews-section {
