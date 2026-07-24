@@ -42,6 +42,7 @@ function renderNavbar(activePath = '') {
             <li><a href="/pages/shop.html?category=shampoo">Shampoo</a></li>
             <li><a href="/pages/shop.html?category=cosmetics">Cosmetics</a></li>
             <li><a href="/pages/bundles.html">Bundles</a></li>
+            <li><a href="/pages/why-shopxtra.html">Why Us</a></li>
           </ul>
         </div>
 

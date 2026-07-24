@@ -1842,31 +1842,78 @@ select:focus-visible {
   }
 }
 
-/* ---------- Why ShopXtra strip ---------- */
-.why-strip {
-  background: var(--paper);
-  border-top: 1px solid var(--hairline);
-  border-bottom: 1px solid var(--hairline);
-  padding: 2.75rem 0;
+/* ---------- Why ShopXtra page ---------- */
+.why-us-hero {
+  text-align: center;
+  max-width: 620px;
+  margin: 0 auto 3rem;
 }
 
-.why-strip-head {
-  margin-bottom: 1rem;
-}
-
-.why-strip-head h2 {
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
-  max-width: 640px;
-  margin: 0.5rem 0 0;
+.why-us-hero h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
   line-height: 1.1;
+  margin: 0.6rem 0 1rem;
 }
 
-.why-strip-text {
-  max-width: 720px;
+.why-us-hero p {
   color: var(--muted-body);
-  font-size: 1rem;
-  line-height: 1.7;
+  font-size: 1.1rem;
+  line-height: 1.65;
   margin: 0;
+}
+
+.why-us-body {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.why-us-body p {
+  color: var(--muted-body);
+  font-size: 1.05rem;
+  line-height: 1.85;
+  margin: 0 0 1.75rem;
+}
+
+.why-us-body p:first-of-type::first-letter {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 3.2rem;
+  line-height: 0.8;
+  float: left;
+  padding: 0.1rem 0.5rem 0 0;
+  color: var(--tea-pink);
+}
+
+.why-us-quote {
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.4rem;
+  line-height: 1.5;
+  color: var(--plum);
+  text-align: center;
+  max-width: 560px;
+  margin: 2.5rem auto;
+  position: relative;
+  padding: 0 1rem;
+}
+
+.why-us-quote::before,
+.why-us-quote::after {
+  content: '';
+  display: block;
+  width: 2.5rem;
+  height: 2px;
+  background: var(--tea-pink);
+  margin: 0 auto 1.1rem;
+}
+
+.why-us-quote::after {
+  margin: 1.1rem auto 0;
+}
+
+.why-us-cta {
+  text-align: center;
+  margin-top: 2.5rem;
 }
 
 /* ---------- Bestseller carousel ---------- */
