@@ -95,8 +95,6 @@ function renderFooter() {
             <img src="/assets/logo-full.png" alt="ShopXtra" class="logo-img logo-img-footer">
           </div>
           <p>Everyday essentials — imported, authentic and PKR-priced. Look after yourself, every single day.</p>
-          <p>Why ShopXtra: quality-first and transparent by nature, with every category safety tested, R&amp;D backed and quality PASS checked before it ships. We believe in real care and real results over quick hype — one ritual across five categories, safe and balanced for daily use. Built on trust, not transactions. Quiet luxury, always priced fairly.</p>
-          <p><a href="mailto:shopxtra9@gmail.com" style="color:inherit;">shopxtra9@gmail.com</a></p>
           <div class="footer-brand-stats">
             <span>&#9733; 4.8 rated</span>
             <span>12,000+ orders</span>
@@ -116,6 +114,13 @@ function renderFooter() {
           <a href="/pages/contact.html">Contact us</a>
           <a href="/pages/account.html">Your account</a>
           <a href="/pages/bundles.html">Kits &amp; bundles</a>
+          <a href="/pages/privacy-policy.html">Privacy policy</a>
+        </div>
+        <div class="footer-col">
+          <h4>Store information</h4>
+          <p style="color:#A8BFA3; font-size:0.85rem; line-height:1.55; margin:0 0 0.9rem;">Authentic products, sourced and sold with transparency and quality you can trust.</p>
+          <p style="margin:0 0 0.35rem;"><strong style="color:#fff;">Phone:</strong> <a href="tel:+923001234567" style="display:inline; padding:0;">+92 300 1234567</a></p>
+          <p style="margin:0;"><strong style="color:#fff;">Email:</strong> <a href="mailto:shopxtra9@gmail.com" style="display:inline; padding:0;">shopxtra9@gmail.com</a></p>
         </div>
         <div class="footer-col footer-newsletter-col">
           <h4>Stay in the loop</h4>
