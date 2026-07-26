@@ -1147,9 +1147,30 @@ body:has(.sticky-add-bar.visible) .back-to-top {
   transition: transform 0.2s ease;
 }
 
+.whatsapp-float::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-color: #25d366;
+  z-index: -1;
+}
+
 .whatsapp-float:hover {
   transform: scale(1.08);
   color: #fff;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .whatsapp-float::before {
+    animation: whatsapp-pulse-ring 2.8s ease-out infinite;
+  }
+}
+
+@keyframes whatsapp-pulse-ring {
+  0% { transform: scale(1); opacity: 0.55; }
+  70% { transform: scale(1.7); opacity: 0; }
+  100% { transform: scale(1.7); opacity: 0; }
 }
 
 /* ---------- Form controls ---------- */
@@ -3761,6 +3782,7 @@ select:focus-visible {
   font-size: 0.9rem;
   line-height: 1;
   padding: 0;
+  transition: border-color 0.15s ease, color 0.15s ease, transform 0.12s ease;
 }
 
 .cart-drawer-qty-btn::before {
@@ -3772,6 +3794,10 @@ select:focus-visible {
 .cart-drawer-qty-btn:hover {
   border-color: var(--tea-pink);
   color: var(--tea-pink);
+}
+
+.cart-drawer-qty-btn:active {
+  transform: scale(0.85);
 }
 
 .cart-drawer-qty-value {

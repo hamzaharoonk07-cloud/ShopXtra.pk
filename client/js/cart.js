@@ -146,11 +146,37 @@ document.addEventListener('click', (e) => {
     const row = stepperBtn.closest('[data-slug]');
     const slug = row.dataset.slug;
     const action = stepperBtn.dataset.action;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     if (action === 'remove') {
-      removeFromCart(slug);
+      if (!reduceMotion && typeof gsap !== 'undefined') {
+        gsap.to(row, {
+          opacity: 0,
+          x: 24,
+          height: 0,
+          marginBottom: 0,
+          paddingTop: 0,
+          paddingBottom: 0,
+          duration: 0.3,
+          ease: 'power2.in',
+          onComplete: () => removeFromCart(slug),
+        });
+      } else {
+        removeFromCart(slug);
+      }
     } else {
       const item = getCart().find((i) => i.slug === slug);
       if (item) updateCartQty(slug, item.qty + (action === 'increase' ? 1 : -1));
+      if (!reduceMotion && typeof gsap !== 'undefined') {
+        requestAnimationFrame(() => {
+          const newRow = document.querySelector(`.cart-drawer-item[data-slug="${slug}"]`);
+          const targets = newRow ? [newRow.querySelector('.cart-drawer-qty-value'), newRow.querySelector('.cart-drawer-item-price')] : [];
+          targets.forEach((el) => {
+            if (!el) return;
+            gsap.fromTo(el, { scale: 1.35 }, { scale: 1, duration: 0.3, ease: 'back.out(3)' });
+          });
+        });
+      }
     }
     return;
   }
