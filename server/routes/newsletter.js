@@ -19,7 +19,7 @@ router.post('/', async (req, res, next) => {
     res.status(201).json({ message: 'Subscribed' });
 
     if (rowCount > 0) {
-      sendMail({
+      await sendMail({
         to: email,
         subject: 'Welcome to the ShopXtra list',
         html: newsletterWelcomeEmail(),
@@ -41,9 +41,7 @@ router.post('/broadcast', requireAuth, requireRole('admin'), async (req, res, ne
     res.json({ message: `Sending to ${rows.length} subscriber${rows.length === 1 ? '' : 's'}.` });
 
     const html = saleAnnouncementEmail({ subject, message });
-    for (const { email } of rows) {
-      sendMail({ to: email, subject, html });
-    }
+    await Promise.all(rows.map(({ email }) => sendMail({ to: email, subject, html })));
   } catch (err) {
     next(err);
   }

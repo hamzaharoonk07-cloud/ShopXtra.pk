@@ -30,16 +30,18 @@ async function create(req, res, next) {
 
     if (order.email) {
       const fullOrder = await orderModel.findById(order.id);
-      sendMail({
-        to: order.email,
-        subject: `Order Confirmed #${order.id} — ShopXtra`,
-        html: orderConfirmationEmail(fullOrder),
-      });
-      sendMail({
-        to: 'shopxtra9@gmail.com',
-        subject: `New order #${order.id} placed — ShopXtra`,
-        html: orderConfirmationEmail(fullOrder),
-      });
+      await Promise.all([
+        sendMail({
+          to: order.email,
+          subject: `Order Confirmed #${order.id} — ShopXtra`,
+          html: orderConfirmationEmail(fullOrder),
+        }),
+        sendMail({
+          to: 'shopxtra9@gmail.com',
+          subject: `New order #${order.id} placed — ShopXtra`,
+          html: orderConfirmationEmail(fullOrder),
+        }),
+      ]);
     }
   } catch (err) {
     if (err.status) return res.status(err.status).json({ error: err.message });
@@ -82,7 +84,7 @@ async function updateStatus(req, res, next) {
     res.json(order);
 
     if (order.email && ['shipped', 'delivered', 'processing', 'cancelled'].includes(order.status)) {
-      sendMail({
+      await sendMail({
         to: order.email,
         subject: `Order #${order.id} update — ${order.status[0].toUpperCase() + order.status.slice(1)} — ShopXtra`,
         html: orderStatusEmail(order, order.status),
