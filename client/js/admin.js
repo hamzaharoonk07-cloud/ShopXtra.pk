@@ -3,6 +3,18 @@ let allOrders = [];
 let allUsers = [];
 let orderStatusFilter = '';
 
+async function safeJson(res) {
+  const text = await res.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    if (res.status === 413 || /request entity too large/i.test(text)) {
+      throw new Error('Upload too large — try fewer images, or smaller ones (under ~1MB each), and try again.');
+    }
+    throw new Error(`Server error (${res.status}). Try again with fewer/smaller images.`);
+  }
+}
+
 document.querySelectorAll('#admin-tabs [data-tab]').forEach((btn) => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('#admin-tabs [data-tab]').forEach((b) => b.classList.remove('active'));
@@ -474,7 +486,7 @@ document.getElementById('edit-product-form').addEventListener('submit', async (e
     else if (editingProductVideoRemoved) formData.append('removeVideo', 'true');
 
     const res = await fetch(`/api/products/${id}`, { method: 'PUT', body: formData });
-    const body = await res.json();
+    const body = await safeJson(res);
     if (!res.ok) throw new Error(body.error);
     bootstrap.Modal.getInstance(document.getElementById('editProductModal')).hide();
     clearImagePreview('ep-new-images-preview', 'ep-new-images');
@@ -520,7 +532,7 @@ document.getElementById('add-product-form').addEventListener('submit', async (e)
     if (videoFile) formData.append('video', videoFile);
 
     const res = await fetch('/api/products', { method: 'POST', body: formData });
-    const body = await res.json();
+    const body = await safeJson(res);
     if (!res.ok) throw new Error(body.error);
     document.getElementById('add-product-form').reset();
     clearImagePreview('np-image-preview', 'np-image');
