@@ -551,7 +551,7 @@ function renderOrdersTable() {
   if (query) filtered = filtered.filter((o) => (o.shipping_name || '').toLowerCase().includes(query));
 
   tbody.innerHTML = filtered.length ? filtered.map((o) => `
-    <tr data-id="${o.id}">
+    <tr data-id="${o.id}" style="cursor:pointer;">
       <td class="mono">#${o.id}</td>
       <td>${o.shipping_name}</td>
       <td class="price">${formatPrice(o.total)}</td>
@@ -568,6 +568,10 @@ function renderOrdersTable() {
 
   tbody.querySelectorAll('tr[data-id]').forEach((row) => {
     const id = row.dataset.id;
+    row.addEventListener('click', (e) => {
+      if (e.target.closest('.status-select')) return;
+      showOrderDetail(id);
+    });
     row.querySelector('.status-select').addEventListener('change', async (e) => {
       await fetch(`/api/orders/${id}/status`, {
         method: 'PATCH',
@@ -578,6 +582,65 @@ function renderOrdersTable() {
       if (order) order.status = e.target.value;
     });
   });
+}
+
+async function showOrderDetail(id) {
+  const modalEl = document.getElementById('orderDetailModal');
+  const body = document.getElementById('order-detail-body');
+  const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+  body.innerHTML = 'Loading…';
+  modal.show();
+
+  try {
+    const order = await apiGet(`/orders/${id}`);
+    document.getElementById('orderDetailModalLabel').textContent = `Order #${order.id}`;
+
+    const itemsHtml = (order.items || []).length
+      ? order.items.map((item) => `
+          <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+            <div>
+              <span>${item.name}</span>
+              <span style="color:#6b5a58; font-size:0.8rem;"> &times; ${item.qty}</span>
+            </div>
+            <span class="price">${formatPrice(item.price_at_purchase * item.qty)}</span>
+          </div>
+        `).join('')
+      : '<p style="color:#6b5a58;">No items found.</p>';
+
+    body.innerHTML = `
+      <div class="mb-3">
+        <span class="category-tint tint-cosmetics" style="font-size:0.7rem;">${order.status}</span>
+        <span style="color:#6b5a58; font-size:0.8rem; margin-left:0.5rem;">${new Date(order.created_at).toLocaleString('en-PK')}</span>
+      </div>
+      <div class="row g-3 mb-3">
+        <div class="col-sm-6">
+          <div style="font-size:0.75rem; color:#6b5a58; text-transform:uppercase; letter-spacing:0.03em;">Customer</div>
+          <div>${order.shipping_name}</div>
+        </div>
+        <div class="col-sm-6">
+          <div style="font-size:0.75rem; color:#6b5a58; text-transform:uppercase; letter-spacing:0.03em;">Phone</div>
+          <div><a href="tel:${order.shipping_phone}">${order.shipping_phone}</a></div>
+        </div>
+        <div class="col-12">
+          <div style="font-size:0.75rem; color:#6b5a58; text-transform:uppercase; letter-spacing:0.03em;">Delivery address</div>
+          <div>${order.shipping_address}, ${order.shipping_city}</div>
+        </div>
+        ${order.email ? `
+        <div class="col-12">
+          <div style="font-size:0.75rem; color:#6b5a58; text-transform:uppercase; letter-spacing:0.03em;">Email</div>
+          <div>${order.email}</div>
+        </div>` : ''}
+      </div>
+      <div style="font-size:0.75rem; color:#6b5a58; text-transform:uppercase; letter-spacing:0.03em; margin-bottom:0.4rem;">Items</div>
+      ${itemsHtml}
+      <div class="d-flex justify-content-between align-items-center pt-3 mt-2" style="border-top: 2px solid #1C231D;">
+        <strong>Total</strong>
+        <strong class="price">${formatPrice(order.total)}</strong>
+      </div>
+    `;
+  } catch (err) {
+    body.innerHTML = `<p class="text-danger">Could not load order: ${err.message}</p>`;
+  }
 }
 
 async function loadOrders() {
