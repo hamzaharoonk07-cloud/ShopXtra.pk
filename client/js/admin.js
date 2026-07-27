@@ -623,7 +623,7 @@ async function showOrderDetail(id) {
         </div>
         <div class="col-12">
           <div style="font-size:0.75rem; color:#6b5a58; text-transform:uppercase; letter-spacing:0.03em;">Delivery address</div>
-          <div>${order.shipping_address}, ${order.shipping_city}</div>
+          <div>${order.shipping_address}, ${order.shipping_city}${order.shipping_postal_code ? ` ${order.shipping_postal_code}` : ''}</div>
         </div>
         ${order.email ? `
         <div class="col-12">

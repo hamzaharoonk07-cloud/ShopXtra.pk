@@ -11,6 +11,10 @@ async function runMigrations() {
     ALTER TABLE products
       ADD COLUMN IF NOT EXISTS video_url TEXT
   `);
+  await pool.query(`
+    ALTER TABLE orders
+      ADD COLUMN IF NOT EXISTS shipping_postal_code VARCHAR(20)
+  `);
 }
 
 module.exports = { runMigrations };

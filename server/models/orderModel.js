@@ -41,10 +41,10 @@ async function createOrder({ userId, email, items, shipping, paymentMethod, prom
     const finalTotal = total - discount;
 
     const { rows: orderRows } = await client.query(
-      `INSERT INTO orders (user_id, email, status, total, discount_total, promo_code, payment_method, shipping_name, shipping_phone, shipping_address, shipping_city)
-       VALUES ($1, $2, 'pending', $3, $4, $5, $6, $7, $8, $9, $10)
+      `INSERT INTO orders (user_id, email, status, total, discount_total, promo_code, payment_method, shipping_name, shipping_phone, shipping_address, shipping_city, shipping_postal_code)
+       VALUES ($1, $2, 'pending', $3, $4, $5, $6, $7, $8, $9, $10, $11)
        RETURNING *`,
-      [userId || null, email || null, finalTotal, discount, appliedCode, paymentMethod, shipping.name, shipping.phone, shipping.address, shipping.city]
+      [userId || null, email || null, finalTotal, discount, appliedCode, paymentMethod, shipping.name, shipping.phone, shipping.address, shipping.city, shipping.postalCode || null]
     );
     const order = orderRows[0];
 

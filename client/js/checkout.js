@@ -94,6 +94,7 @@ document.getElementById('checkout-form').addEventListener('submit', async (e) =>
           phone: document.getElementById('ship-phone').value,
           address: document.getElementById('ship-address').value,
           city: document.getElementById('ship-city').value,
+          postalCode: document.getElementById('ship-postal').value,
         },
         paymentMethod: 'cod',
         promoCode: appliedPromo ? appliedPromo.code : undefined,
@@ -138,6 +139,7 @@ renderCheckoutSummary();
     if (defaultAddress) {
       document.getElementById('ship-address').value = defaultAddress.line1;
       document.getElementById('ship-city').value = defaultAddress.city;
+      document.getElementById('ship-postal').value = defaultAddress.postal_code || '';
     }
   } catch {
     // Guest checkout; leave shipping fields blank for manual entry.

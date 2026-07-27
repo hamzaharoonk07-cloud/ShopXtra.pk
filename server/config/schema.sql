@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS orders (
   shipping_phone VARCHAR(20),
   shipping_address TEXT,
   shipping_city VARCHAR(120),
+  shipping_postal_code VARCHAR(20),
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 

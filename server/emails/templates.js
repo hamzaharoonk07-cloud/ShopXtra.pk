@@ -41,7 +41,7 @@ function orderConfirmationEmail(order) {
       </tr>
     </table>
     <p style="color:#5A5348; margin-bottom: 4px;"><strong>Delivery address</strong></p>
-    <p style="color:#5A5348; margin-top: 0;">${order.shipping_address}, ${order.shipping_city}<br>${order.shipping_phone}</p>
+    <p style="color:#5A5348; margin-top: 0;">${order.shipping_address}, ${order.shipping_city}${order.shipping_postal_code ? ` ${order.shipping_postal_code}` : ''}<br>${order.shipping_phone}</p>
     <div style="background-color:#EAF3E3; border:1px solid #B8D9A3; border-radius: 12px; padding: 12px 16px; margin-top: 20px;">
       <span style="color:#2C4A1E; font-size: 13px;">Cash on Delivery &middot; Have the total ready for the rider when your order arrives.</span>
     </div>
