@@ -4,7 +4,7 @@ function renderAnnouncementBar() {
     <span class="dot" aria-hidden="true">&#8226;</span>
     <span class="announcement-highlight">Free delivery over Rs 3,000</span>
     <span class="dot" aria-hidden="true">&#8226;</span>
-    <span>Imported &amp; authentic — priced better than Amazon</span>
+    <span>Imported &amp; authentic products</span>
     <span class="dot" aria-hidden="true">&#8226;</span>
   `;
   return `
@@ -39,7 +39,7 @@ function renderNavbar(activePath = '') {
             <li><a href="/pages/shop.html">Shop all</a></li>
             <li><a href="/pages/shop.html?category=electrolytes">Electrolytes</a></li>
             <li><a href="/pages/shop.html?category=coffee">Coffee</a></li>
-            <li><a href="/pages/shop.html?category=shampoo">Shampoo</a></li>
+            <li><a href="/pages/shop.html?category=soaps">Soaps</a></li>
             <li><a href="/pages/shop.html?category=cosmetics">Cosmetics</a></li>
             <li><a href="/pages/bundles.html">Bundles</a></li>
             <li><a href="/pages/why-shopxtra.html">Why Us</a></li>
@@ -105,7 +105,6 @@ function renderFooter() {
           <h4>Shop</h4>
           <a href="/pages/shop.html?category=electrolytes">Electrolytes</a>
           <a href="/pages/shop.html?category=coffee">Coffee</a>
-          <a href="/pages/shop.html?category=shampoo">Shampoo</a>
           <a href="/pages/shop.html?category=soaps">Soaps</a>
           <a href="/pages/shop.html?category=cosmetics">Cosmetics</a>
         </div>

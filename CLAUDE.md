@@ -2,7 +2,7 @@
 
 ## What this project is
 
-ShopXtra is a full-stack e-commerce website selling five categories of everyday wellness products: **electrolytes, shampoo, soaps, coffee, and cosmetics**. The brand positions these not as unrelated categories but as one daily self-care ritual (morning / midday / evening).
+ShopXtra is a full-stack e-commerce website selling four categories of everyday wellness products: **electrolytes, soaps, coffee, and cosmetics**. The brand positions these not as unrelated categories but as one daily self-care ritual (morning / midday / evening).
 
 Target market: Pakistan (PKR pricing, COD + local payment methods), with room to scale to card payments (Stripe) later.
 
@@ -32,7 +32,7 @@ Premium, soft, pink-forward but not childish. Weight comes from a deep plum-brow
 - Soft gradient washes (blush → sand) rather than flat color blocks
 - Pink-tinted soft shadows on hover instead of harsh black shadows
 - Category color-coding: each of the 5 categories gets its own tint from the palette family (blush, rose, sand, gold, plum) for visual distinction within a cohesive system
-- Signature element: a "Daily Ritual" timeline (Morning / Midday / Evening) grouping products by when they're used — Electrolytes+Coffee (morning), Shampoo+Soap (midday), Cosmetics (evening)
+- Signature element: a "Daily Ritual" timeline (Morning / Midday / Evening) grouping products by when they're used — Electrolytes+Coffee (morning), Soap (midday), Cosmetics (evening)
 
 ### Design don'ts
 - No harsh pure-black shadows or borders
@@ -60,7 +60,6 @@ Premium, soft, pink-forward but not childish. Weight comes from a deep plum-brow
 /                    Home
 /shop                All products (filterable by category, price, sort)
 /shop/electrolytes
-/shop/shampoo
 /shop/soaps
 /shop/coffee
 /shop/cosmetics

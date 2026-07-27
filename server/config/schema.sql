@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS products (
   id SERIAL PRIMARY KEY,
   name VARCHAR(200) NOT NULL,
   slug VARCHAR(220) UNIQUE NOT NULL,
-  category VARCHAR(50) NOT NULL CHECK (category IN ('electrolytes', 'shampoo', 'soaps', 'coffee', 'cosmetics')),
+  category VARCHAR(50) NOT NULL CHECK (category IN ('electrolytes', 'soaps', 'coffee', 'cosmetics')),
   description TEXT,
   price NUMERIC(10, 2) NOT NULL,
   compare_at_price NUMERIC(10, 2),

@@ -34,15 +34,6 @@ const PRODUCT_ILLUSTRATIONS = {
       <path d="M45 30 q4 -10 0 -18" fill="none" stroke="var(--dusty-rose)" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
       <path d="M58 30 q4 -10 0 -18" fill="none" stroke="var(--dusty-rose)" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
     </svg>`,
-  shampoo: `
-    <svg viewBox="0 0 120 120" width="55%" role="img" aria-hidden="true">
-      <ellipse cx="60" cy="108" rx="24" ry="6" fill="var(--plum)" opacity="0.08"/>
-      <rect x="46" y="14" width="10" height="14" rx="2" fill="var(--plum)" opacity="0.6"/>
-      <path d="M38 30 h30 l4 8 v58 a12 12 0 0 1 -12 12 h-18 a12 12 0 0 1 -12 -12 v-58 z"
-        fill="var(--dusty-rose)" stroke="var(--plum)" stroke-width="1.5" opacity="0.9"/>
-      <rect x="34" y="60" width="52" height="6" fill="var(--ivory-blush)" opacity="0.5"/>
-      <path d="M46 78 q8 8 16 0" fill="none" stroke="var(--ivory-blush)" stroke-width="2" opacity="0.7"/>
-    </svg>`,
   soaps: `
     <svg viewBox="0 0 120 120" width="55%" role="img" aria-hidden="true">
       <ellipse cx="60" cy="102" rx="34" ry="6" fill="var(--plum)" opacity="0.08"/>
@@ -105,7 +96,6 @@ function starsHtml(rating, size = '1rem') {
 function categoryLabel(category) {
   const labels = {
     electrolytes: 'Electrolytes',
-    shampoo: 'Shampoo',
     soaps: 'Soaps',
     coffee: 'Coffee',
     cosmetics: 'Cosmetics',

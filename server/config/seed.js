@@ -20,13 +20,6 @@ const products = [
   { name: 'Gold Dust Instant Coffee Sachets', category: 'coffee', price: 890, stock: 150,
     description: 'Smooth instant coffee for a quick, premium morning cup, box of 10.',
     ingredients: 'Freeze-dried Arabica coffee' },
-  // Shampoo (midday)
-  { name: 'Tea Rose Nourishing Shampoo', category: 'shampoo', price: 1450, stock: 90, is_bestseller: true,
-    description: 'Sulfate-free shampoo infused with tea rose extract for soft, fragrant hair.',
-    ingredients: 'Aqua, cocamidopropyl betaine, rose extract, panthenol, glycerin' },
-  { name: 'Sandalwood Scalp Renewal Shampoo', category: 'shampoo', price: 1550, stock: 70,
-    description: 'Balancing shampoo with sandalwood to soothe the scalp and reduce buildup.',
-    ingredients: 'Aqua, sodium cocoyl isethionate, sandalwood extract, niacinamide' },
   // Soaps (midday)
   { name: 'Blush Clay Cleansing Bar', category: 'soaps', price: 650, stock: 200,
     description: 'A gentle pink clay soap bar that cleanses without stripping natural oils.',
