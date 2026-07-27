@@ -11,7 +11,7 @@ function categoryIcon(slug) {
 }
 
 const HOME_CATEGORIES = [
-  { slug: 'electrolytes', name: 'Electrolytes', desc: 'Hydration that wakes you up faster than coffee.' },
+  { slug: 'electrolytes', name: 'Electrolytes', desc: 'Hydration that wakes you up faster than coffee.', image: '/assets/hero/electrolytes-flavors.jpg' },
   { slug: 'coffee', name: 'Coffee', desc: 'Rich roasts and cold brew for the daily ritual.' },
   { slug: 'shampoo', name: 'Shampoo', desc: 'Care that cleans without ever drying you out.' },
   { slug: 'soaps', name: 'Soaps', desc: 'Everyday bars for a clean, simple routine.' },
@@ -156,7 +156,7 @@ function renderCategoryGrid() {
   if (!grid) return;
   grid.innerHTML = HOME_CATEGORIES.map((c) => `
     <a href="/pages/shop.html?category=${c.slug}" class="category-tile category-tile-${c.slug}" data-reveal="item">
-      <div class="category-tile-image">${categoryIcon(c.slug)}</div>
+      <div class="category-tile-image">${c.image ? `<img src="${c.image}" alt="" loading="lazy">` : categoryIcon(c.slug)}</div>
       <div class="category-tile-foot">
         <span class="category-tile-name">${c.name}</span>
         <p class="category-tile-desc">${c.desc}</p>

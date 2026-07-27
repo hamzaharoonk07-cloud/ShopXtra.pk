@@ -2384,6 +2384,12 @@ select:focus-visible {
   overflow: hidden;
 }
 
+.category-tile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .category-tile-electrolytes { background: var(--tint-electrolytes-bg); }
 .category-tile-electrolytes .category-tile-image { background: linear-gradient(150deg, var(--tint-electrolytes-bg), #EAF3DF); color: var(--tint-electrolytes-ink); }
 .category-tile-coffee { background: var(--tint-coffee-bg); }
