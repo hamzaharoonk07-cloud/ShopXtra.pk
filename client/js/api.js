@@ -125,7 +125,7 @@ function productCardHtml(product) {
   const outOfStock = product.stock <= 0;
   const lowStock = !outOfStock && Number(product.stock) <= 5;
   return `
-    <div class="col-6 col-md-4 col-lg-3" data-reveal="item">
+    <div class="col-6 col-md-4 col-lg-4" data-reveal="item">
       <div class="product-card h-100 ${outOfStock ? 'is-out-of-stock' : ''}">
         <a href="/pages/product.html?slug=${encodeURIComponent(product.slug)}" class="product-card-media-link">
           <div class="product-image">
@@ -143,15 +143,14 @@ function productCardHtml(product) {
           ${outOfStock ? 'disabled' : ''}>${outOfStock ? 'Out of stock' : 'Add to cart'}</button>
         <a href="/pages/product.html?slug=${encodeURIComponent(product.slug)}" class="product-card-link">
           <div class="product-body">
-            <span class="category-tint tint-${product.category}">${categoryLabel(product.category)}</span>
+            ${Number(product.review_count) > 0 ? `
+              <div class="product-card-rating">${starsHtml(product.avg_rating, '0.8rem')}<span class="product-card-rating-count">${Number(product.avg_rating).toFixed(1)}/5</span></div>
+            ` : `<span class="category-tint tint-${product.category}">${categoryLabel(product.category)}</span>`}
             <div class="product-name">${product.name}</div>
             <div class="product-card-price-row">
               <span class="price">${formatPrice(product.price)}</span>
               ${discount ? `<span class="compare-price">${formatPrice(product.compare_at_price)}</span>` : ''}
             </div>
-            ${Number(product.review_count) > 0 ? `
-              <div class="product-card-rating">${starsHtml(product.avg_rating, '0.8rem')}<span class="product-card-rating-count">(${product.review_count})</span></div>
-            ` : ''}
           </div>
         </a>
       </div>
