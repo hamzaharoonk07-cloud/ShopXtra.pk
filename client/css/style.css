@@ -549,14 +549,10 @@ a {
   overflow: hidden;
 }
 
-.product-image:has(img) {
-  aspect-ratio: auto;
-  display: block;
-}
-
 .product-image img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
