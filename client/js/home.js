@@ -11,10 +11,18 @@ function categoryIcon(slug) {
 
 const HOME_CATEGORIES = [
   { slug: 'electrolytes', name: 'Electrolytes', desc: 'Hydration that wakes you up faster than coffee.', image: '/assets/hero/electrolytes-flavors.jpg' },
-  { slug: 'coffee', name: 'Coffee', desc: 'Rich roasts and cold brew for the daily ritual.' },
+  { slug: 'coffee', name: 'Coffee', desc: 'Rich roasts and cold brew for the daily ritual.', image: '/assets/hero/coffee-pour.jpg' },
   { slug: 'soaps', name: 'Soaps', desc: 'Everyday bars for a clean, simple routine.' },
   { slug: 'cosmetics', name: 'Cosmetics', desc: 'Shades and finishes that match what you expect.' },
 ];
+
+function applyCategoryImagesFromProducts(products) {
+  HOME_CATEGORIES.forEach((c) => {
+    const withImage = products.find((p) => p.category === c.slug && p.images && p.images[0]);
+    if (withImage) c.image = withImage.images[0];
+  });
+  renderCategoryGrid();
+}
 
 async function showSaleBannerIfAny() {
   const toastEl = document.getElementById('saleBannerToast');
@@ -180,6 +188,7 @@ async function loadBestsellers() {
   grid.innerHTML = Array(4).fill(productCardSkeletonHtml()).join('');
   try {
     const products = await apiGet('/products?sort=bestseller');
+    applyCategoryImagesFromProducts(products);
     const top = products.slice(0, 4);
     if (!top.length) {
       grid.innerHTML = '<p class="text-center py-5">No products yet.</p>';
