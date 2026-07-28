@@ -286,10 +286,18 @@ function renderCurrentVideo() {
 
 function renderEditImageGrid() {
   const grid = document.getElementById('ep-image-grid');
+  const last = editingProductImages.length - 1;
   grid.innerHTML = editingProductImages.map((url, i) => `
     <div class="admin-edit-image-thumb" data-index="${i}">
-      <img src="${url}" alt="">
-      <button type="button" class="admin-edit-image-remove" aria-label="Remove image">&times;</button>
+      <div class="admin-edit-image-photo">
+        ${i === 0 ? '<span class="admin-edit-image-primary">Cover</span>' : ''}
+        <img src="${url}" alt="">
+        <button type="button" class="admin-edit-image-remove" aria-label="Remove image">&times;</button>
+      </div>
+      <div class="admin-edit-image-move-row">
+        <button type="button" class="admin-edit-image-move" data-dir="-1" aria-label="Move image earlier" ${i === 0 ? 'disabled' : ''}>&larr;</button>
+        <button type="button" class="admin-edit-image-move" data-dir="1" aria-label="Move image later" ${i === last ? 'disabled' : ''}>&rarr;</button>
+      </div>
     </div>
   `).join('') || '<p style="color:#a89490; font-size:0.85rem;">No images yet.</p>';
 
@@ -297,6 +305,17 @@ function renderEditImageGrid() {
     btn.addEventListener('click', () => {
       const i = Number(btn.closest('.admin-edit-image-thumb').dataset.index);
       editingProductImages.splice(i, 1);
+      renderEditImageGrid();
+    });
+  });
+
+  grid.querySelectorAll('.admin-edit-image-move').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const i = Number(btn.closest('.admin-edit-image-thumb').dataset.index);
+      const dir = Number(btn.dataset.dir);
+      const target = i + dir;
+      if (target < 0 || target >= editingProductImages.length) return;
+      [editingProductImages[i], editingProductImages[target]] = [editingProductImages[target], editingProductImages[i]];
       renderEditImageGrid();
     });
   });

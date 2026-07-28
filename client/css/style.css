@@ -4450,6 +4450,10 @@ select:focus-visible {
 }
 
 .admin-edit-image-thumb {
+  width: 72px;
+}
+
+.admin-edit-image-photo {
   position: relative;
   width: 72px;
   height: 72px;
@@ -4458,10 +4462,26 @@ select:focus-visible {
   background: var(--sand);
 }
 
-.admin-edit-image-thumb img {
+.admin-edit-image-photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
+}
+
+.admin-edit-image-primary {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(28, 35, 29, 0.75);
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: center;
+  padding: 0.15rem 0;
 }
 
 .admin-edit-image-remove {
@@ -4479,6 +4499,30 @@ select:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.admin-edit-image-move-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.3rem;
+  margin-top: 0.3rem;
+}
+
+.admin-edit-image-move {
+  flex: 1;
+  height: 22px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--hairline-strong);
+  background: var(--paper);
+  color: var(--plum);
+  font-size: 0.75rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.admin-edit-image-move:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
 /* #editProductModal wraps its .modal-body/.modal-footer in a <form> (needed
