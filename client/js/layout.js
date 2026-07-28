@@ -95,7 +95,7 @@ function renderFooter() {
           <div class="footer-brand-row">
             <img src="/assets/logo-full.png" alt="ShopXtra" class="logo-img logo-img-footer">
           </div>
-          <p>Everyday essentials — imported, authentic and PKR-priced. Look after yourself, every single day.</p>
+          <p>Everyday essentials that are imported, authentic, and PKR-priced. Look after yourself, every single day.</p>
           <div class="footer-brand-stats">
             <span>&#9733; 4.8 rated</span>
             <span>12,000+ orders</span>
@@ -226,7 +226,7 @@ document.addEventListener('submit', async (e) => {
     });
     const body = await res.json();
     if (!res.ok) throw new Error(body.error);
-    msg.textContent = 'You\'re on the list — thank you!';
+    msg.textContent = 'You\'re on the list. Thank you!';
     msg.style.color = 'var(--tea-pink)';
     emailInput.value = '';
   } catch (err) {

@@ -26,7 +26,7 @@ async function loadConfirmation() {
       <div class="order-id-callout" data-reveal="hero">
         <span class="order-id-label">Your order ID</span>
         <span class="order-id-value">SX-${order.id}</span>
-        <span class="order-id-hint">Save this — you'll need it (with your phone number) to track your order anytime.</span>
+        <span class="order-id-hint">Save this. You'll need it (with your phone number) to track your order anytime.</span>
         <a href="/pages/track-order.html?order=${order.id}&phone=${encodeURIComponent(order.shipping_phone || '')}" class="btn btn-plum mt-2">Track this order</a>
       </div>
 

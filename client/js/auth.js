@@ -115,7 +115,7 @@ async function loadWishlist() {
     document.getElementById('stat-wishlist-count').textContent = items.length;
     container.innerHTML = items.length
       ? items.map(productCardHtml).join('')
-      : '<p style="color:#6b5a58;">Nothing saved yet — tap the heart on any product.</p>';
+      : '<p style="color:#6b5a58;">Nothing saved yet. Tap the heart on any product.</p>';
   } catch (err) {
     container.innerHTML = `<p class="text-danger">Could not load wishlist: ${err.message}</p>`;
   }
@@ -133,7 +133,7 @@ async function loadOrderHistory() {
 
     if (!orders.length) {
       container.innerHTML = '<p style="color:#6b5a58;">No orders yet.</p>';
-      overview.innerHTML = '<p style="color:#6b5a58;">No orders yet — <a href="/pages/shop.html">start shopping</a>.</p>';
+      overview.innerHTML = '<p style="color:#6b5a58;">No orders yet. <a href="/pages/shop.html">Start shopping</a>.</p>';
       return;
     }
 

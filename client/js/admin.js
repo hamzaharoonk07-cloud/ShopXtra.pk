@@ -9,7 +9,7 @@ async function safeJson(res) {
     return JSON.parse(text);
   } catch {
     if (res.status === 413 || /request entity too large/i.test(text)) {
-      throw new Error('Upload too large — try fewer images, or smaller ones (under ~1MB each), and try again.');
+      throw new Error('Upload too large. Try fewer images, or smaller ones (under ~1MB each), and try again.');
     }
     throw new Error(`Server error (${res.status}). Try again with fewer/smaller images.`);
   }
@@ -173,7 +173,7 @@ async function loadOverview() {
       </div>
       <div class="admin-stat-card">
         <span class="admin-stat-label">Customers</span>
-        <span class="admin-stat-value">${allUsers.length || '—'}</span>
+        <span class="admin-stat-value">${allUsers.length}</span>
       </div>
     `;
 
@@ -747,7 +747,7 @@ async function showUserDetail(id) {
     body.innerHTML = `
       <div class="mb-4">
         <p class="mb-1"><strong>Email:</strong> ${user.email}</p>
-        <p class="mb-1"><strong>Phone:</strong> ${user.phone || '—'}</p>
+        <p class="mb-1"><strong>Phone:</strong> ${user.phone || 'Not provided'}</p>
         <p class="mb-1"><strong>Role:</strong> ${user.role}</p>
         <p class="mb-0"><strong>Signed up:</strong> ${new Date(user.created_at).toLocaleDateString('en-PK', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
       </div>

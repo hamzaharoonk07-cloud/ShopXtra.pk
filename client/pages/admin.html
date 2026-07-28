@@ -1,11 +1,11 @@
-<title>Admin — ShopXtra</title>
+<title>Admin | ShopXtra</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, follow">
 <meta name="description" content="ShopXtra admin panel.">
 <link rel="canonical" href="https://shop-xtra-pk.vercel.app/pages/admin.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ShopXtra">
-<meta property="og:title" content="Admin — ShopXtra">
+<meta property="og:title" content="Admin | ShopXtra">
 <meta property="og:description" content="ShopXtra admin panel.">
 <meta property="og:url" content="https://shop-xtra-pk.vercel.app/pages/admin.html">
 <meta property="og:image" content="https://shop-xtra-pk.vercel.app/assets/logo-full.png">
@@ -163,7 +163,7 @@
       <div class="admin-panel mb-4">
         <h2>Email newsletter subscribers</h2>
         <form id="broadcast-form" class="row g-2">
-          <div class="col-md-4"><input class="form-control" id="broadcast-subject" placeholder="Subject, e.g. Weekend Sale — 20% off Coffee" required></div>
+          <div class="col-md-4"><input class="form-control" id="broadcast-subject" placeholder="Subject, e.g. Weekend Sale: 20% off Coffee" required></div>
           <div class="col-md-6"><input class="form-control" id="broadcast-message" placeholder="Message" required></div>
           <div class="col-md-2"><button type="submit" class="btn btn-plum w-100">Send</button></div>
         </form>
@@ -307,7 +307,7 @@
               <input type="number" class="form-control" id="ep-price" min="0" required>
             </div>
             <div class="col-md-4">
-              <label class="form-label mono" style="font-size:0.75rem;">Compare-at price <span style="font-weight:400; text-transform:none;">— shows a % off badge</span></label>
+              <label class="form-label mono" style="font-size:0.75rem;">Compare-at price <span style="font-weight:400; text-transform:none;">(shows a % off badge)</span></label>
               <input type="number" class="form-control" id="ep-compare-price" min="0" placeholder="Optional">
             </div>
             <div class="col-md-4">
@@ -324,13 +324,13 @@
           <input type="file" class="form-control form-control-sm mt-2" id="ep-new-images" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
           <div class="admin-image-preview-grid" id="ep-new-images-preview"></div>
 
-          <label class="form-label mono mt-3" style="font-size:0.75rem;">Video <span style="font-weight:400; text-transform:none;">— shown alongside photos on the product page</span></label>
+          <label class="form-label mono mt-3" style="font-size:0.75rem;">Video <span style="font-weight:400; text-transform:none;">(shown alongside photos on the product page)</span></label>
           <div id="ep-video-current"></div>
           <input type="file" class="form-control form-control-sm mt-2" id="ep-new-video" accept="video/mp4,video/webm,video/quicktime">
           <div class="admin-video-preview" id="ep-new-video-preview"></div>
 
-          <label class="form-label mono mt-3" style="font-size:0.75rem;">Variants <span style="font-weight:400; text-transform:none;">— shown as clickable swatches on the product page; clicking one swaps the main photo</span></label>
-          <p style="font-size:0.8rem; color:var(--muted-body); margin-bottom:0.5rem;">If each uploaded photo above is a different colour of this product, click below to auto-create a colour swatch for each one — no need to fill the form per colour.</p>
+          <label class="form-label mono mt-3" style="font-size:0.75rem;">Variants <span style="font-weight:400; text-transform:none;">(shown as clickable swatches on the product page; clicking one swaps the main photo)</span></label>
+          <p style="font-size:0.8rem; color:var(--muted-body); margin-bottom:0.5rem;">If each uploaded photo above is a different colour of this product, click below to auto-create a colour swatch for each one, no need to fill the form per colour.</p>
           <button type="button" class="btn btn-outline-plum btn-sm mb-2" id="ev-auto-detect-btn">Auto-create colours from images</button>
           <div class="admin-variant-list" id="ep-variant-list"></div>
           <div class="btn-group btn-group-sm mb-2" role="group" aria-label="Variant type" id="ev-type-toggle">

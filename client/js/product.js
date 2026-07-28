@@ -9,7 +9,7 @@ async function loadProduct() {
 
   try {
     const product = await apiGet(`/products/${encodeURIComponent(slug)}`);
-    document.title = `${product.name} — ShopXtra`;
+    document.title = `${product.name} | ShopXtra`;
     updateProductSeo(product, slug);
 
     const variants = product.variants || [];
@@ -80,7 +80,7 @@ async function loadProduct() {
           <div class="pdp-stars-row" id="reviews-summary-inline"></div>
           <div class="pdp-price-row">
             <span class="pdp-price" id="product-price">${formatPrice(product.price)}</span>
-            <span class="pdp-stock${product.stock > 0 && product.stock <= 5 ? ' pdp-stock-urgent' : ''}">${product.stock > 0 ? (product.stock <= 5 ? `Only ${product.stock} left — order soon` : `${product.stock} in stock`) : 'Out of stock'}</span>
+            <span class="pdp-stock${product.stock > 0 && product.stock <= 5 ? ' pdp-stock-urgent' : ''}">${product.stock > 0 ? (product.stock <= 5 ? `Only ${product.stock} left, order soon` : `${product.stock} in stock`) : 'Out of stock'}</span>
           </div>
           <p class="pdp-desc">${product.description || ''}</p>
 
@@ -102,7 +102,7 @@ async function loadProduct() {
               <button type="button" class="pdp-qty-btn" data-step="1" aria-label="Increase quantity">+</button>
             </div>
             <button class="btn btn-plum flex-grow-1" id="add-to-cart-btn" ${product.stock <= 0 ? 'disabled' : ''}>
-              ${product.stock <= 0 ? 'Out of stock' : `Add to bag — ${formatPrice(product.price)}`}
+              ${product.stock <= 0 ? 'Out of stock' : `Add to bag for ${formatPrice(product.price)}`}
             </button>
             <button class="btn btn-outline-plum" id="wishlist-btn" aria-label="Add to wishlist" aria-pressed="false">
               <span id="wishlist-icon" aria-hidden="true">&#9825;</span>
@@ -181,7 +181,7 @@ async function loadProduct() {
       const outOfStock = selectedVariant ? Number(selectedVariant.stock) <= 0 : product.stock <= 0;
       if (btn) {
         btn.disabled = outOfStock;
-        btn.textContent = outOfStock ? 'Out of stock' : `Add to bag — ${formatPrice(finalPrice)}`;
+        btn.textContent = outOfStock ? 'Out of stock' : `Add to bag for ${formatPrice(finalPrice)}`;
       }
       return finalPrice;
     }
@@ -194,7 +194,7 @@ async function loadProduct() {
           selectedVariant = swatchVariants.find((v) => String(v.id) === swatch.dataset.variantId);
           document.getElementById('pdp-color-name').textContent = selectedVariant.color_name || selectedVariant.variant_name;
           if (swatch.dataset.image) {
-            document.getElementById('pdp-main-image').innerHTML = `<img src="${swatch.dataset.image}" alt="${product.name} — ${selectedVariant.color_name || selectedVariant.variant_name || ''}">`;
+            document.getElementById('pdp-main-image').innerHTML = `<img src="${swatch.dataset.image}" alt="${product.name} (${selectedVariant.color_name || selectedVariant.variant_name || ''})">`;
             main.querySelectorAll('.pdp-thumb').forEach((b) => b.classList.remove('active'));
           }
           applyVariantPrice();
@@ -217,7 +217,7 @@ async function loadProduct() {
       const cartProduct = selectedVariant ? {
         ...product,
         slug: `${product.slug}::${selectedVariant.id}`,
-        name: `${product.name} — ${selectedVariant.color_name || selectedVariant.variant_name}`,
+        name: `${product.name} (${selectedVariant.color_name || selectedVariant.variant_name})`,
         price: Number(product.price) + Number(selectedVariant.price_modifier || 0),
         images: selectedVariant.image_url ? [selectedVariant.image_url] : product.images,
       } : product;
@@ -253,7 +253,7 @@ async function loadRelatedProducts(product) {
 function updateProductSeo(product, slug) {
   const url = `https://shop-xtra-pk.vercel.app/pages/product.html?slug=${encodeURIComponent(slug)}`;
   const description = (product.description || '').slice(0, 160) ||
-    `${product.name} — authentic, PKR-priced, delivered nationwide across Pakistan with Cash on Delivery.`;
+    `${product.name}: authentic, PKR-priced, delivered nationwide across Pakistan with Cash on Delivery.`;
   const image = (product.images && product.images[0]) || 'https://shop-xtra-pk.vercel.app/assets/logo-full.png';
 
   const setMeta = (selector, attr, value) => {
@@ -270,7 +270,7 @@ function updateProductSeo(product, slug) {
 
   setMeta('meta[name="description"]', 'content', description);
   setMeta('link[rel="canonical"]', 'href', url);
-  setMeta('meta[property="og:title"]', 'content', `${product.name} — ShopXtra`);
+  setMeta('meta[property="og:title"]', 'content', `${product.name} | ShopXtra`);
   setMeta('meta[property="og:description"]', 'content', description);
   setMeta('meta[property="og:url"]', 'content', url);
   setMeta('meta[property="og:image"]', 'content', image);
@@ -382,7 +382,7 @@ async function loadReviews(slug) {
         </div>
       `;
     } else {
-      summaryEl.innerHTML = '<p class="text-center" style="color:#6b5a58;">No reviews yet — be the first.</p>';
+      summaryEl.innerHTML = '<p class="text-center" style="color:#6b5a58;">No reviews yet. Be the first.</p>';
     }
 
     const inlineEl = document.getElementById('reviews-summary-inline');

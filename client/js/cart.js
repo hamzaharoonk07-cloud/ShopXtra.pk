@@ -122,7 +122,7 @@ function renderCartDrawer() {
       <span>Subtotal</span>
       <span>${formatPrice(cartTotal(cart))}</span>
     </div>
-    <a href="/pages/checkout.html" class="btn btn-plum w-100">Checkout — Cash on Delivery</a>
+    <a href="/pages/checkout.html" class="btn btn-plum w-100">Checkout with Cash on Delivery</a>
     <a href="/pages/cart.html" class="cart-drawer-view-cart">View &amp; edit bag</a>
   `;
 }
