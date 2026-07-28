@@ -541,7 +541,8 @@ a {
 
 .product-image {
   aspect-ratio: 4 / 5;
-  background: linear-gradient(135deg, var(--sand), var(--ivory-blush));
+  background: var(--paper);
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -610,28 +611,27 @@ a {
   margin: 0.85rem 1.1rem 0;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   text-align: center;
-  color: var(--plum);
-  border: 1.5px solid var(--plum);
-  border-radius: 0;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
   padding: 0.65rem 1rem;
-  background: transparent;
+  background: var(--tea-pink);
   white-space: nowrap;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .quick-add-btn:hover:not(:disabled) {
-  background: var(--plum);
-  color: #fff;
+  background: var(--ink-hover);
+  transform: translateY(-1px);
 }
 
 .quick-add-btn:disabled {
-  opacity: 0.7;
+  opacity: 0.6;
   color: var(--muted);
-  border-color: var(--hairline-strong);
+  background: var(--hairline-strong);
   cursor: not-allowed;
 }
 
@@ -2805,7 +2805,7 @@ select:focus-visible {
 
 /* ---------- Shop listing controls ---------- */
 .shop-banner {
-  background: linear-gradient(135deg, var(--plum), #1F332A 85%);
+  background: var(--watermelon-gradient);
   border-radius: var(--radius-lg);
   padding: clamp(1.75rem, 4vw, 2.75rem) clamp(1.5rem, 4vw, 2.5rem);
   margin-bottom: 2rem;
@@ -2813,12 +2813,12 @@ select:focus-visible {
 
 .shop-breadcrumb {
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(18, 41, 30, 0.55);
   margin-bottom: 0.75rem;
 }
 
 .shop-breadcrumb a {
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--plum);
 }
 
 .shop-title-row {
@@ -2831,15 +2831,14 @@ select:focus-visible {
 
 .shop-title-row h1 {
   font-size: clamp(2rem, 4vw, 3rem);
-  color: #fff;
-  text-transform: uppercase;
+  color: var(--plum);
   font-weight: 800;
   letter-spacing: -0.01em;
 }
 
 .shop-count {
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(18, 41, 30, 0.6);
 }
 
 .shop-controls-row {
