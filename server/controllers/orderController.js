@@ -9,8 +9,11 @@ async function create(req, res, next) {
     if (!Array.isArray(items) || !items.length) {
       return res.status(400).json({ error: 'Cart items are required' });
     }
-    if (!shipping || !shipping.name || !shipping.phone || !shipping.address || !shipping.city) {
-      return res.status(400).json({ error: 'Full shipping details are required' });
+    if (!shipping || !shipping.name || !shipping.phone || !shipping.address || !shipping.city || !shipping.postalCode) {
+      return res.status(400).json({ error: 'Full shipping details, including postal code, are required' });
+    }
+    if (!req.user?.email && !email) {
+      return res.status(400).json({ error: 'Email is required' });
     }
     for (const item of items) {
       if (!item.slug || !Number.isInteger(item.qty) || item.qty < 1) {

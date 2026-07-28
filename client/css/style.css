@@ -1,13 +1,14 @@
 :root {
-  /* Lightened, professional take on the green brand palette — deep
-     forest-green surfaces (nav/footer/buttons) moved to a medium sage
-     tone (not near-black, not pale) per client feedback. Variable names
-     kept as-is (tea-pink/plum/dusty-rose/gold) to avoid touching every
-     reference site-wide — only the values changed. */
+  /* Deepened back to a rich forest-green brand palette (nav/footer/
+     buttons) to match a bolder, ownkind.ae-style look — reverses an
+     earlier pass that lightened this to a medium sage tone. Variable
+     names kept as-is (tea-pink/plum/dusty-rose/gold) to avoid touching
+     every reference site-wide — only the values changed. Coral tokens
+     below are net-new, added for the watermelon-gradient hero/accents. */
   --ivory-blush: #F7F9F6;
   --paper: #FFFFFF;
-  --tea-pink: #3C7A5D;
-  --plum: #2E4A3D;
+  --tea-pink: #1F5C3E;
+  --plum: #12291E;
   --dusty-rose: #8FD19E;
   --sand: #EEF3E8;
   --gold: #E6A935;
@@ -15,11 +16,15 @@
   --muted-body: #4C5A52;
   --hairline: #E4E9DF;
   --hairline-strong: #D7E0D1;
-  --ink-hover: #2F6B4E;
+  --ink-hover: #164A30;
   --success-bg: #F6FAF1;
   --success-border: #E0ECD4;
-  --success-dot: #3C7A5D;
+  --success-dot: #1F5C3E;
   --success-text: #3A473F;
+
+  --coral: #FF6F5E;
+  --coral-soft: #FFA98F;
+  --watermelon-gradient: linear-gradient(135deg, #FF6F5E 0%, #FFA98F 55%, #FFD3B0 100%);
 
   /* Category tile tints, matched from the doc (Electrolytes/Coffee/
      Hair & Body/Cosmetics) */
@@ -35,9 +40,9 @@
   --radius-lg: 1.375rem;
   --radius-md: 1.125rem;
   --radius-sm: 0.75rem;
-  --shadow-soft: 0 1px 2px rgba(46, 74, 61, 0.06), 0 14px 30px -14px rgba(46, 74, 61, 0.25);
-  --shadow-soft-lg: 0 2px 6px rgba(46, 74, 61, 0.07), 0 24px 44px -26px rgba(46, 74, 61, 0.35);
-  --shadow-lift: 0 1px 2px rgba(46, 74, 61, 0.05), 0 32px 60px -28px rgba(46, 74, 61, 0.4);
+  --shadow-soft: 0 1px 2px rgba(18, 41, 30, 0.06), 0 14px 30px -14px rgba(18, 41, 30, 0.25);
+  --shadow-soft-lg: 0 2px 6px rgba(18, 41, 30, 0.07), 0 24px 44px -26px rgba(18, 41, 30, 0.35);
+  --shadow-lift: 0 1px 2px rgba(18, 41, 30, 0.05), 0 32px 60px -28px rgba(18, 41, 30, 0.4);
 }
 
 * {
@@ -1612,21 +1617,22 @@ select:focus-visible {
 }
 
 .hero-slide-morning,
-.hero-slide-evening {
-  background: linear-gradient(135deg, var(--plum), #1F332A 85%);
-}
-
-.hero-slide-midday {
-  background: linear-gradient(135deg, var(--tea-pink), var(--ink-hover) 85%);
-}
-
+.hero-slide-evening,
+.hero-slide-midday,
 .hero-slide-coffee {
-  background: #1a1310;
+  background: var(--watermelon-gradient);
 }
 
 .hero-slide-photo {
   position: absolute;
-  inset: 0;
+  right: 6%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(42vw, 480px);
+  height: min(42vw, 480px);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lift);
+  overflow: hidden;
   z-index: 0;
 }
 
@@ -1642,13 +1648,6 @@ select:focus-visible {
   object-position: center 55%;
 }
 
-.hero-slide-photo::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgba(10, 7, 5, 0.88) 0%, rgba(10, 7, 5, 0.62) 42%, rgba(10, 7, 5, 0.18) 75%);
-}
-
 .hero-slide-icon {
   position: absolute;
   right: -6%;
@@ -1656,8 +1655,8 @@ select:focus-visible {
   transform: translateY(-50%);
   width: min(48vw, 540px);
   height: min(48vw, 540px);
-  opacity: 0.12;
-  color: #fff;
+  opacity: 0.1;
+  color: var(--plum);
   pointer-events: none;
 }
 
@@ -1682,22 +1681,21 @@ select:focus-visible {
   font-size: 0.78rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--dusty-rose);
+  color: var(--tea-pink);
   margin-bottom: 1rem;
 }
 
 .hero-slide-copy h1 {
-  color: #fff;
+  color: var(--plum);
   font-size: clamp(2.3rem, 4.8vw, 3.85rem);
   line-height: 1.05;
   font-weight: 800;
-  text-transform: uppercase;
   letter-spacing: -0.01em;
   margin: 0 0 1.1rem;
 }
 
 .hero-slide-copy .lead {
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--muted-body);
   max-width: 34ch;
   margin: 0 0 1.75rem;
 }
@@ -1727,15 +1725,15 @@ select:focus-visible {
 }
 
 .btn-hero-outline {
-  border: 1.5px solid rgba(255, 255, 255, 0.55);
-  color: #fff;
+  border: 1.5px solid rgba(18, 41, 30, 0.35);
+  color: var(--plum);
 }
 
 .btn-hero-outline:hover,
 .btn-hero-outline:focus-visible {
-  border-color: #fff;
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  border-color: var(--plum);
+  background: rgba(18, 41, 30, 0.08);
+  color: var(--plum);
 }
 
 .hero-carousel-arrow {
@@ -1746,8 +1744,8 @@ select:focus-visible {
   height: 44px;
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.16);
-  color: #fff;
+  background: rgba(18, 41, 30, 0.1);
+  color: var(--plum);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1759,7 +1757,7 @@ select:focus-visible {
 
 .hero-carousel-arrow:hover,
 .hero-carousel-arrow:focus-visible {
-  background: rgba(255, 255, 255, 0.32);
+  background: rgba(18, 41, 30, 0.2);
 }
 
 .hero-carousel-arrow.prev { left: 1.25rem; }
@@ -1780,14 +1778,14 @@ select:focus-visible {
   height: 8px;
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(18, 41, 30, 0.3);
   padding: 0;
   cursor: pointer;
   transition: background-color 0.2s ease, width 0.25s ease;
 }
 
 .hero-carousel-dots button.active {
-  background: #fff;
+  background: var(--plum);
   width: 22px;
   border-radius: 4px;
 }
@@ -1833,13 +1831,14 @@ select:focus-visible {
     height: 70vw;
     right: -18%;
   }
-  /* Full-bleed photo slides: the slide is much taller/narrower on mobile
-     than the source photos are shot for, so object-fit:cover crops far
-     more aggressively (losing side content a left-to-right desktop
-     gradient assumes is there). A near-uniform dark scrim keeps text
-     legible regardless of exactly what crop lands under it. */
-  .hero-slide-photo::after {
-    background: linear-gradient(180deg, rgba(10, 7, 5, 0.82) 0%, rgba(10, 7, 5, 0.72) 55%, rgba(10, 7, 5, 0.85) 100%);
+  /* The framed photo card shrinks and tucks into the lower-right corner
+     on mobile so it doesn't collide with the full-width stacked copy. */
+  .hero-slide-photo {
+    width: min(55vw, 260px);
+    height: min(55vw, 260px);
+    top: auto;
+    bottom: 1.5rem;
+    transform: none;
   }
   .hero-slide-copy {
     max-width: none;
