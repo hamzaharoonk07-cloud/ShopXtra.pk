@@ -16,7 +16,6 @@ router.post('/', async (req, res, next) => {
       'INSERT INTO newsletter_signups (email) VALUES ($1) ON CONFLICT (email) DO NOTHING',
       [email]
     );
-    res.status(201).json({ message: 'Subscribed' });
 
     if (rowCount > 0) {
       await sendMail({
@@ -25,6 +24,8 @@ router.post('/', async (req, res, next) => {
         html: newsletterWelcomeEmail(),
       });
     }
+
+    res.status(201).json({ message: 'Subscribed' });
   } catch (err) {
     next(err);
   }
@@ -38,10 +39,11 @@ router.post('/broadcast', requireAuth, requireRole('admin'), async (req, res, ne
     }
 
     const { rows } = await pool.query('SELECT email FROM newsletter_signups');
-    res.json({ message: `Sending to ${rows.length} subscriber${rows.length === 1 ? '' : 's'}.` });
 
     const html = saleAnnouncementEmail({ subject, message });
     await Promise.all(rows.map(({ email }) => sendMail({ to: email, subject, html })));
+
+    res.json({ message: `Sending to ${rows.length} subscriber${rows.length === 1 ? '' : 's'}.` });
   } catch (err) {
     next(err);
   }

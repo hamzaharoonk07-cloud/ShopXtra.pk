@@ -26,7 +26,6 @@ async function create(req, res, next) {
       paymentMethod: paymentMethod === 'cod' ? 'cod' : 'cod',
       promoCode,
     });
-    res.status(201).json(order);
 
     if (order.email) {
       const fullOrder = await orderModel.findById(order.id);
@@ -43,6 +42,8 @@ async function create(req, res, next) {
         }),
       ]);
     }
+
+    res.status(201).json(order);
   } catch (err) {
     if (err.status) return res.status(err.status).json({ error: err.message });
     next(err);
@@ -81,7 +82,6 @@ async function updateStatus(req, res, next) {
   try {
     const order = await orderModel.updateStatus(req.params.id, req.body.status);
     if (!order) return res.status(404).json({ error: 'Order not found' });
-    res.json(order);
 
     if (order.email && ['shipped', 'delivered', 'processing', 'cancelled'].includes(order.status)) {
       await sendMail({
@@ -90,6 +90,8 @@ async function updateStatus(req, res, next) {
         html: orderStatusEmail(order, order.status),
       });
     }
+
+    res.json(order);
   } catch (err) {
     if (err.status) return res.status(err.status).json({ error: err.message });
     next(err);
