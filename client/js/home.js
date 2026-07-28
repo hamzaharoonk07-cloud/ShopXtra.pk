@@ -24,6 +24,17 @@ function applyCategoryImagesFromProducts(products) {
   renderCategoryGrid();
 }
 
+function renderFreeShipBannerImages(products) {
+  const wrap = document.getElementById('free-ship-banner-images');
+  if (!wrap) return;
+  const photos = HOME_CATEGORIES
+    .map((c) => products.find((p) => p.category === c.slug && p.images && p.images[0]))
+    .filter(Boolean)
+    .slice(0, 4);
+  if (!photos.length) return;
+  wrap.innerHTML = photos.map((p) => `<img src="${p.images[0]}" alt="${p.name}" loading="lazy">`).join('');
+}
+
 async function showSaleBannerIfAny() {
   const toastEl = document.getElementById('saleBannerToast');
   if (!toastEl) return;
@@ -189,6 +200,7 @@ async function loadBestsellers() {
   try {
     const products = await apiGet('/products?sort=bestseller');
     applyCategoryImagesFromProducts(products);
+    renderFreeShipBannerImages(products);
     const top = products.slice(0, 4);
     if (!top.length) {
       grid.innerHTML = '<p class="text-center py-5">No products yet.</p>';
