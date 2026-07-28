@@ -3,8 +3,9 @@
      buttons) to match a bolder, ownkind.ae-style look — reverses an
      earlier pass that lightened this to a medium sage tone. Variable
      names kept as-is (tea-pink/plum/dusty-rose/gold) to avoid touching
-     every reference site-wide — only the values changed. Coral tokens
-     below are net-new, added for the watermelon-gradient hero/accents. */
+     every reference site-wide — only the values changed. --hero-gradient
+     is net-new, a light green wash for the hero/shop-banner (an earlier
+     coral/watermelon version was tried and reverted back to green). */
   --ivory-blush: #F7F9F6;
   --paper: #FFFFFF;
   --tea-pink: #1F5C3E;
@@ -22,9 +23,7 @@
   --success-dot: #1F5C3E;
   --success-text: #3A473F;
 
-  --coral: #FF6F5E;
-  --coral-soft: #FFA98F;
-  --watermelon-gradient: linear-gradient(135deg, #FF6F5E 0%, #FFA98F 55%, #FFD3B0 100%);
+  --hero-gradient: linear-gradient(135deg, var(--dusty-rose) 0%, var(--sand) 60%, var(--ivory-blush) 100%);
 
   /* Category tile tints, matched from the doc (Electrolytes/Coffee/
      Hair & Body/Cosmetics) */
@@ -541,7 +540,7 @@ a {
 
 .product-image {
   aspect-ratio: 4 / 5;
-  background: var(--paper);
+  background: linear-gradient(135deg, var(--sand), var(--ivory-blush));
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
@@ -1620,7 +1619,7 @@ select:focus-visible {
 .hero-slide-evening,
 .hero-slide-midday,
 .hero-slide-coffee {
-  background: var(--watermelon-gradient);
+  background: var(--hero-gradient);
 }
 
 .hero-slide-photo {
@@ -2805,7 +2804,7 @@ select:focus-visible {
 
 /* ---------- Shop listing controls ---------- */
 .shop-banner {
-  background: var(--watermelon-gradient);
+  background: var(--hero-gradient);
   border-radius: var(--radius-lg);
   padding: clamp(1.75rem, 4vw, 2.75rem) clamp(1.5rem, 4vw, 2.5rem);
   margin-bottom: 2rem;
