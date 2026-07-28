@@ -761,24 +761,73 @@ async function showUserDetail(id) {
   }
 }
 
+function promoTypeLabel(type) {
+  if (type === 'percent') return 'Percent';
+  if (type === 'free_gift') return 'Free gift';
+  return 'Flat';
+}
+
+function promoValueLabel(c) {
+  if (c.discount_type === 'percent') return `${Number(c.discount_value)}%`;
+  if (c.discount_type === 'free_gift') return c.gift_product_name || 'Gift product';
+  return formatPrice(c.discount_value);
+}
+
 async function loadPromoCodes() {
   const tbody = document.getElementById('promo-table-body');
   try {
     const codes = await apiGet('/promo');
     tbody.innerHTML = codes.length
       ? codes.map((c) => `
-          <tr>
+          <tr data-id="${c.id}">
             <td class="mono">${c.code}</td>
-            <td>${c.discount_type === 'percent' ? 'Percent' : 'Flat'}</td>
-            <td>${c.discount_type === 'percent' ? `${Number(c.discount_value)}%` : formatPrice(c.discount_value)}</td>
+            <td>${promoTypeLabel(c.discount_type)}</td>
+            <td>${promoValueLabel(c)}</td>
             <td>${c.active ? 'Active' : 'Inactive'}</td>
+            <td><button type="button" class="btn btn-outline-plum btn-sm promo-toggle-btn" data-active="${c.active}">${c.active ? 'Deactivate' : 'Activate'}</button></td>
           </tr>
         `).join('')
-      : '<tr><td colspan="4" style="color:#6b5a58;">No promo codes yet.</td></tr>';
+      : '<tr><td colspan="5" style="color:#6b5a58;">No promo codes yet.</td></tr>';
+
+    tbody.querySelectorAll('.promo-toggle-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const row = btn.closest('tr');
+        const id = row.dataset.id;
+        const nextActive = btn.dataset.active !== 'true';
+        btn.disabled = true;
+        try {
+          const res = await fetch(`/api/promo/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ active: nextActive }),
+          });
+          if (!res.ok) throw new Error();
+          loadPromoCodes();
+        } catch {
+          btn.disabled = false;
+        }
+      });
+    });
   } catch (err) {
     tbody.innerHTML = `<tr><td colspan="5" class="text-danger">Could not load promo codes: ${err.message}</td></tr>`;
   }
 }
+
+function populateGiftProductOptions() {
+  const select = document.getElementById('promo-gift-product-input');
+  if (!select) return;
+  select.innerHTML = '<option value="">Select gift product</option>' +
+    allProducts.map((p) => `<option value="${p.id}">${p.name}</option>`).join('');
+}
+
+document.getElementById('promo-type-input').addEventListener('change', (e) => {
+  const isGift = e.target.value === 'free_gift';
+  document.getElementById('promo-value-field').classList.toggle('d-none', isGift);
+  document.getElementById('promo-value-input').required = !isGift;
+  document.getElementById('promo-gift-field').classList.toggle('d-none', !isGift);
+  document.getElementById('promo-gift-product-input').required = isGift;
+  if (isGift) populateGiftProductOptions();
+});
 
 document.getElementById('broadcast-form').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -813,19 +862,23 @@ document.getElementById('add-promo-form').addEventListener('submit', async (e) =
   e.preventDefault();
   const errorEl = document.getElementById('add-promo-error');
   errorEl.classList.add('d-none');
+  const discountType = document.getElementById('promo-type-input').value;
   try {
     const res = await fetch('/api/promo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         code: document.getElementById('promo-code-input').value,
-        discountType: document.getElementById('promo-type-input').value,
-        discountValue: Number(document.getElementById('promo-value-input').value),
+        discountType,
+        discountValue: discountType === 'free_gift' ? 0 : Number(document.getElementById('promo-value-input').value),
+        giftProductId: discountType === 'free_gift' ? Number(document.getElementById('promo-gift-product-input').value) : undefined,
       }),
     });
     const body = await res.json();
     if (!res.ok) throw new Error(body.error);
     document.getElementById('add-promo-form').reset();
+    document.getElementById('promo-value-field').classList.remove('d-none');
+    document.getElementById('promo-gift-field').classList.add('d-none');
     loadPromoCodes();
   } catch (err) {
     errorEl.textContent = err.message;

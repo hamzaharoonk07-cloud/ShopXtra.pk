@@ -39,6 +39,7 @@ async function createOrder({ userId, email, items, shipping, paymentMethod, prom
 
     let discount = 0;
     let appliedCode = null;
+    let giftProductId = null;
     if (promoCode) {
       const promo = await promoModel.findByCode(promoCode);
       if (!promo) {
@@ -46,6 +47,17 @@ async function createOrder({ userId, email, items, shipping, paymentMethod, prom
       }
       discount = promoModel.computeDiscount(promo, total);
       appliedCode = promo.code;
+      if (promo.discount_type === 'free_gift' && promo.gift_product_id) {
+        const { rows: giftRows } = await client.query(
+          'SELECT id, stock FROM products WHERE id = $1 FOR UPDATE',
+          [promo.gift_product_id]
+        );
+        const giftProduct = giftRows[0];
+        if (giftProduct && giftProduct.stock > 0) {
+          giftProductId = giftProduct.id;
+          await client.query('UPDATE products SET stock = stock - 1 WHERE id = $1', [giftProductId]);
+        }
+      }
     }
     const shippingFee = computeShippingFee(shipping.city, total);
     const finalTotal = total - discount + shippingFee;
@@ -63,6 +75,14 @@ async function createOrder({ userId, email, items, shipping, paymentMethod, prom
         `INSERT INTO order_items (order_id, product_id, qty, price_at_purchase)
          VALUES ($1, $2, $3, $4)`,
         [order.id, item.productId, item.qty, item.price]
+      );
+    }
+
+    if (giftProductId) {
+      await client.query(
+        `INSERT INTO order_items (order_id, product_id, qty, price_at_purchase)
+         VALUES ($1, $2, 1, 0)`,
+        [order.id, giftProductId]
       );
     }
 

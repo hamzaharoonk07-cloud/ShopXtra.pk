@@ -2,7 +2,10 @@ const pool = require('../config/db');
 
 async function findByCode(code) {
   const { rows } = await pool.query(
-    'SELECT * FROM promo_codes WHERE code = $1 AND active = true',
+    `SELECT pc.*, p.name AS gift_product_name, p.slug AS gift_product_slug, p.images AS gift_product_images
+     FROM promo_codes pc
+     LEFT JOIN products p ON p.id = pc.gift_product_id
+     WHERE pc.code = $1 AND pc.active = true`,
     [code.toUpperCase()]
   );
   return rows[0] || null;
@@ -10,6 +13,7 @@ async function findByCode(code) {
 
 function computeDiscount(promo, subtotal) {
   if (!promo) return 0;
+  if (promo.discount_type === 'free_gift') return 0;
   const raw = promo.discount_type === 'percent'
     ? (subtotal * Number(promo.discount_value)) / 100
     : Number(promo.discount_value);
@@ -17,7 +21,12 @@ function computeDiscount(promo, subtotal) {
 }
 
 async function findAll() {
-  const { rows } = await pool.query('SELECT * FROM promo_codes ORDER BY created_at DESC');
+  const { rows } = await pool.query(
+    `SELECT pc.*, p.name AS gift_product_name
+     FROM promo_codes pc
+     LEFT JOIN products p ON p.id = pc.gift_product_id
+     ORDER BY pc.created_at DESC`
+  );
   return rows;
 }
 
@@ -28,13 +37,21 @@ async function findPublicOffers() {
   return rows;
 }
 
-async function create({ code, discountType, discountValue, isPublicOffer }) {
+async function create({ code, discountType, discountValue, isPublicOffer, giftProductId }) {
   const { rows } = await pool.query(
-    `INSERT INTO promo_codes (code, discount_type, discount_value, is_public_offer)
-     VALUES ($1, $2, $3, $4) RETURNING *`,
-    [code.toUpperCase(), discountType, discountValue, !!isPublicOffer]
+    `INSERT INTO promo_codes (code, discount_type, discount_value, is_public_offer, gift_product_id)
+     VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+    [code.toUpperCase(), discountType, discountValue, !!isPublicOffer, giftProductId || null]
   );
   return rows[0];
 }
 
-module.exports = { findByCode, computeDiscount, findAll, findPublicOffers, create };
+async function setActive(id, active) {
+  const { rows } = await pool.query(
+    'UPDATE promo_codes SET active = $2 WHERE id = $1 RETURNING *',
+    [id, active]
+  );
+  return rows[0] || null;
+}
+
+module.exports = { findByCode, computeDiscount, findAll, findPublicOffers, create, setActive };

@@ -65,8 +65,9 @@ CREATE TABLE IF NOT EXISTS orders (
 CREATE TABLE IF NOT EXISTS promo_codes (
   id SERIAL PRIMARY KEY,
   code VARCHAR(50) UNIQUE NOT NULL,
-  discount_type VARCHAR(10) NOT NULL CHECK (discount_type IN ('percent', 'flat')),
+  discount_type VARCHAR(10) NOT NULL CHECK (discount_type IN ('percent', 'flat', 'free_gift')),
   discount_value NUMERIC(10, 2) NOT NULL,
+  gift_product_id INTEGER REFERENCES products(id),
   active BOOLEAN NOT NULL DEFAULT true,
   is_public_offer BOOLEAN NOT NULL DEFAULT false,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()

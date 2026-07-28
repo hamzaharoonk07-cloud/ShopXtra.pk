@@ -33,8 +33,13 @@ function updateTotals() {
 
   const discountRow = document.getElementById('promo-discount-row');
   const discount = appliedPromo ? appliedPromo.discountAmount : 0;
-  if (appliedPromo) {
+  if (appliedPromo && appliedPromo.discountType === 'free_gift') {
     discountRow.classList.remove('d-none');
+    document.getElementById('checkout-discount-label').textContent = 'Free gift';
+    document.getElementById('checkout-discount').textContent = appliedPromo.giftProduct?.name || 'Included';
+  } else if (appliedPromo) {
+    discountRow.classList.remove('d-none');
+    document.getElementById('checkout-discount-label').textContent = 'Discount';
     document.getElementById('checkout-discount').textContent = `- ${formatPrice(discount)}`;
   } else {
     discountRow.classList.add('d-none');

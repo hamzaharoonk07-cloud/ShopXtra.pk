@@ -19,6 +19,15 @@ async function runMigrations() {
     ALTER TABLE orders
       ADD COLUMN IF NOT EXISTS shipping_fee NUMERIC(10, 2) NOT NULL DEFAULT 0
   `);
+  await pool.query(`
+    ALTER TABLE promo_codes
+      ADD COLUMN IF NOT EXISTS gift_product_id INTEGER REFERENCES products(id)
+  `);
+  await pool.query(`ALTER TABLE promo_codes DROP CONSTRAINT IF EXISTS promo_codes_discount_type_check`);
+  await pool.query(`
+    ALTER TABLE promo_codes ADD CONSTRAINT promo_codes_discount_type_check
+      CHECK (discount_type IN ('percent', 'flat', 'free_gift'))
+  `);
 
   // Discontinue the shampoo category: keep any shampoo product that has real
   // order history by moving it into soaps (order_items has no ON DELETE
