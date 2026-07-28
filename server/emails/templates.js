@@ -1,3 +1,5 @@
+const SITE_URL = process.env.SITE_URL || 'http://localhost:4000';
+
 function formatPKR(value) {
   return `Rs ${Number(value).toLocaleString('en-PK', { maximumFractionDigits: 0 })}`;
 }
@@ -6,8 +8,8 @@ function layout(bodyHtml) {
   return `
     <div style="background-color:#F5F0E6; padding: 32px 16px; font-family: Georgia, 'Times New Roman', serif;">
       <div style="max-width: 560px; margin: 0 auto; background: #FDFBF7; border-radius: 16px; overflow: hidden;">
-        <div style="background-color:#1C231D; padding: 24px 32px; text-align: center;">
-          <span style="color:#F5F0E6; font-size: 22px; font-style: italic; letter-spacing: 0.5px;">ShopXtra</span>
+        <div style="background-color:#000000; padding: 20px 32px; text-align: center;">
+          <img src="${SITE_URL}/assets/logo.png" alt="ShopXtra" width="120" style="width: 120px; max-width: 100%; height: auto; display: inline-block;">
         </div>
         <div style="padding: 32px; font-family: Arial, sans-serif;">
           ${bodyHtml}
@@ -21,12 +23,18 @@ function layout(bodyHtml) {
 }
 
 function itemsTableHtml(items) {
-  return items.map((item) => `
+  return items.map((item) => {
+    const image = (item.images && item.images[0]) || `${SITE_URL}/assets/logo.png`;
+    return `
     <tr>
+      <td style="padding: 8px 8px 8px 0; width: 56px;">
+        <img src="${image}" alt="${item.name}" width="48" height="48" style="width:48px; height:48px; object-fit:cover; border-radius:8px; display:block; border:1px solid #EFEADE;">
+      </td>
       <td style="padding: 8px 0; color:#1C231D;">${item.name} <span style="color:#7A7266;">&times;${item.qty}</span></td>
       <td style="padding: 8px 0; text-align: right; color:#1C231D; font-weight: bold;">${formatPKR(item.price_at_purchase * item.qty)}</td>
     </tr>
-  `).join('');
+  `;
+  }).join('');
 }
 
 function orderConfirmationEmail(order) {
@@ -36,7 +44,7 @@ function orderConfirmationEmail(order) {
     <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
       ${itemsTableHtml(order.items || [])}
       <tr>
-        <td style="padding-top: 12px; border-top: 1px solid #EFEADE; font-weight: bold; color:#1C231D;">Total</td>
+        <td colspan="2" style="padding-top: 12px; border-top: 1px solid #EFEADE; font-weight: bold; color:#1C231D;">Total</td>
         <td style="padding-top: 12px; border-top: 1px solid #EFEADE; text-align: right; font-weight: bold; color:#1C231D;">${formatPKR(order.total)}</td>
       </tr>
     </table>
@@ -45,6 +53,7 @@ function orderConfirmationEmail(order) {
     <div style="background-color:#EAF3E3; border:1px solid #B8D9A3; border-radius: 12px; padding: 12px 16px; margin-top: 20px;">
       <span style="color:#2C4A1E; font-size: 13px;">Cash on Delivery &middot; Have the total ready for the rider when your order arrives.</span>
     </div>
+    <p style="color:#5A5348; margin-top: 24px; margin-bottom: 0;">Thank you for shopping with ShopXtra &mdash; we hope you love it!</p>
   `);
 }
 
@@ -76,12 +85,11 @@ function newsletterWelcomeEmail() {
 }
 
 function saleAnnouncementEmail({ subject, message }) {
-  const siteUrl = process.env.SITE_URL || 'http://localhost:4000';
   return layout(`
     <h1 style="color:#1C231D; font-size: 22px; margin-bottom: 4px; font-family: Georgia, serif; font-style: italic; font-weight: normal;">${subject}</h1>
     <p style="color:#5A5348; white-space: pre-line;">${message}</p>
     <div style="text-align:center; margin-top: 24px;">
-      <a href="${siteUrl}/pages/sale.html" style="display:inline-block; background-color:#1C231D; color:#F5F0E6; text-decoration:none; border-radius:999px; padding: 12px 28px; font-family: Arial, sans-serif; font-size: 14px;">Shop the sale</a>
+      <a href="${SITE_URL}/pages/sale.html" style="display:inline-block; background-color:#1C231D; color:#F5F0E6; text-decoration:none; border-radius:999px; padding: 12px 28px; font-family: Arial, sans-serif; font-size: 14px;">Shop the sale</a>
     </div>
   `);
 }
