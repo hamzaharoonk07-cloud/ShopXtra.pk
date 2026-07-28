@@ -15,6 +15,10 @@ async function runMigrations() {
     ALTER TABLE orders
       ADD COLUMN IF NOT EXISTS shipping_postal_code VARCHAR(20)
   `);
+  await pool.query(`
+    ALTER TABLE orders
+      ADD COLUMN IF NOT EXISTS shipping_fee NUMERIC(10, 2) NOT NULL DEFAULT 0
+  `);
 
   // Discontinue the shampoo category: keep any shampoo product that has real
   // order history by moving it into soaps (order_items has no ON DELETE

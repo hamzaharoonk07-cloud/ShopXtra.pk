@@ -40,6 +40,10 @@ async function loadConfirmation() {
             <span class="price" style="color: var(--plum);">- ${formatPrice(order.discount_total)}</span>
           </div>
         ` : ''}
+        <div class="d-flex justify-content-between mb-2">
+          <span>Shipping</span>
+          <span class="price">${Number(order.shipping_fee) > 0 ? formatPrice(order.shipping_fee) : 'Free'}</span>
+        </div>
         <div class="d-flex justify-content-between fw-semibold mb-3">
           <span>Total</span>
           <span class="price">${formatPrice(order.total)}</span>

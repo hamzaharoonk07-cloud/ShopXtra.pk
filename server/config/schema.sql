@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS orders (
   status VARCHAR(30) NOT NULL DEFAULT 'pending',
   total NUMERIC(10, 2) NOT NULL,
   discount_total NUMERIC(10, 2) NOT NULL DEFAULT 0,
+  shipping_fee NUMERIC(10, 2) NOT NULL DEFAULT 0,
   promo_code VARCHAR(50),
   email VARCHAR(255),
   payment_method VARCHAR(30) NOT NULL DEFAULT 'cod',

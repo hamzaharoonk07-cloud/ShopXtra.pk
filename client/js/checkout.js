@@ -27,15 +27,19 @@ function updateTotals() {
   const subtotal = cartTotal(getCart());
   document.getElementById('checkout-subtotal').textContent = formatPrice(subtotal);
 
+  const city = document.getElementById('ship-city').value;
+  const shippingFee = computeShippingFee(city, subtotal);
+  document.getElementById('checkout-shipping').textContent = shippingFee > 0 ? formatPrice(shippingFee) : 'Free';
+
   const discountRow = document.getElementById('promo-discount-row');
+  const discount = appliedPromo ? appliedPromo.discountAmount : 0;
   if (appliedPromo) {
     discountRow.classList.remove('d-none');
-    document.getElementById('checkout-discount').textContent = `- ${formatPrice(appliedPromo.discountAmount)}`;
-    document.getElementById('checkout-total').textContent = formatPrice(subtotal - appliedPromo.discountAmount);
+    document.getElementById('checkout-discount').textContent = `- ${formatPrice(discount)}`;
   } else {
     discountRow.classList.add('d-none');
-    document.getElementById('checkout-total').textContent = formatPrice(subtotal);
   }
+  document.getElementById('checkout-total').textContent = formatPrice(subtotal - discount + shippingFee);
 }
 
 async function applyPromoCode(code) {
@@ -123,6 +127,9 @@ document.getElementById('checkout-form').addEventListener('submit', async (e) =>
   }
 });
 
+document.getElementById('ship-city').innerHTML = cityOptionsHtml();
+document.getElementById('ship-city').addEventListener('change', updateTotals);
+
 renderCheckoutSummary();
 
 (async () => {
@@ -140,6 +147,7 @@ renderCheckoutSummary();
       document.getElementById('ship-address').value = defaultAddress.line1;
       document.getElementById('ship-city').value = defaultAddress.city;
       document.getElementById('ship-postal').value = defaultAddress.postal_code || '';
+      updateTotals();
     }
   } catch {
     // Guest checkout; leave shipping fields blank for manual entry.

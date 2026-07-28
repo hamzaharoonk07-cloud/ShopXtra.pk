@@ -95,7 +95,7 @@ function orderConfirmationEmail(order) {
       ${itemsTableHtml(order.items || [])}
       <tr>
         <td colspan="3" style="padding-top: 10px; color:#5A5348;">Subtotal</td>
-        <td style="padding-top: 10px; text-align: right; color:#5A5348;">${formatPKR(order.total + (order.discount_total || 0))}</td>
+        <td style="padding-top: 10px; text-align: right; color:#5A5348;">${formatPKR(order.total + (order.discount_total || 0) - (order.shipping_fee || 0))}</td>
       </tr>
       ${order.discount_total > 0 ? `
       <tr>
@@ -104,7 +104,7 @@ function orderConfirmationEmail(order) {
       </tr>` : ''}
       <tr>
         <td colspan="3" style="color:#5A5348;">Shipping fee</td>
-        <td style="text-align: right; color:#5A5348;">Free</td>
+        <td style="text-align: right; color:#5A5348;">${Number(order.shipping_fee) > 0 ? formatPKR(order.shipping_fee) : 'Free'}</td>
       </tr>
       <tr>
         <td colspan="3" style="padding-top: 8px; border-top: 1px solid #EFEADE; font-weight: bold; color:#1C231D;">Total cash due at delivery</td>

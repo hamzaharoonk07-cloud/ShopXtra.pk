@@ -1,6 +1,15 @@
 const pool = require('../config/db');
 const promoModel = require('./promoModel');
 
+const FREE_SHIPPING_THRESHOLD = 3000;
+const KARACHI_SHIPPING_FEE = 200;
+const STANDARD_SHIPPING_FEE = 250;
+
+function computeShippingFee(city, subtotal) {
+  if (Number(subtotal) >= FREE_SHIPPING_THRESHOLD) return 0;
+  return String(city || '').trim().toLowerCase() === 'karachi' ? KARACHI_SHIPPING_FEE : STANDARD_SHIPPING_FEE;
+}
+
 async function createOrder({ userId, email, items, shipping, paymentMethod, promoCode }) {
   const client = await pool.connect();
   try {
@@ -38,13 +47,14 @@ async function createOrder({ userId, email, items, shipping, paymentMethod, prom
       discount = promoModel.computeDiscount(promo, total);
       appliedCode = promo.code;
     }
-    const finalTotal = total - discount;
+    const shippingFee = computeShippingFee(shipping.city, total);
+    const finalTotal = total - discount + shippingFee;
 
     const { rows: orderRows } = await client.query(
-      `INSERT INTO orders (user_id, email, status, total, discount_total, promo_code, payment_method, shipping_name, shipping_phone, shipping_address, shipping_city, shipping_postal_code)
-       VALUES ($1, $2, 'pending', $3, $4, $5, $6, $7, $8, $9, $10, $11)
+      `INSERT INTO orders (user_id, email, status, total, discount_total, shipping_fee, promo_code, payment_method, shipping_name, shipping_phone, shipping_address, shipping_city, shipping_postal_code)
+       VALUES ($1, $2, 'pending', $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
        RETURNING *`,
-      [userId || null, email || null, finalTotal, discount, appliedCode, paymentMethod, shipping.name, shipping.phone, shipping.address, shipping.city, shipping.postalCode || null]
+      [userId || null, email || null, finalTotal, discount, shippingFee, appliedCode, paymentMethod, shipping.name, shipping.phone, shipping.address, shipping.city, shipping.postalCode || null]
     );
     const order = orderRows[0];
 
@@ -130,6 +140,10 @@ async function getOverview() {
 
 module.exports = {
   createOrder,
+  computeShippingFee,
+  FREE_SHIPPING_THRESHOLD,
+  KARACHI_SHIPPING_FEE,
+  STANDARD_SHIPPING_FEE,
   findById,
   findByUserId,
   findAll,

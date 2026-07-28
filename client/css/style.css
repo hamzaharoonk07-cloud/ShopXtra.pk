@@ -3356,7 +3356,8 @@ select:focus-visible {
   color: var(--muted);
 }
 
-.checkout-field input {
+.checkout-field input,
+.checkout-field select {
   background: var(--paper);
   border: 1px solid var(--hairline-strong);
   border-radius: var(--radius-sm);
@@ -3366,7 +3367,9 @@ select:focus-visible {
 }
 
 .checkout-field input:focus,
-.checkout-field input:required:valid {
+.checkout-field input:required:valid,
+.checkout-field select:focus,
+.checkout-field select:required:valid {
   border-color: var(--plum);
   outline: none;
 }

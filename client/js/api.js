@@ -14,6 +14,34 @@ function formatPrice(value) {
   return `Rs ${num.toLocaleString('en-PK', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 }
 
+const PAKISTAN_CITIES = [
+  'Karachi',
+  'Lahore', 'Islamabad', 'Rawalpindi', 'Faisalabad', 'Multan', 'Peshawar', 'Quetta',
+  'Sialkot', 'Gujranwala', 'Hyderabad', 'Bahawalpur', 'Sargodha', 'Sukkur', 'Larkana',
+  'Sheikhupura', 'Rahim Yar Khan', 'Jhang', 'Gujrat', 'Mardan', 'Kasur', 'Dera Ghazi Khan',
+  'Sahiwal', 'Nawabshah', 'Okara', 'Mingora', 'Chiniot', 'Kamoke', 'Mandi Bahauddin',
+  'Jhelum', 'Sadiqabad', 'Jacobabad', 'Shikarpur', 'Khanewal', 'Hafizabad', 'Kohat',
+  'Muzaffargarh', 'Khanpur', 'Gojra', 'Bahawalnagar', 'Muridke', 'Pakpattan', 'Abbottabad',
+  'Attock', 'Tando Adam', 'Vehari', 'Nowshera', 'Dera Ismail Khan', 'Chaman', 'Wazirabad',
+  'Ahmedpur East', 'Kamalia', 'Khairpur', 'Turbat', 'Burewala', 'Zhob', 'Muzaffarabad',
+  'Mirpur', 'Gwadar',
+];
+
+function cityOptionsHtml(selected) {
+  return '<option value="">Select city</option>' + PAKISTAN_CITIES.map((city) =>
+    `<option value="${city}" ${selected === city ? 'selected' : ''}>${city}</option>`
+  ).join('');
+}
+
+const FREE_SHIPPING_THRESHOLD = 3000;
+const KARACHI_SHIPPING_FEE = 200;
+const STANDARD_SHIPPING_FEE = 250;
+
+function computeShippingFee(city, subtotal) {
+  if (Number(subtotal) >= FREE_SHIPPING_THRESHOLD) return 0;
+  return String(city || '').trim().toLowerCase() === 'karachi' ? KARACHI_SHIPPING_FEE : STANDARD_SHIPPING_FEE;
+}
+
 const PRODUCT_ILLUSTRATIONS = {
   electrolytes: `
     <svg viewBox="0 0 120 120" width="55%" role="img" aria-hidden="true">

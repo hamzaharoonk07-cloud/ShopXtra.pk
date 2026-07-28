@@ -240,6 +240,9 @@ document.getElementById('logout-btn')?.addEventListener('click', async () => {
   showLoggedOut();
 });
 
+const addrCitySelect = document.getElementById('addr-city');
+if (addrCitySelect) addrCitySelect.innerHTML = cityOptionsHtml();
+
 (async () => {
   const user = await fetchCurrentUser();
   if (user) {

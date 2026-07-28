@@ -673,6 +673,10 @@ async function showOrderDetail(id) {
       </div>
       <div style="font-size:0.75rem; color:#6b5a58; text-transform:uppercase; letter-spacing:0.03em; margin-bottom:0.4rem;">Items</div>
       ${itemsHtml}
+      <div class="d-flex justify-content-between mt-2">
+        <span>Shipping</span>
+        <span class="price">${Number(order.shipping_fee) > 0 ? formatPrice(order.shipping_fee) : 'Free'}</span>
+      </div>
       <div class="d-flex justify-content-between align-items-center pt-3 mt-2" style="border-top: 2px solid #1C231D;">
         <strong>Total</strong>
         <strong class="price">${formatPrice(order.total)}</strong>
