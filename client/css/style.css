@@ -556,6 +556,23 @@ a {
   display: block;
 }
 
+.product-image-hover {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.product-card:hover .product-image-hover {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-image-hover {
+    transition: none;
+  }
+}
+
 .product-card-badge {
   position: absolute;
   top: 0.75rem;
@@ -3026,6 +3043,30 @@ select:focus-visible {
 .pdp-color-swatch.active {
   outline: 2px solid var(--tea-pink);
   outline-offset: 2px;
+}
+
+.pdp-flavor-swatch {
+  height: 34px;
+  padding: 0 0.9rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--hairline-strong);
+  background: var(--paper);
+  color: var(--plum);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.pdp-flavor-swatch:hover {
+  border-color: var(--tea-pink);
+}
+
+.pdp-flavor-swatch.active {
+  background: var(--tea-pink);
+  border-color: var(--tea-pink);
+  color: #fff;
 }
 
 .pdp-color-name {

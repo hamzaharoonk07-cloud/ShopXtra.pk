@@ -329,16 +329,22 @@
           <input type="file" class="form-control form-control-sm mt-2" id="ep-new-video" accept="video/mp4,video/webm,video/quicktime">
           <div class="admin-video-preview" id="ep-new-video-preview"></div>
 
-          <label class="form-label mono mt-3" style="font-size:0.75rem;">Colour variants <span style="font-weight:400; text-transform:none;">— shown as clickable swatches on the product page</span></label>
+          <label class="form-label mono mt-3" style="font-size:0.75rem;">Variants <span style="font-weight:400; text-transform:none;">— shown as clickable swatches on the product page; clicking one swaps the main photo</span></label>
           <p style="font-size:0.8rem; color:var(--muted-body); margin-bottom:0.5rem;">If each uploaded photo above is a different colour of this product, click below to auto-create a colour swatch for each one — no need to fill the form per colour.</p>
           <button type="button" class="btn btn-outline-plum btn-sm mb-2" id="ev-auto-detect-btn">Auto-create colours from images</button>
           <div class="admin-variant-list" id="ep-variant-list"></div>
+          <div class="btn-group btn-group-sm mb-2" role="group" aria-label="Variant type" id="ev-type-toggle">
+            <input type="radio" class="btn-check" name="ev-type" id="ev-type-color" value="color" checked>
+            <label class="btn btn-outline-plum" for="ev-type-color">Colour</label>
+            <input type="radio" class="btn-check" name="ev-type" id="ev-type-flavor" value="flavor">
+            <label class="btn btn-outline-plum" for="ev-type-flavor">Flavour</label>
+          </div>
           <div class="row g-2 align-items-end admin-variant-add-row">
             <div class="col-md-3">
-              <label class="form-label mono" style="font-size:0.7rem;">Colour name</label>
+              <label class="form-label mono" style="font-size:0.7rem;" id="ev-name-label">Colour name</label>
               <input class="form-control form-control-sm" id="ev-color-name" placeholder="e.g. Rose Gold">
             </div>
-            <div class="col-md-2">
+            <div class="col-md-2" id="ev-swatch-field">
               <label class="form-label mono" style="font-size:0.7rem;">Swatch</label>
               <input type="color" class="form-control form-control-sm form-control-color" id="ev-color-hex" value="#3C7A5D">
             </div>
@@ -351,11 +357,11 @@
               <input type="number" class="form-control form-control-sm" id="ev-stock" min="0" value="0">
             </div>
             <div class="col-md-3">
-              <label class="form-label mono" style="font-size:0.7rem;">Photo (optional)</label>
+              <label class="form-label mono" style="font-size:0.7rem;" id="ev-image-label">Photo (optional)</label>
               <input type="file" class="form-control form-control-sm" id="ev-image" accept="image/jpeg,image/png,image/webp,image/gif">
             </div>
           </div>
-          <button type="button" class="btn btn-outline-plum btn-sm mt-2" id="ev-add-btn">+ Add colour</button>
+          <button type="button" class="btn btn-outline-plum btn-sm mt-2" id="ev-add-btn">+ Add variant</button>
           <p class="text-danger d-none mt-2" id="edit-variant-error"></p>
 
           <p class="text-danger d-none mt-2" id="edit-product-error"></p>

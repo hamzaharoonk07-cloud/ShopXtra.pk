@@ -13,14 +13,15 @@ async function loadProduct() {
     updateProductSeo(product, slug);
 
     const variants = product.variants || [];
-    const colorVariants = variants.filter((v) => v.color_hex);
-    const plainVariants = colorVariants.length ? [] : variants;
+    const swatchVariants = variants.filter((v) => v.color_hex || v.image_url);
+    const plainVariants = swatchVariants.length ? [] : variants;
+    const isColorSwatches = swatchVariants.length > 0 && Boolean(swatchVariants[0].color_hex);
 
-    const colorSwatchesHtml = colorVariants.length ? `
+    const colorSwatchesHtml = swatchVariants.length ? `
       <div class="mb-3">
-        <label class="form-label mono" style="font-size:0.8rem;">Colour</label>
+        <label class="form-label mono" style="font-size:0.8rem;">${isColorSwatches ? 'Colour' : 'Flavour'}</label>
         <div class="pdp-color-swatches" id="pdp-color-swatches">
-          ${colorVariants.map((v, i) => `
+          ${swatchVariants.map((v, i) => v.color_hex ? `
             <button type="button" class="pdp-color-swatch ${i === 0 ? 'active' : ''}"
               data-variant-id="${v.id}"
               data-modifier="${v.price_modifier}"
@@ -28,9 +29,16 @@ async function loadProduct() {
               data-stock="${v.stock}"
               style="background:${v.color_hex};"
               aria-label="${v.color_name || v.variant_name}" title="${v.color_name || v.variant_name}"></button>
+          ` : `
+            <button type="button" class="pdp-flavor-swatch ${i === 0 ? 'active' : ''}"
+              data-variant-id="${v.id}"
+              data-modifier="${v.price_modifier}"
+              data-image="${v.image_url || ''}"
+              data-stock="${v.stock}"
+              aria-label="${v.variant_name}" title="${v.variant_name}">${v.variant_name}</button>
           `).join('')}
         </div>
-        <span class="pdp-color-name" id="pdp-color-name">${colorVariants[0].color_name || colorVariants[0].variant_name}</span>
+        <span class="pdp-color-name" id="pdp-color-name">${swatchVariants[0].color_name || swatchVariants[0].variant_name}</span>
       </div>
     ` : '';
 
@@ -163,7 +171,7 @@ async function loadProduct() {
       });
     }
 
-    let selectedVariant = colorVariants[0] || null;
+    let selectedVariant = swatchVariants[0] || null;
 
     function applyVariantPrice() {
       const modifier = selectedVariant ? Number(selectedVariant.price_modifier) : 0;
@@ -178,15 +186,15 @@ async function loadProduct() {
       return finalPrice;
     }
 
-    if (colorVariants.length) {
-      main.querySelectorAll('.pdp-color-swatch').forEach((swatch) => {
+    if (swatchVariants.length) {
+      main.querySelectorAll('.pdp-color-swatch, .pdp-flavor-swatch').forEach((swatch) => {
         swatch.addEventListener('click', () => {
-          main.querySelectorAll('.pdp-color-swatch').forEach((s) => s.classList.remove('active'));
+          main.querySelectorAll('.pdp-color-swatch, .pdp-flavor-swatch').forEach((s) => s.classList.remove('active'));
           swatch.classList.add('active');
-          selectedVariant = colorVariants.find((v) => String(v.id) === swatch.dataset.variantId);
+          selectedVariant = swatchVariants.find((v) => String(v.id) === swatch.dataset.variantId);
           document.getElementById('pdp-color-name').textContent = selectedVariant.color_name || selectedVariant.variant_name;
           if (swatch.dataset.image) {
-            document.getElementById('pdp-main-image').innerHTML = `<img src="${swatch.dataset.image}" alt="${product.name} — ${selectedVariant.color_name || ''}">`;
+            document.getElementById('pdp-main-image').innerHTML = `<img src="${swatch.dataset.image}" alt="${product.name} — ${selectedVariant.color_name || selectedVariant.variant_name || ''}">`;
             main.querySelectorAll('.pdp-thumb').forEach((b) => b.classList.remove('active'));
           }
           applyVariantPrice();

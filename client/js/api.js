@@ -120,6 +120,7 @@ function productCardHtml(product) {
         <a href="/pages/product.html?slug=${encodeURIComponent(product.slug)}" class="product-card-media-link">
           <div class="product-image">
             ${productMediaHtml(product)}
+            ${product.images && product.images[1] ? `<img src="${product.images[1]}" alt="" loading="lazy" class="product-image-hover">` : ''}
             ${outOfStock
               ? '<span class="product-card-badge product-card-badge-muted">Out of stock</span>'
               : discount ? `<span class="product-card-badge">Save ${discount}%</span>` : product.is_bestseller ? '<span class="product-card-badge">Bestseller</span>' : ''}

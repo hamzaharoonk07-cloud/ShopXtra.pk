@@ -311,9 +311,9 @@ function renderVariantList() {
       <span class="admin-variant-swatch" style="background:${v.color_hex || 'var(--sand)'};"></span>
       <span class="admin-variant-name">${v.color_name || v.variant_name}</span>
       <span class="admin-variant-meta">${Number(v.price_modifier) !== 0 ? `${Number(v.price_modifier) > 0 ? '+' : ''}${formatPrice(v.price_modifier)} · ` : ''}${v.stock} in stock</span>
-      <button type="button" class="admin-variant-remove" aria-label="Remove colour">&times;</button>
+      <button type="button" class="admin-variant-remove" aria-label="Remove variant">&times;</button>
     </div>
-  `).join('') : '<p style="color:#a89490; font-size:0.85rem;">No colour variants yet.</p>';
+  `).join('') : '<p style="color:#a89490; font-size:0.85rem;">No variants yet.</p>';
 
   list.querySelectorAll('.admin-variant-remove').forEach((btn) => {
     btn.addEventListener('click', async () => {
@@ -395,24 +395,45 @@ document.getElementById('ev-auto-detect-btn').addEventListener('click', async ()
   }
 });
 
+function isFlavorVariantType() {
+  return document.getElementById('ev-type-flavor').checked;
+}
+
+document.querySelectorAll('#ev-type-toggle input[name="ev-type"]').forEach((radio) => {
+  radio.addEventListener('change', () => {
+    const flavor = isFlavorVariantType();
+    document.getElementById('ev-swatch-field').style.display = flavor ? 'none' : '';
+    document.getElementById('ev-name-label').textContent = flavor ? 'Flavour name' : 'Colour name';
+    document.getElementById('ev-image-label').textContent = flavor ? 'Photo' : 'Photo (optional)';
+  });
+});
+
 document.getElementById('ev-add-btn').addEventListener('click', async () => {
   const errorEl = document.getElementById('edit-variant-error');
   errorEl.classList.add('d-none');
   const productId = document.getElementById('ep-id').value;
-  const colorName = document.getElementById('ev-color-name').value.trim();
-  if (!colorName) {
-    errorEl.textContent = 'Colour name is required.';
+  const flavor = isFlavorVariantType();
+  const name = document.getElementById('ev-color-name').value.trim();
+  if (!name) {
+    errorEl.textContent = flavor ? 'Flavour name is required.' : 'Colour name is required.';
+    errorEl.classList.remove('d-none');
+    return;
+  }
+  const imageFile = document.getElementById('ev-image').files[0];
+  if (flavor && !imageFile) {
+    errorEl.textContent = 'A photo is required so this flavour has an image to switch to.';
     errorEl.classList.remove('d-none');
     return;
   }
   try {
     const formData = new FormData();
-    formData.append('variant_name', colorName);
-    formData.append('color_name', colorName);
-    formData.append('color_hex', document.getElementById('ev-color-hex').value);
+    formData.append('variant_name', name);
+    if (!flavor) {
+      formData.append('color_name', name);
+      formData.append('color_hex', document.getElementById('ev-color-hex').value);
+    }
     formData.append('price_modifier', document.getElementById('ev-price-modifier').value || 0);
     formData.append('stock', document.getElementById('ev-stock').value || 0);
-    const imageFile = document.getElementById('ev-image').files[0];
     if (imageFile) formData.append('image', imageFile);
 
     const res = await fetch(`/api/products/${productId}/variants`, { method: 'POST', body: formData });
