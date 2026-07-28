@@ -1,11 +1,11 @@
 :root {
   /* Deepened back to a rich forest-green brand palette (nav/footer/
-     buttons) to match a bolder, ownkind.ae-style look — reverses an
-     earlier pass that lightened this to a medium sage tone. Variable
+     buttons/hero) to match a bolder, ownkind.ae-style look — reverses
+     an earlier pass that lightened this to a medium sage tone. Variable
      names kept as-is (tea-pink/plum/dusty-rose/gold) to avoid touching
-     every reference site-wide — only the values changed. --hero-gradient
-     is net-new, a light green wash for the hero/shop-banner (an earlier
-     coral/watermelon version was tried and reverted back to green). */
+     every reference site-wide — only the values changed. (A coral/
+     watermelon hero and a light-green wash were both tried and reverted
+     — the hero and shop banner use the deep green surfaces below.) */
   --ivory-blush: #F7F9F6;
   --paper: #FFFFFF;
   --tea-pink: #1F5C3E;
@@ -22,8 +22,6 @@
   --success-border: #E0ECD4;
   --success-dot: #1F5C3E;
   --success-text: #3A473F;
-
-  --hero-gradient: linear-gradient(135deg, var(--dusty-rose) 0%, var(--sand) 60%, var(--ivory-blush) 100%);
 
   /* Category tile tints, matched from the doc (Electrolytes/Coffee/
      Hair & Body/Cosmetics) */
@@ -1616,22 +1614,21 @@ select:focus-visible {
 }
 
 .hero-slide-morning,
-.hero-slide-evening,
-.hero-slide-midday,
+.hero-slide-evening {
+  background: linear-gradient(135deg, var(--plum), #0A1A12 85%);
+}
+
+.hero-slide-midday {
+  background: linear-gradient(135deg, var(--tea-pink), var(--ink-hover) 85%);
+}
+
 .hero-slide-coffee {
-  background: var(--hero-gradient);
+  background: #1a1310;
 }
 
 .hero-slide-photo {
   position: absolute;
-  right: 6%;
-  top: 50%;
-  transform: translateY(-50%);
-  width: min(42vw, 480px);
-  height: min(42vw, 480px);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lift);
-  overflow: hidden;
+  inset: 0;
   z-index: 0;
 }
 
@@ -1647,6 +1644,13 @@ select:focus-visible {
   object-position: center 55%;
 }
 
+.hero-slide-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(10, 7, 5, 0.88) 0%, rgba(10, 7, 5, 0.62) 42%, rgba(10, 7, 5, 0.18) 75%);
+}
+
 .hero-slide-icon {
   position: absolute;
   right: -6%;
@@ -1654,8 +1658,8 @@ select:focus-visible {
   transform: translateY(-50%);
   width: min(48vw, 540px);
   height: min(48vw, 540px);
-  opacity: 0.1;
-  color: var(--plum);
+  opacity: 0.12;
+  color: #fff;
   pointer-events: none;
 }
 
@@ -1680,21 +1684,22 @@ select:focus-visible {
   font-size: 0.78rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--tea-pink);
+  color: var(--dusty-rose);
   margin-bottom: 1rem;
 }
 
 .hero-slide-copy h1 {
-  color: var(--plum);
+  color: #fff;
   font-size: clamp(2.3rem, 4.8vw, 3.85rem);
   line-height: 1.05;
   font-weight: 800;
+  text-transform: uppercase;
   letter-spacing: -0.01em;
   margin: 0 0 1.1rem;
 }
 
 .hero-slide-copy .lead {
-  color: var(--muted-body);
+  color: rgba(255, 255, 255, 0.82);
   max-width: 34ch;
   margin: 0 0 1.75rem;
 }
@@ -1724,15 +1729,15 @@ select:focus-visible {
 }
 
 .btn-hero-outline {
-  border: 1.5px solid rgba(18, 41, 30, 0.35);
-  color: var(--plum);
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  color: #fff;
 }
 
 .btn-hero-outline:hover,
 .btn-hero-outline:focus-visible {
-  border-color: var(--plum);
-  background: rgba(18, 41, 30, 0.08);
-  color: var(--plum);
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
 }
 
 .hero-carousel-arrow {
@@ -1743,8 +1748,8 @@ select:focus-visible {
   height: 44px;
   border-radius: 50%;
   border: none;
-  background: rgba(18, 41, 30, 0.1);
-  color: var(--plum);
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1756,7 +1761,7 @@ select:focus-visible {
 
 .hero-carousel-arrow:hover,
 .hero-carousel-arrow:focus-visible {
-  background: rgba(18, 41, 30, 0.2);
+  background: rgba(255, 255, 255, 0.32);
 }
 
 .hero-carousel-arrow.prev { left: 1.25rem; }
@@ -1777,14 +1782,14 @@ select:focus-visible {
   height: 8px;
   border-radius: 50%;
   border: none;
-  background: rgba(18, 41, 30, 0.3);
+  background: rgba(255, 255, 255, 0.4);
   padding: 0;
   cursor: pointer;
   transition: background-color 0.2s ease, width 0.25s ease;
 }
 
 .hero-carousel-dots button.active {
-  background: var(--plum);
+  background: #fff;
   width: 22px;
   border-radius: 4px;
 }
@@ -1830,14 +1835,13 @@ select:focus-visible {
     height: 70vw;
     right: -18%;
   }
-  /* The framed photo card shrinks and tucks into the lower-right corner
-     on mobile so it doesn't collide with the full-width stacked copy. */
-  .hero-slide-photo {
-    width: min(55vw, 260px);
-    height: min(55vw, 260px);
-    top: auto;
-    bottom: 1.5rem;
-    transform: none;
+  /* Full-bleed photo slides: the slide is much taller/narrower on mobile
+     than the source photos are shot for, so object-fit:cover crops far
+     more aggressively (losing side content a left-to-right desktop
+     gradient assumes is there). A near-uniform dark scrim keeps text
+     legible regardless of exactly what crop lands under it. */
+  .hero-slide-photo::after {
+    background: linear-gradient(180deg, rgba(10, 7, 5, 0.82) 0%, rgba(10, 7, 5, 0.72) 55%, rgba(10, 7, 5, 0.85) 100%);
   }
   .hero-slide-copy {
     max-width: none;
@@ -2804,7 +2808,7 @@ select:focus-visible {
 
 /* ---------- Shop listing controls ---------- */
 .shop-banner {
-  background: var(--hero-gradient);
+  background: linear-gradient(135deg, var(--plum), #0A1A12 85%);
   border-radius: var(--radius-lg);
   padding: clamp(1.75rem, 4vw, 2.75rem) clamp(1.5rem, 4vw, 2.5rem);
   margin-bottom: 2rem;
@@ -2812,12 +2816,12 @@ select:focus-visible {
 
 .shop-breadcrumb {
   font-size: 0.85rem;
-  color: rgba(18, 41, 30, 0.55);
+  color: rgba(255, 255, 255, 0.6);
   margin-bottom: 0.75rem;
 }
 
 .shop-breadcrumb a {
-  color: var(--plum);
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .shop-title-row {
@@ -2830,14 +2834,15 @@ select:focus-visible {
 
 .shop-title-row h1 {
   font-size: clamp(2rem, 4vw, 3rem);
-  color: var(--plum);
+  color: #fff;
+  text-transform: uppercase;
   font-weight: 800;
   letter-spacing: -0.01em;
 }
 
 .shop-count {
   font-size: 0.9rem;
-  color: rgba(18, 41, 30, 0.6);
+  color: rgba(255, 255, 255, 0.65);
 }
 
 .shop-controls-row {
