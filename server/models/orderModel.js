@@ -71,8 +71,10 @@ async function findById(id) {
   if (!rows[0]) return null;
 
   const { rows: items } = await pool.query(
-    `SELECT oi.qty, oi.price_at_purchase, p.name, p.slug, p.category, p.images
-     FROM order_items oi JOIN products p ON p.id = oi.product_id
+    `SELECT oi.qty, oi.price_at_purchase, p.name, p.slug, p.category, p.images, v.variant_name
+     FROM order_items oi
+     JOIN products p ON p.id = oi.product_id
+     LEFT JOIN product_variants v ON v.id = oi.variant_id
      WHERE oi.order_id = $1`,
     [id]
   );
