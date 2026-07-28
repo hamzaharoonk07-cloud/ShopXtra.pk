@@ -22,7 +22,7 @@ async function getTransporter() {
   // No real SMTP configured: use a disposable Ethereal test inbox so emails
   // can still be sent and inspected (via a preview URL) during development.
   transporterPromise = nodemailer.createTestAccount().then((account) => {
-    console.log(`[mailer] No SMTP_HOST set — using Ethereal test inbox (${account.user})`);
+    console.log(`[mailer] No SMTP_HOST set, using Ethereal test inbox (${account.user})`);
     return nodemailer.createTransport({
       host: 'smtp.ethereal.email',
       port: 587,

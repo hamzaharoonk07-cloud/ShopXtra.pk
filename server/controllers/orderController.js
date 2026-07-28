@@ -35,12 +35,12 @@ async function create(req, res, next) {
       await Promise.all([
         sendMail({
           to: order.email,
-          subject: `Order Confirmed #${order.id} — ShopXtra`,
+          subject: `Order Confirmed #${order.id} | ShopXtra`,
           html: orderConfirmationEmail(fullOrder),
         }),
         sendMail({
           to: 'shopxtra9@gmail.com',
-          subject: `New order #${order.id} placed — ShopXtra`,
+          subject: `New order #${order.id} placed | ShopXtra`,
           html: orderConfirmationEmail(fullOrder),
         }),
       ]);
@@ -89,7 +89,7 @@ async function updateStatus(req, res, next) {
     if (order.email && ['shipped', 'delivered', 'processing', 'cancelled'].includes(order.status)) {
       await sendMail({
         to: order.email,
-        subject: `Order #${order.id} update — ${order.status[0].toUpperCase() + order.status.slice(1)} — ShopXtra`,
+        subject: `Order #${order.id} update: ${order.status[0].toUpperCase() + order.status.slice(1)} | ShopXtra`,
         html: orderStatusEmail(order, order.status),
       });
     }

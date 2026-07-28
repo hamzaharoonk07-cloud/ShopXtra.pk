@@ -151,12 +151,12 @@ function orderStatusEmail(order, status) {
 function newsletterWelcomeEmail() {
   return layout(`
     <h1 style="color:#1C231D; font-size: 22px; margin-bottom: 4px; font-family: 'Montserrat', Arial, sans-serif; font-weight: 700; letter-spacing: -0.01em;">You're on the list.</h1>
-    <p style="color:#5A5348; margin-top: 0;">Thanks for joining the ShopXtra newsletter — you'll be the first to hear about new drops, ritual bundle discounts, and upcoming sales.</p>
+    <p style="color:#5A5348; margin-top: 0;">Thanks for joining the ShopXtra newsletter. You'll be the first to hear about new drops, ritual bundle discounts, and upcoming sales.</p>
     <p style="color:#5A5348;">In the meantime, here's 10% off any Ritual Bundle with the code:</p>
     <div style="background-color:#EAF3E3; border:1px dashed #B8D9A3; border-radius: 12px; padding: 14px 16px; text-align:center; margin: 16px 0;">
       <span style="color:#1C231D; font-size: 16px; font-weight: bold; letter-spacing: 1px;">RITUAL10</span>
     </div>
-    <p style="color:#7A7266; font-size: 13px;">No spam, ever — just the occasional email when there's something worth telling you about.</p>
+    <p style="color:#7A7266; font-size: 13px;">No spam, ever. Just the occasional email when there's something worth telling you about.</p>
   `);
 }
 

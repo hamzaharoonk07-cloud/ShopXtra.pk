@@ -14,7 +14,7 @@ const IMAGE_DIR = 'C:\\Users\\LINKTR~1\\AppData\\Local\\Temp\\claude\\C--WINDOWS
 
 const products = [
   {
-    name: 'Jelly Blush Stick — Waterproof, Long-Lasting',
+    name: 'Jelly Blush Stick, Waterproof, Long-Lasting',
     category: 'cosmetics',
     price: 1800,
     stock: 50,
@@ -26,7 +26,7 @@ const products = [
     ],
   },
   {
-    name: 'Air Cushion CC Cream — Brightening, Lightweight',
+    name: 'Air Cushion CC Cream, Brightening, Lightweight',
     category: 'cosmetics',
     price: 1800,
     stock: 50,
@@ -42,7 +42,7 @@ const products = [
     category: 'cosmetics',
     price: 1800,
     stock: 50,
-    description: 'A featherlight matte lip mud with rich, blurred-out colour payoff — no dryness, no stickiness, just a soft-focus matte finish.',
+    description: 'A featherlight matte lip mud with rich, blurred-out colour payoff, no dryness, no stickiness, just a soft-focus matte finish.',
     imageFiles: [
       '1N0_iGsR2MK5gnWmHsYtmzWxxYg7Uf9UQ_LIPSTICK 1.jpg',
       '1NR2bQ9FL4ts3lnosTZryP3_vXVrnWv2N_LIPSTICK 2.jpg',
@@ -50,7 +50,7 @@ const products = [
     ],
   },
   {
-    name: 'Long-Wear Concealer — 5 Shades',
+    name: 'Long-Wear Concealer, 5 Shades',
     category: 'cosmetics',
     price: 1800,
     stock: 50,
@@ -93,7 +93,7 @@ async function run() {
     console.log(`  -> saved as /pages/product.html?slug=${slug} with ${imageUrls.length} images`);
   }
   await pool.end();
-  console.log('Done. Ingredients were not provided by the supplier — add the real INCI list per product in the admin panel before relying on it for allergy-sensitive customers.');
+  console.log('Done. Ingredients were not provided by the supplier. Add the real INCI list per product in the admin panel before relying on it for allergy-sensitive customers.');
 }
 
 run().catch((err) => {
