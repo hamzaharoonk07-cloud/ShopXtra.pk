@@ -3,7 +3,7 @@ const productModel = require('../models/productModel');
 
 const router = express.Router();
 const SITE_URL = process.env.SITE_URL || 'https://shop-xtra-pk.vercel.app';
-const CATEGORIES = ['electrolytes', 'coffee', 'soaps', 'cosmetics'];
+const CATEGORIES = ['electrolytes', 'coffee', 'shampoo', 'cosmetics'];
 
 router.get('/sitemap.xml', async (req, res) => {
   const staticUrls = [

@@ -29,8 +29,8 @@
   --tint-electrolytes-ink: #5E6F55;
   --tint-coffee-bg: #EFE7DB;
   --tint-coffee-ink: #76644C;
-  --tint-soaps-bg: #DFEEE7;
-  --tint-soaps-ink: #4C7063;
+  --tint-shampoo-bg: #DFEEE7;
+  --tint-shampoo-ink: #4C7063;
   --tint-cosmetics-bg: #F0E4E6;
   --tint-cosmetics-ink: #8A5A67;
 
@@ -470,7 +470,7 @@ a {
 
 .tint-electrolytes { background-color: var(--tint-electrolytes-bg); color: var(--tint-electrolytes-ink); }
 .tint-coffee { background-color: var(--tint-coffee-bg); color: var(--tint-coffee-ink); }
-.tint-soaps { background-color: var(--tint-soaps-bg); color: var(--tint-soaps-ink); }
+.tint-shampoo { background-color: var(--tint-shampoo-bg); color: var(--tint-shampoo-ink); }
 .tint-cosmetics { background-color: var(--tint-cosmetics-bg); color: var(--tint-cosmetics-ink); }
 
 /* ---------- Product cards ---------- */
@@ -2465,8 +2465,8 @@ select:focus-visible {
 .category-tile-electrolytes .category-tile-image { background: linear-gradient(150deg, var(--tint-electrolytes-bg), #EAF3DF); color: var(--tint-electrolytes-ink); }
 .category-tile-coffee { background: var(--tint-coffee-bg); }
 .category-tile-coffee .category-tile-image { background: linear-gradient(150deg, var(--tint-coffee-bg), #F2EBE0); color: var(--tint-coffee-ink); }
-.category-tile-soaps { background: #E4EEDB; }
-.category-tile-soaps .category-tile-image { background: linear-gradient(150deg, #D6E8BF, #EAF3DF); color: var(--tint-soaps-ink); }
+.category-tile-shampoo { background: #E4EEDB; }
+.category-tile-shampoo .category-tile-image { background: linear-gradient(150deg, #D6E8BF, #EAF3DF); color: var(--tint-shampoo-ink); }
 .category-tile-cosmetics { background: var(--tint-cosmetics-bg); }
 .category-tile-cosmetics .category-tile-image { background: linear-gradient(150deg, var(--tint-cosmetics-bg), #F4E7EA); color: var(--tint-cosmetics-ink); }
 

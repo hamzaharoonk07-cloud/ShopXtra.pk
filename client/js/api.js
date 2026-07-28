@@ -62,7 +62,7 @@ const PRODUCT_ILLUSTRATIONS = {
       <path d="M45 30 q4 -10 0 -18" fill="none" stroke="var(--dusty-rose)" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
       <path d="M58 30 q4 -10 0 -18" fill="none" stroke="var(--dusty-rose)" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
     </svg>`,
-  soaps: `
+  shampoo: `
     <svg viewBox="0 0 120 120" width="55%" role="img" aria-hidden="true">
       <ellipse cx="60" cy="102" rx="34" ry="6" fill="var(--plum)" opacity="0.08"/>
       <rect x="24" y="46" width="72" height="44" rx="18" fill="var(--sand)" stroke="var(--plum)" stroke-width="1.5"/>
@@ -124,7 +124,7 @@ function starsHtml(rating, size = '1rem') {
 function categoryLabel(category) {
   const labels = {
     electrolytes: 'Electrolytes',
-    soaps: 'Soaps',
+    shampoo: 'Shampoo',
     coffee: 'Coffee',
     cosmetics: 'Cosmetics',
   };

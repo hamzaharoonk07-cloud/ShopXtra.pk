@@ -20,11 +20,11 @@ const products = [
   { name: 'Gold Dust Instant Coffee Sachets', category: 'coffee', price: 890, stock: 150,
     description: 'Smooth instant coffee for a quick, premium morning cup, box of 10.',
     ingredients: 'Freeze-dried Arabica coffee' },
-  // Soaps (midday)
-  { name: 'Blush Clay Cleansing Bar', category: 'soaps', price: 650, stock: 200,
+  // Shampoo (midday)
+  { name: 'Blush Clay Cleansing Bar', category: 'shampoo', price: 650, stock: 200,
     description: 'A gentle pink clay soap bar that cleanses without stripping natural oils.',
     ingredients: 'Saponified oils, kaolin clay, shea butter, rose fragrance' },
-  { name: 'Gold Honey Oat Soap', category: 'soaps', price: 700, stock: 140, is_bestseller: true,
+  { name: 'Gold Honey Oat Soap', category: 'shampoo', price: 700, stock: 140, is_bestseller: true,
     description: 'Nourishing honey and oat soap bar for soft, calm skin.',
     ingredients: 'Saponified oils, honey, colloidal oatmeal, vitamin E' },
   // Cosmetics (evening)

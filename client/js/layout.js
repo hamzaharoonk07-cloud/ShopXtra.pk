@@ -39,7 +39,7 @@ function renderNavbar(activePath = '') {
             <li><a href="/pages/shop.html">Shop all</a></li>
             <li><a href="/pages/shop.html?category=electrolytes">Electrolytes</a></li>
             <li><a href="/pages/shop.html?category=coffee">Coffee</a></li>
-            <li><a href="/pages/shop.html?category=soaps">Soaps</a></li>
+            <li><a href="/pages/shop.html?category=shampoo">Shampoo</a></li>
             <li><a href="/pages/shop.html?category=cosmetics">Cosmetics</a></li>
             <li><a href="/pages/bundles.html">Bundles</a></li>
             <li><a href="/pages/why-shopxtra.html">Why Us</a></li>
@@ -105,7 +105,7 @@ function renderFooter() {
           <h4>Shop</h4>
           <a href="/pages/shop.html?category=electrolytes">Electrolytes</a>
           <a href="/pages/shop.html?category=coffee">Coffee</a>
-          <a href="/pages/shop.html?category=soaps">Soaps</a>
+          <a href="/pages/shop.html?category=shampoo">Shampoo</a>
           <a href="/pages/shop.html?category=cosmetics">Cosmetics</a>
         </div>
         <div class="footer-col">

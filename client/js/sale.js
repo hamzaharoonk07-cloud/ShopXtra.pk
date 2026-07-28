@@ -24,7 +24,7 @@ async function loadSaleItems() {
     const maxDiscount = Math.max(...products.map((p) => saleDiscountPercent(p) || 0));
     if (maxDiscount > 0) {
       document.getElementById('sale-hero-subtitle').textContent =
-        `Save up to ${maxDiscount}% across electrolytes, coffee, soaps & cosmetics.`;
+        `Save up to ${maxDiscount}% across electrolytes, coffee, shampoo & cosmetics.`;
     }
   } catch (err) {
     grid.innerHTML = `<p class="text-center py-5 text-danger">Could not load sale items: ${err.message}</p>`;

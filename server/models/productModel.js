@@ -1,6 +1,6 @@
 const pool = require('../config/db');
 
-const CATEGORIES = ['electrolytes', 'soaps', 'coffee', 'cosmetics'];
+const CATEGORIES = ['electrolytes', 'shampoo', 'coffee', 'cosmetics'];
 const SORT_COLUMNS = {
   price_asc: 'p.price ASC',
   price_desc: 'p.price DESC',

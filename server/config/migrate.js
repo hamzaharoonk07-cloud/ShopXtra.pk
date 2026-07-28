@@ -43,6 +43,16 @@ async function runMigrations() {
     ALTER TABLE products ADD CONSTRAINT products_category_check
       CHECK (category IN ('electrolytes', 'soaps', 'coffee', 'cosmetics'))
   `);
+
+  // Reinstate shampoo as the category name (reversing the discontinuation
+  // above, per a later decision): rename every existing 'soaps' product to
+  // 'shampoo' and update the allowed category list to match.
+  await pool.query(`UPDATE products SET category = 'shampoo' WHERE category = 'soaps'`);
+  await pool.query(`ALTER TABLE products DROP CONSTRAINT IF EXISTS products_category_check`);
+  await pool.query(`
+    ALTER TABLE products ADD CONSTRAINT products_category_check
+      CHECK (category IN ('electrolytes', 'shampoo', 'coffee', 'cosmetics'))
+  `);
 }
 
 module.exports = { runMigrations };
