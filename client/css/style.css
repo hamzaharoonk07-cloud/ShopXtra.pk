@@ -463,15 +463,13 @@ a {
   padding: 0.3rem 0.85rem;
   border-radius: 999px;
   font-size: 0.75rem;
+  font-weight: 700;
   font-family: 'Montserrat', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  background-color: var(--tea-pink);
+  color: #fff;
 }
-
-.tint-electrolytes { background-color: var(--tint-electrolytes-bg); color: var(--tint-electrolytes-ink); }
-.tint-coffee { background-color: var(--tint-coffee-bg); color: var(--tint-coffee-ink); }
-.tint-shampoo { background-color: var(--tint-shampoo-bg); color: var(--tint-shampoo-ink); }
-.tint-cosmetics { background-color: var(--tint-cosmetics-bg); color: var(--tint-cosmetics-ink); }
 
 /* ---------- Product cards ---------- */
 .product-card {
