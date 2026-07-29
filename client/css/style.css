@@ -2858,10 +2858,10 @@ select:focus-visible {
 
 .shop-banner-photo-all img {
   position: absolute;
-  bottom: clamp(1.25rem, 3vw, 1.75rem);
+  top: clamp(1.25rem, 3vw, 1.75rem);
   right: clamp(1.5rem, 4vw, 3rem);
   width: auto;
-  height: clamp(40px, 6vw, 64px);
+  height: clamp(28px, 4vw, 40px);
   object-fit: contain;
   opacity: 0.95;
 }
