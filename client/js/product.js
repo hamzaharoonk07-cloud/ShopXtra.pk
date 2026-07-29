@@ -493,8 +493,16 @@ function initStickyAddBar(product, mainAddBtn) {
     if (typeof flyToCart === 'function') flyToCart(stickyBtn);
   });
 
+  // On mobile the button often starts below the fold (tall product image above
+  // it), so the very first observer callback would report "not intersecting"
+  // and show the sticky bar immediately on load. Only show it once the button
+  // has actually been seen and then scrolled past.
+  let hasBeenSeen = false;
   const observer = new IntersectionObserver(
-    ([entry]) => bar.classList.toggle('visible', !entry.isIntersecting),
+    ([entry]) => {
+      if (entry.isIntersecting) hasBeenSeen = true;
+      bar.classList.toggle('visible', hasBeenSeen && !entry.isIntersecting);
+    },
     { threshold: 0 }
   );
   observer.observe(mainAddBtn);
