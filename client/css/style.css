@@ -2852,11 +2852,32 @@ select:focus-visible {
   object-position: center 78%;
 }
 
+.shop-banner-photo-all {
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: clamp(1.5rem, 4vw, 3rem);
+}
+
+.shop-banner-photo-all img {
+  width: auto;
+  height: auto;
+  max-height: 65%;
+  max-width: 45%;
+  object-fit: contain;
+  opacity: 0.95;
+}
+
 .shop-banner-photo::after {
   content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(115deg, rgba(10, 26, 18, 0.92) 0%, rgba(10, 26, 18, 0.72) 45%, rgba(10, 26, 18, 0.35) 100%);
+}
+
+.shop-banner-photo-all::after {
+  content: none;
 }
 
 .shop-breadcrumb {

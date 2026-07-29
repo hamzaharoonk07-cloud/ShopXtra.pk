@@ -7,6 +7,11 @@ const SHOP_BANNER_PHOTOS = {
 function applyBannerPhoto(category) {
   const wrap = document.getElementById('shop-banner-photo');
   if (!wrap) return;
+  if (!category) {
+    wrap.className = 'shop-banner-photo shop-banner-photo-all';
+    wrap.innerHTML = '<img src="/assets/logo-full.png" alt="ShopXtra">';
+    return;
+  }
   const photo = SHOP_BANNER_PHOTOS[category];
   wrap.className = 'shop-banner-photo' + (photo ? ` shop-banner-photo-${category}` : '');
   wrap.innerHTML = photo ? `<img src="${photo}" alt="">` : '';
