@@ -1,5 +1,6 @@
 const pool = require('../config/db');
 const promoModel = require('./promoModel');
+const productViewModel = require('./productViewModel');
 
 const FREE_SHIPPING_THRESHOLD = 3000;
 const KARACHI_SHIPPING_FEE = 200;
@@ -155,7 +156,8 @@ async function getOverview() {
      ORDER BY units_sold DESC
      LIMIT 5`
   );
-  return { ...totals[0], byStatus, topProducts };
+  const mostViewed = await productViewModel.mostViewed(5);
+  return { ...totals[0], byStatus, topProducts, mostViewed };
 }
 
 module.exports = {

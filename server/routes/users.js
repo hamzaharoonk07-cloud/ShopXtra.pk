@@ -2,6 +2,8 @@ const express = require('express');
 const userModel = require('../models/userModel');
 const orderModel = require('../models/orderModel');
 const addressModel = require('../models/addressModel');
+const wishlistModel = require('../models/wishlistModel');
+const productViewModel = require('../models/productViewModel');
 const { requireAuth, requireRole } = require('../middleware/auth');
 
 const router = express.Router();
@@ -19,11 +21,13 @@ router.get('/:id/detail', async (req, res, next) => {
   try {
     const user = await userModel.findById(req.params.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
-    const [orders, addresses] = await Promise.all([
+    const [orders, addresses, wishlist, recentViews] = await Promise.all([
       orderModel.findByUserId(req.params.id),
       addressModel.findByUserId(req.params.id),
+      wishlistModel.findByUserId(req.params.id),
+      productViewModel.findByUserId(req.params.id),
     ]);
-    res.json({ user, orders, addresses });
+    res.json({ user, orders, addresses, wishlist, recentViews });
   } catch (err) {
     next(err);
   }

@@ -53,6 +53,17 @@ async function runMigrations() {
     ALTER TABLE products ADD CONSTRAINT products_category_check
       CHECK (category IN ('electrolytes', 'shampoo', 'coffee', 'cosmetics'))
   `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS product_views (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `);
+  await pool.query(`CREATE INDEX IF NOT EXISTS idx_product_views_user_id ON product_views(user_id)`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS idx_product_views_product_id ON product_views(product_id)`);
 }
 
 module.exports = { runMigrations };

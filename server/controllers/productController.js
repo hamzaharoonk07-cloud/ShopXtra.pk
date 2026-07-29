@@ -1,4 +1,5 @@
 const productModel = require('../models/productModel');
+const productViewModel = require('../models/productViewModel');
 const { saveImage } = require('../utils/imageStorage');
 
 function slugify(name) {
@@ -34,6 +35,17 @@ async function getBySlug(req, res, next) {
     const product = await productModel.findBySlug(req.params.slug);
     if (!product) return res.status(404).json({ error: 'Product not found' });
     res.json(product);
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function recordView(req, res, next) {
+  try {
+    const product = await productModel.findBySlug(req.params.slug);
+    if (!product) return res.status(404).json({ error: 'Product not found' });
+    await productViewModel.record(product.id, req.user?.id);
+    res.status(204).end();
   } catch (err) {
     next(err);
   }
@@ -164,4 +176,4 @@ async function removeVariant(req, res, next) {
   }
 }
 
-module.exports = { list, getBySlug, create, update, remove, createVariant, updateVariant, removeVariant };
+module.exports = { list, getBySlug, recordView, create, update, remove, createVariant, updateVariant, removeVariant };

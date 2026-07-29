@@ -198,6 +198,18 @@ async function loadOverview() {
         `).join('')
       : '<p style="color:#6b5a58;">No sales yet.</p>';
 
+    const mostViewed = document.getElementById('overview-most-viewed');
+    if (mostViewed) {
+      mostViewed.innerHTML = (data.mostViewed || []).length
+        ? data.mostViewed.map((p) => `
+            <div class="admin-top-product-row">
+              <a href="/pages/product.html?slug=${p.slug}" target="_blank" rel="noopener">${p.name}</a>
+              <span class="mono">${p.view_count} view${p.view_count === 1 ? '' : 's'}</span>
+            </div>
+          `).join('')
+        : '<p style="color:#6b5a58;">No product views recorded yet.</p>';
+    }
+
     const recentTbody = document.getElementById('overview-recent-orders');
     if (recentTbody) {
       const recent = allOrders.slice(0, 5);
@@ -722,7 +734,7 @@ async function showUserDetail(id) {
   modal.show();
 
   try {
-    const { user, orders, addresses } = await apiGet(`/users/${id}/detail`);
+    const { user, orders, addresses, wishlist, recentViews } = await apiGet(`/users/${id}/detail`);
     document.getElementById('userDetailModalLabel').textContent = user.name;
 
     const ordersHtml = orders.length
@@ -744,6 +756,21 @@ async function showUserDetail(id) {
         `).join('')
       : '<p style="color:#6b5a58;">No saved addresses.</p>';
 
+    const wishlistHtml = (wishlist || []).length
+      ? wishlist.map((p) => `
+          <div class="py-1"><a href="/pages/product.html?slug=${p.slug}" target="_blank" rel="noopener">${p.name}</a></div>
+        `).join('')
+      : '<p style="color:#6b5a58;">Nothing wishlisted.</p>';
+
+    const recentViewsHtml = (recentViews || []).length
+      ? recentViews.map((p) => `
+          <div class="d-flex justify-content-between align-items-center py-1">
+            <a href="/pages/product.html?slug=${p.slug}" target="_blank" rel="noopener">${p.name}</a>
+            <span style="color:#6b5a58; font-size:0.75rem;">${new Date(p.last_viewed).toLocaleDateString('en-PK')}</span>
+          </div>
+        `).join('')
+      : '<p style="color:#6b5a58;">No product views recorded.</p>';
+
     body.innerHTML = `
       <div class="mb-4">
         <p class="mb-1"><strong>Email:</strong> ${user.email}</p>
@@ -753,6 +780,10 @@ async function showUserDetail(id) {
       </div>
       <h3 class="h6">Addresses</h3>
       <div class="mb-4">${addressesHtml}</div>
+      <h3 class="h6">Recently viewed</h3>
+      <div class="mb-4">${recentViewsHtml}</div>
+      <h3 class="h6">Wishlist</h3>
+      <div class="mb-4">${wishlistHtml}</div>
       <h3 class="h6">Orders (${orders.length})</h3>
       <div>${ordersHtml}</div>
     `;

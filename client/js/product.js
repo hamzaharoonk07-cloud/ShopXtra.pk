@@ -11,6 +11,7 @@ async function loadProduct() {
     const product = await apiGet(`/products/${encodeURIComponent(slug)}`);
     document.title = `${product.name} | ShopXtra`;
     updateProductSeo(product, slug);
+    fetch(`/api/products/${encodeURIComponent(slug)}/view`, { method: 'POST' }).catch(() => {});
 
     const variants = product.variants || [];
     const swatchVariants = variants.filter((v) => v.color_hex || v.image_url);
