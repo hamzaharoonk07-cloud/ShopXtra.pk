@@ -64,7 +64,7 @@ h1, h2, h3, h4, .display-serif {
   font-family: 'Montserrat', sans-serif;
   color: var(--plum);
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.005em;
 }
 
 .price {
