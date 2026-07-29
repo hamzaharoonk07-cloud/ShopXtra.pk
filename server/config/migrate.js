@@ -29,24 +29,19 @@ async function runMigrations() {
       CHECK (discount_type IN ('percent', 'flat', 'free_gift'))
   `);
 
-  // Discontinue the shampoo category: keep any shampoo product that has real
-  // order history by moving it into soaps (order_items has no ON DELETE
-  // CASCADE on product_id, so it can't be deleted outright), then remove the
-  // rest and drop shampoo from the allowed category list.
-  await pool.query(`
-    UPDATE products SET category = 'soaps'
-    WHERE category = 'shampoo' AND id IN (SELECT DISTINCT product_id FROM order_items)
-  `);
-  await pool.query(`DELETE FROM products WHERE category = 'shampoo'`);
-  await pool.query(`ALTER TABLE products DROP CONSTRAINT IF EXISTS products_category_check`);
-  await pool.query(`
-    ALTER TABLE products ADD CONSTRAINT products_category_check
-      CHECK (category IN ('electrolytes', 'soaps', 'coffee', 'cosmetics'))
-  `);
+  // NOTE: this migration file has no version tracking, so every statement
+  // here re-runs on every cold start - each one MUST be safe to repeat
+  // indefinitely (IF NOT EXISTS / IF EXISTS / idempotent UPDATE). A previous
+  // migration here discontinued the shampoo category by moving shampoo
+  // products to soaps and deleting the rest; that was a one-time data
+  // transform, not idempotent (re-running it after shampoo was reinstated
+  // below would delete any new shampoo product with no order history), so
+  // it has been removed now that it has already served its purpose.
 
-  // Reinstate shampoo as the category name (reversing the discontinuation
-  // above, per a later decision): rename every existing 'soaps' product to
-  // 'shampoo' and update the allowed category list to match.
+  // Reinstate shampoo as the category name (a later decision reversed the
+  // discontinuation above): rename every existing 'soaps' product to
+  // 'shampoo' and update the allowed category list to match. Safe to
+  // re-run - once no rows are 'soaps', the UPDATE is a no-op.
   await pool.query(`UPDATE products SET category = 'shampoo' WHERE category = 'soaps'`);
   await pool.query(`ALTER TABLE products DROP CONSTRAINT IF EXISTS products_category_check`);
   await pool.query(`

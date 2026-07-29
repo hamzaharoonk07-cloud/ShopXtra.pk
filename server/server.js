@@ -22,7 +22,17 @@ const { runMigrations } = require('./config/migrate');
 
 const app = express();
 
-runMigrations().catch((err) => console.error('Migration error:', err.message));
+// Fire-and-forget from the process's perspective, but every request below
+// waits on this same promise before reaching any route - otherwise a cold
+// start can serve a request (e.g. hitting a brand-new table) before the
+// migration that creates it has actually finished running.
+const migrationsReady = runMigrations().catch((err) => {
+  console.error('Migration error:', err.message);
+});
+
+app.use((req, res, next) => {
+  migrationsReady.then(() => next()).catch(next);
+});
 
 app.use(cors());
 app.use(express.json());
