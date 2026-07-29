@@ -26,13 +26,13 @@
   /* Category tile tints, matched from the doc (Electrolytes/Coffee/
      Hair & Body/Cosmetics) */
   --tint-electrolytes-bg: #E7F0DD;
-  --tint-electrolytes-ink: #5E6F55;
+  --tint-electrolytes-ink: #3E4A38;
   --tint-coffee-bg: #EFE7DB;
-  --tint-coffee-ink: #76644C;
+  --tint-coffee-ink: #4A3F2E;
   --tint-shampoo-bg: #DFEEE7;
-  --tint-shampoo-ink: #4C7063;
+  --tint-shampoo-ink: #2E4A3F;
   --tint-cosmetics-bg: #F0E4E6;
-  --tint-cosmetics-ink: #8A5A67;
+  --tint-cosmetics-ink: #5C3A44;
 
   --radius-lg: 1.375rem;
   --radius-md: 1.125rem;
@@ -1586,65 +1586,6 @@ select:focus-visible {
   text-transform: uppercase;
   letter-spacing: 0.12em;
   margin-bottom: 0.4rem;
-}
-
-.free-ship-banner {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  background: linear-gradient(135deg, var(--sand), var(--ivory-blush));
-  border-radius: var(--radius-lg);
-  padding: clamp(1.5rem, 4vw, 2.5rem);
-  flex-wrap: wrap;
-}
-
-.free-ship-banner-copy {
-  flex: 1 1 320px;
-}
-
-.free-ship-banner-eyebrow {
-  display: inline-block;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--tea-pink);
-  margin-bottom: 0.5rem;
-}
-
-.free-ship-banner-copy h2 {
-  font-size: clamp(1.4rem, 3vw, 1.9rem);
-  margin: 0 0 0.5rem;
-}
-
-.free-ship-banner-copy p {
-  color: var(--muted-body);
-  margin: 0 0 1.25rem;
-  max-width: 42ch;
-}
-
-.free-ship-banner-images {
-  flex: 1 1 260px;
-  max-width: 320px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
-}
-
-.free-ship-banner-images img {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-soft);
-}
-
-@media (max-width: 575.98px) {
-  .free-ship-banner-images {
-    max-width: none;
-    width: 100%;
-  }
 }
 
 .section-head {
@@ -3237,6 +3178,17 @@ select:focus-visible {
   color: var(--success-text);
 }
 
+.free-shipping-note {
+  background: var(--success-bg);
+  border: 1px solid var(--success-border);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.9rem;
+  margin: 0 0 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--success-text);
+}
+
 .pdp-cod-dot {
   width: 8px;
   height: 8px;
@@ -4136,36 +4088,64 @@ select:focus-visible {
 }
 
 /* ---------- Sale banner promo toast (non-blocking) ---------- */
+.promo-toast-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 41, 30, 0.45);
+  z-index: 1149;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.promo-toast-backdrop.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .promo-toast {
   position: fixed;
-  left: 1.5rem;
-  bottom: 1.5rem;
-  width: 320px;
-  max-width: calc(100vw - 3rem);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.96);
+  width: min(90vw, 760px);
+  max-height: 88vh;
+  overflow-y: auto;
   background: var(--paper);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lift);
-  overflow: hidden;
   z-index: 1150;
   opacity: 0;
-  transform: translateY(16px) scale(0.98);
   pointer-events: none;
   transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
 .promo-toast.visible {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: translate(-50%, -50%) scale(1);
   pointer-events: auto;
+}
+
+@media (min-width: 576px) {
+  .promo-toast {
+    display: flex;
+    align-items: stretch;
+  }
+  #sale-banner-image-wrap {
+    flex: 1 1 45%;
+  }
+  .promo-toast-body {
+    flex: 1 1 55%;
+  }
 }
 
 .promo-toast-close {
   position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
+  top: 0.85rem;
+  right: 0.85rem;
   z-index: 2;
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4178,27 +4158,30 @@ select:focus-visible {
 
 #sale-banner-image-wrap img {
   width: 100%;
-  max-height: 150px;
+  height: 100%;
+  min-height: 200px;
+  max-height: 340px;
   object-fit: cover;
   display: block;
 }
 
 .promo-toast-body {
-  padding: 1.25rem 1.35rem 1.4rem;
+  padding: clamp(1.75rem, 4vw, 2.75rem);
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  justify-content: center;
+  gap: 0.6rem;
 }
 
 .promo-toast-body h2 {
   margin: 0;
-  font-size: 1.15rem;
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
 }
 
 .promo-toast-body p {
   color: var(--muted-body);
-  font-size: 0.88rem;
-  margin: 0 0 0.3rem;
+  font-size: 1rem;
+  margin: 0 0 0.4rem;
 }
 
 .promo-toast-body .btn {
@@ -4207,18 +4190,22 @@ select:focus-visible {
 
 @media (max-width: 575.98px) {
   .promo-toast {
-    left: 0.75rem;
-    right: 0.75rem;
-    bottom: 0.75rem;
-    width: auto;
-    max-width: none;
+    width: 92vw;
+  }
+  #sale-banner-image-wrap img {
+    max-height: 200px;
+    min-height: 0;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .promo-toast {
+  .promo-toast,
+  .promo-toast-backdrop {
     transition: opacity 0.2s ease;
     transform: none;
+  }
+  .promo-toast.visible {
+    transform: translate(-50%, -50%);
   }
 }
 

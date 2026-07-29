@@ -31,6 +31,16 @@ function updateTotals() {
   const shippingFee = computeShippingFee(city, subtotal);
   document.getElementById('checkout-shipping').textContent = shippingFee > 0 ? formatPrice(shippingFee) : 'Free';
 
+  const freeShippingNote = document.getElementById('checkout-free-shipping-note');
+  if (freeShippingNote) {
+    if (subtotal >= FREE_SHIPPING_THRESHOLD) {
+      freeShippingNote.textContent = '🎉 Congratulations, you’ve unlocked free delivery!';
+      freeShippingNote.classList.remove('d-none');
+    } else {
+      freeShippingNote.classList.add('d-none');
+    }
+  }
+
   const discountRow = document.getElementById('promo-discount-row');
   const discount = appliedPromo ? appliedPromo.discountAmount : 0;
   if (appliedPromo && appliedPromo.discountType === 'free_gift') {

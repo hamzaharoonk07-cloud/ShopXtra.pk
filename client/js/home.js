@@ -24,19 +24,9 @@ function applyCategoryImagesFromProducts(products) {
   renderCategoryGrid();
 }
 
-function renderFreeShipBannerImages(products) {
-  const wrap = document.getElementById('free-ship-banner-images');
-  if (!wrap) return;
-  const photos = HOME_CATEGORIES
-    .map((c) => products.find((p) => p.category === c.slug && p.images && p.images[0]))
-    .filter(Boolean)
-    .slice(0, 4);
-  if (!photos.length) return;
-  wrap.innerHTML = photos.map((p) => `<img src="${p.images[0]}" alt="${p.name}" loading="lazy">`).join('');
-}
-
 async function showSaleBannerIfAny() {
   const toastEl = document.getElementById('saleBannerToast');
+  const backdropEl = document.getElementById('saleBannerBackdrop');
   if (!toastEl) return;
   try {
     const banner = await apiGet('/banner/active');
@@ -59,28 +49,25 @@ async function showSaleBannerIfAny() {
     const dismiss = () => {
       toastEl.classList.remove('visible');
       toastEl.setAttribute('aria-hidden', 'true');
+      if (backdropEl) {
+        backdropEl.classList.remove('visible');
+        backdropEl.setAttribute('aria-hidden', 'true');
+      }
       sessionStorage.setItem(dismissKey, '1');
     };
     document.getElementById('sale-banner-close').addEventListener('click', dismiss, { once: true });
+    if (backdropEl) backdropEl.addEventListener('click', dismiss, { once: true });
 
-    // Non-blocking: no backdrop, no scroll lock. Reveal only once the hero (and its
-    // primary CTAs) has scrolled out of view, so the toast never sits on top of them.
+    // Centered, full-size banner: reveal shortly after load with a dimming backdrop.
     const reveal = () => {
       toastEl.classList.add('visible');
       toastEl.setAttribute('aria-hidden', 'false');
+      if (backdropEl) {
+        backdropEl.classList.add('visible');
+        backdropEl.setAttribute('aria-hidden', 'false');
+      }
     };
-    const heroEl = document.querySelector('.home-hero');
-    if (heroEl && 'IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => {
-        if (!entries[0].isIntersecting) {
-          reveal();
-          observer.disconnect();
-        }
-      }, { threshold: 0 });
-      observer.observe(heroEl);
-    } else {
-      setTimeout(reveal, 1400);
-    }
+    setTimeout(reveal, 900);
   } catch {
     // No active banner or request failed; fail silently.
   }
@@ -200,7 +187,6 @@ async function loadBestsellers() {
   try {
     const products = await apiGet('/products?sort=bestseller');
     applyCategoryImagesFromProducts(products);
-    renderFreeShipBannerImages(products);
     const top = products.slice(0, 4);
     if (!top.length) {
       grid.innerHTML = '<p class="text-center py-5">No products yet.</p>';

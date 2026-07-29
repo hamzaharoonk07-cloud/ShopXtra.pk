@@ -48,9 +48,20 @@ function renderCartPage() {
     });
   }
 
-  document.getElementById('cart-subtotal').textContent = formatPrice(cartTotal(cart));
+  const subtotal = cartTotal(cart);
+  document.getElementById('cart-subtotal').textContent = formatPrice(subtotal);
   const count = cartCount(cart);
   document.getElementById('cart-count-label').textContent = count ? `· ${count} item${count === 1 ? '' : 's'}` : '';
+
+  const freeShippingNote = document.getElementById('cart-free-shipping-note');
+  if (freeShippingNote) {
+    if (count && subtotal >= FREE_SHIPPING_THRESHOLD) {
+      freeShippingNote.textContent = '🎉 Congratulations, you’ve unlocked free delivery!';
+      freeShippingNote.classList.remove('d-none');
+    } else {
+      freeShippingNote.classList.add('d-none');
+    }
+  }
 }
 
 renderCartPage();
