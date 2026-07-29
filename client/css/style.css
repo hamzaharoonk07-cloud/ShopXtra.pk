@@ -1659,6 +1659,10 @@ select:focus-visible {
   object-position: center 55%;
 }
 
+.hero-slide-evening .hero-slide-photo img {
+  object-position: center 45%;
+}
+
 .hero-slide-photo::after {
   content: '';
   position: absolute;
