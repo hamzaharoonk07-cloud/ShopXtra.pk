@@ -2848,6 +2848,10 @@ select:focus-visible {
   display: block;
 }
 
+.shop-banner-photo-cosmetics img {
+  object-position: center 78%;
+}
+
 .shop-banner-photo::after {
   content: '';
   position: absolute;

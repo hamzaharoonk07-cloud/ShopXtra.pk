@@ -8,6 +8,7 @@ function applyBannerPhoto(category) {
   const wrap = document.getElementById('shop-banner-photo');
   if (!wrap) return;
   const photo = SHOP_BANNER_PHOTOS[category];
+  wrap.className = 'shop-banner-photo' + (photo ? ` shop-banner-photo-${category}` : '');
   wrap.innerHTML = photo ? `<img src="${photo}" alt="">` : '';
 }
 
