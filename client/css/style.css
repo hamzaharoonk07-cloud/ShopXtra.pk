@@ -4288,7 +4288,25 @@ select:focus-visible {
 }
 
 .admin-view-site {
-  color: var(--tea-pink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  background: var(--tea-pink);
+  border: 1px solid var(--tea-pink);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.admin-view-site:hover {
+  background: var(--ink-hover);
+  border-color: var(--ink-hover);
+  color: #fff;
+  transform: translateY(-1px);
 }
 
 .admin-logout-btn {
