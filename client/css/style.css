@@ -54,26 +54,26 @@ html {
 body {
   background-color: var(--ivory-blush);
   color: var(--plum);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
   width: 100%;
 }
 
 h1, h2, h3, h4, .display-serif {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Montserrat', sans-serif;
   color: var(--plum);
   font-weight: 700;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 .price {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
 }
 
 .mono {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 a {
@@ -149,7 +149,7 @@ a {
 
 .navbar-brand-text {
   display: inline-block;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 900;
   font-size: 2.3rem;
   line-height: 1;
@@ -271,7 +271,7 @@ a {
 .navbar-links-row a {
   display: inline-block;
   color: #3A473F;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 600;
   font-size: 0.8rem;
   letter-spacing: 0.02em;
@@ -446,7 +446,7 @@ a {
 }
 
 .ritual-card .ritual-time {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   font-size: 0.75rem;
@@ -464,7 +464,7 @@ a {
   border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 700;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   background-color: var(--tea-pink);
@@ -579,7 +579,7 @@ a {
   color: #fff;
   border-radius: 999px;
   padding: 0.32rem 0.75rem;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.02em;
@@ -621,7 +621,7 @@ a {
   display: block;
   width: calc(100% - 2.2rem);
   margin: 0.85rem 1.1rem 0;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -660,7 +660,7 @@ a {
 }
 
 .product-card .product-name {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.05rem;
   font-weight: 700;
   color: var(--plum);
@@ -671,18 +671,18 @@ a {
   display: flex;
   align-items: baseline;
   gap: 0.55rem;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .product-card-price-row .price {
   font-weight: 800;
   font-size: 1.1rem;
   color: var(--ink-hover);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .product-card-price-row .compare-price {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.82rem;
   margin-left: 0;
 }
@@ -691,7 +691,7 @@ a {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .product-card-rating-count {
@@ -753,14 +753,14 @@ a {
 }
 
 .offcanvas-header .h5 {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 /* ---------- Pills / tabs ---------- */
 .nav-pills .nav-link {
   color: var(--plum);
   border-radius: 999px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
@@ -832,7 +832,7 @@ a {
   display: block;
   text-align: center;
   padding: 0.6rem;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.8rem;
   color: var(--gold);
   border-top: 1px solid var(--sand);
@@ -840,14 +840,14 @@ a {
 
 /* ---------- Stats ---------- */
 .stat-number {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 800;
   font-size: clamp(2rem, 4vw, 2.75rem);
   color: var(--gold);
 }
 
 .stat-label {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -871,7 +871,7 @@ a {
 }
 
 .testimonial-author {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 600;
   color: var(--plum);
   font-size: 0.9rem;
@@ -887,7 +887,7 @@ a {
 }
 
 .accordion-button {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 600;
   color: var(--plum);
   background-color: #fff;
@@ -922,7 +922,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   font-size: 1.4rem;
 }
@@ -1027,7 +1027,7 @@ a {
 }
 
 .value-label {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -1261,7 +1261,7 @@ footer.site-footer {
 }
 
 .footer-col h4 {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 600;
   color: #fff;
   font-size: 0.95rem;
@@ -1375,7 +1375,7 @@ select:focus-visible {
   background-color: #fff;
   color: #c0392b;
   border: 1.5px solid #c0392b;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.7rem;
   font-weight: 600;
   padding: 0.2rem 0.55rem;
@@ -1397,7 +1397,7 @@ select:focus-visible {
   z-index: 2;
   background-color: var(--plum);
   color: var(--gold);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.65rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -1695,7 +1695,7 @@ select:focus-visible {
 
 .hero-slide-eyebrow {
   display: inline-block;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.78rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1823,7 +1823,7 @@ select:focus-visible {
 }
 
 .hero-stat-num {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   font-size: 1.2rem;
   color: var(--plum);
@@ -1906,7 +1906,7 @@ select:focus-visible {
 }
 
 .why-us-body p:first-of-type::first-letter {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 800;
   font-size: 3.2rem;
   line-height: 0.8;
@@ -2017,7 +2017,7 @@ select:focus-visible {
 }
 
 .trust-band-label {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 800;
   font-size: 0.8rem;
   letter-spacing: 0.02em;
@@ -2164,7 +2164,7 @@ select:focus-visible {
 }
 
 .bundle-visual-plus {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   font-size: 1.4rem;
   color: var(--tea-pink);
@@ -2211,7 +2211,7 @@ select:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
@@ -2231,7 +2231,7 @@ select:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.1rem;
   color: var(--tea-pink);
   transition: transform 0.2s ease;
@@ -2302,7 +2302,7 @@ select:focus-visible {
 }
 
 .import-value-num {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.1rem;
   color: var(--tea-pink);
 }
@@ -2425,7 +2425,7 @@ select:focus-visible {
 }
 
 .category-tile-name {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 600;
   font-size: 1.15rem;
   color: var(--plum);
@@ -2516,7 +2516,7 @@ select:focus-visible {
 }
 
 .bestseller-card-name {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.15rem;
   color: var(--plum);
 }
@@ -2532,7 +2532,7 @@ select:focus-visible {
   font-weight: 600;
   font-size: 0.95rem;
   color: var(--plum);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .bestseller-add-btn {
@@ -2575,7 +2575,7 @@ select:focus-visible {
 }
 
 .trust-band-title {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.4rem;
   color: var(--plum);
 }
@@ -2655,7 +2655,7 @@ select:focus-visible {
 }
 
 .reviews-overview-score-num {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 800;
   font-size: 2.4rem;
   color: var(--plum);
@@ -2732,7 +2732,7 @@ select:focus-visible {
   position: absolute;
   top: 0.4rem;
   right: 1.1rem;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 4.5rem;
   font-weight: 700;
   color: var(--sand);
@@ -2753,7 +2753,7 @@ select:focus-visible {
 }
 
 .review-quote {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.05rem;
   color: var(--plum);
   margin: 0;
@@ -3050,7 +3050,7 @@ select:focus-visible {
   border: 1.5px solid var(--hairline-strong);
   background: var(--paper);
   color: var(--plum);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
@@ -3078,7 +3078,7 @@ select:focus-visible {
   font-weight: 600;
   font-size: 1.6rem;
   color: var(--plum);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .pdp-stock {
@@ -3218,7 +3218,7 @@ select:focus-visible {
 .pdp-accordion-item summary::after {
   content: '+';
   float: right;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.3rem;
 }
 
@@ -3277,7 +3277,7 @@ select:focus-visible {
 }
 
 .pdp-related-name {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.05rem;
   color: var(--plum);
 }
@@ -3504,7 +3504,7 @@ select:focus-visible {
 }
 
 .checkout-summary-item-name {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.95rem;
   color: var(--plum);
 }
@@ -3647,7 +3647,7 @@ select:focus-visible {
 }
 
 .bundle-card-name {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.5rem;
   color: var(--plum);
 }
@@ -3720,7 +3720,7 @@ select:focus-visible {
 }
 
 .bundles-how-num {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.8rem;
   color: var(--plum);
 }
@@ -3750,13 +3750,13 @@ select:focus-visible {
   align-items: center;
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid var(--hairline);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.4rem;
   color: var(--plum);
 }
 
 .cart-drawer-count {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-style: normal;
   font-size: 0.9rem;
   color: var(--muted);
@@ -3803,7 +3803,7 @@ select:focus-visible {
 }
 
 .cart-drawer-item-name {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1rem;
   color: var(--plum);
 }
@@ -3938,7 +3938,7 @@ select:focus-visible {
 }
 
 .order-id-value {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 2rem;
   font-weight: 600;
   color: #fff;
@@ -4240,7 +4240,7 @@ select:focus-visible {
 }
 
 .admin-sidebar-caption {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.1rem;
   color: var(--tea-pink);
 }
@@ -4373,7 +4373,7 @@ select:focus-visible {
 }
 
 .admin-stat-value {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.8rem;
   color: var(--plum);
 }
