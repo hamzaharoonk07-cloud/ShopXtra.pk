@@ -2854,17 +2854,14 @@ select:focus-visible {
 
 .shop-banner-photo-all {
   background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: clamp(1.5rem, 4vw, 3rem);
 }
 
 .shop-banner-photo-all img {
+  position: absolute;
+  bottom: clamp(1.25rem, 3vw, 1.75rem);
+  right: clamp(1.5rem, 4vw, 3rem);
   width: auto;
-  height: auto;
-  max-height: 65%;
-  max-width: 45%;
+  height: clamp(40px, 6vw, 64px);
   object-fit: contain;
   opacity: 0.95;
 }
