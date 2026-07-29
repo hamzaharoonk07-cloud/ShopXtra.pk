@@ -42,6 +42,18 @@ async function runMigrations() {
   // discontinuation above): rename every existing 'soaps' product to
   // 'shampoo' and update the allowed category list to match. Safe to
   // re-run - once no rows are 'soaps', the UPDATE is a no-op.
+  //
+  // The constraint must allow BOTH values while the UPDATE runs - the old
+  // constraint (only 'soaps') would reject the UPDATE's new 'shampoo' value,
+  // and a constraint that only allows 'shampoo' would reject the ADD CONSTRAINT
+  // itself (it validates existing rows, which are still 'soaps' at that point).
+  // This ordering bug previously threw on every cold start and silently aborted
+  // the rest of runMigrations() (including the product_views table below).
+  await pool.query(`ALTER TABLE products DROP CONSTRAINT IF EXISTS products_category_check`);
+  await pool.query(`
+    ALTER TABLE products ADD CONSTRAINT products_category_check
+      CHECK (category IN ('electrolytes', 'soaps', 'shampoo', 'coffee', 'cosmetics'))
+  `);
   await pool.query(`UPDATE products SET category = 'shampoo' WHERE category = 'soaps'`);
   await pool.query(`ALTER TABLE products DROP CONSTRAINT IF EXISTS products_category_check`);
   await pool.query(`
