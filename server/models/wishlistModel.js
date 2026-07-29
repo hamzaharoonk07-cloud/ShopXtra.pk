@@ -32,4 +32,17 @@ async function remove(userId, slug) {
   return rowCount > 0;
 }
 
-module.exports = { findByUserId, add, remove };
+async function mostWishlisted(limit = 5) {
+  const { rows } = await pool.query(
+    `SELECT p.id, p.name, p.slug, COUNT(*)::int AS wishlist_count
+     FROM wishlists w
+     JOIN products p ON p.id = w.product_id
+     GROUP BY p.id, p.name, p.slug
+     ORDER BY wishlist_count DESC
+     LIMIT $1`,
+    [limit]
+  );
+  return rows;
+}
+
+module.exports = { findByUserId, add, remove, mostWishlisted };

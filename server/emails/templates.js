@@ -116,7 +116,7 @@ function orderConfirmationEmail(order) {
       <tr>
         <td style="width: 50%; vertical-align: top; padding-top: 16px;">
           <p style="color:#1C231D; font-weight: bold; margin: 0 0 4px;">Delivery address</p>
-          <p style="color:#5A5348; margin: 0; font-size: 13px; line-height: 1.5;">${order.shipping_name}<br>${order.shipping_phone}<br>${order.shipping_address}, ${order.shipping_city}${order.shipping_postal_code ? ` ${order.shipping_postal_code}` : ''}</p>
+          <p style="color:#5A5348; margin: 0; font-size: 13px; line-height: 1.5;">${order.shipping_name}<br>${order.shipping_phone}${order.email ? `<br>${order.email}` : ''}<br>${order.shipping_address}, ${order.shipping_city}${order.shipping_postal_code ? ` ${order.shipping_postal_code}` : ''}</p>
         </td>
         <td style="width: 50%; vertical-align: top; padding-top: 16px;">
           <p style="color:#1C231D; font-weight: bold; margin: 0 0 4px;">Estimated delivery</p>
@@ -143,7 +143,7 @@ function orderStatusEmail(order, status) {
   return layout(`
     <h1 style="color:#1C231D; font-size: 22px; margin-bottom: 4px; font-family: 'Montserrat', Arial, sans-serif; font-weight: 700; letter-spacing: -0.01em;">${messages[status] || 'Order update'}</h1>
     <p style="color:#5A5348;">Order <strong>#${order.id}</strong> status is now: <strong style="color:#C9A24D; text-transform: uppercase;">${status}</strong></p>
-    <p style="color:#5A5348;">Total: ${formatPKR(order.total)}<br>Delivering to: ${order.shipping_address}, ${order.shipping_city}</p>
+    <p style="color:#5A5348;">Total: ${formatPKR(order.total)}<br>${status === 'delivered' ? 'Delivered' : 'Delivering'} to: ${order.shipping_address}, ${order.shipping_city}</p>
     <p style="color:#5A5348;">You can track this order any time from your ShopXtra account dashboard.</p>
   `);
 }

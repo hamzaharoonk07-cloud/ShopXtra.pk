@@ -210,6 +210,18 @@ async function loadOverview() {
         : '<p style="color:#6b5a58;">No product views recorded yet.</p>';
     }
 
+    const mostWishlisted = document.getElementById('overview-most-wishlisted');
+    if (mostWishlisted) {
+      mostWishlisted.innerHTML = (data.mostWishlisted || []).length
+        ? data.mostWishlisted.map((p) => `
+            <div class="admin-top-product-row">
+              <a href="/pages/product.html?slug=${p.slug}" target="_blank" rel="noopener">${p.name}</a>
+              <span class="mono">${p.wishlist_count} save${p.wishlist_count === 1 ? '' : 's'}</span>
+            </div>
+          `).join('')
+        : '<p style="color:#6b5a58;">No wishlist saves recorded yet.</p>';
+    }
+
     const recentTbody = document.getElementById('overview-recent-orders');
     if (recentTbody) {
       const recent = allOrders.slice(0, 5);

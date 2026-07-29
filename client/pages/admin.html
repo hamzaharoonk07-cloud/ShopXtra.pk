@@ -40,7 +40,7 @@
     </nav>
     <div class="admin-sidebar-foot">
       <span id="admin-whoami" class="admin-whoami"></span>
-      <a href="/index.html" class="admin-view-site">View site &rarr;</a>
+      <a href="/index.html" class="admin-view-site" target="_blank" rel="noopener">View site &rarr;</a>
       <button type="button" id="logout-btn" class="admin-logout-btn">Log out</button>
     </div>
   </aside>
@@ -64,9 +64,15 @@
         </div>
       </div>
 
-      <div class="admin-panel mt-4">
-        <h2>Most viewed products</h2>
-        <div id="overview-most-viewed"></div>
+      <div class="admin-panel-row">
+        <div class="admin-panel">
+          <h2>Most viewed products</h2>
+          <div id="overview-most-viewed"></div>
+        </div>
+        <div class="admin-panel">
+          <h2>Most wishlisted products</h2>
+          <div id="overview-most-wishlisted"></div>
+        </div>
       </div>
 
       <div class="admin-panel mt-4">
