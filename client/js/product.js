@@ -172,7 +172,7 @@ async function loadProduct() {
       });
     }
 
-    let selectedVariant = swatchVariants[0] || null;
+    let selectedVariant = swatchVariants[0] || plainVariants[0] || null;
 
     function applyVariantPrice() {
       const modifier = selectedVariant ? Number(selectedVariant.price_modifier) : 0;
@@ -200,6 +200,15 @@ async function loadProduct() {
           }
           applyVariantPrice();
         });
+      });
+      applyVariantPrice();
+    }
+
+    if (plainVariants.length) {
+      const variantSelect = document.getElementById('variant-select');
+      variantSelect.addEventListener('change', () => {
+        selectedVariant = plainVariants.find((v) => String(v.id) === variantSelect.value);
+        applyVariantPrice();
       });
       applyVariantPrice();
     }

@@ -1,6 +1,7 @@
 const SHOP_BANNER_PHOTOS = {
   electrolytes: '/assets/hero/electrolytes-flavors.jpg',
   coffee: '/assets/hero/coffee-pour.jpg',
+  shampoo: '/assets/hero/shampoo-rosemary.jpg',
   cosmetics: '/assets/hero/cosmetics-flatlay.jpg',
 };
 
