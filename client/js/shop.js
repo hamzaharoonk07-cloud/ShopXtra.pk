@@ -1,3 +1,16 @@
+const SHOP_BANNER_PHOTOS = {
+  electrolytes: '/assets/hero/electrolytes-flavors.jpg',
+  coffee: '/assets/hero/coffee-pour.jpg',
+  cosmetics: '/assets/hero/cosmetics-flatlay.jpg',
+};
+
+function applyBannerPhoto(category) {
+  const wrap = document.getElementById('shop-banner-photo');
+  if (!wrap) return;
+  const photo = SHOP_BANNER_PHOTOS[category];
+  wrap.innerHTML = photo ? `<img src="${photo}" alt="">` : '';
+}
+
 function getParams() {
   return new URLSearchParams(window.location.search);
 }
@@ -54,6 +67,7 @@ function applyAndLoad() {
   window.history.pushState({}, '', `${window.location.pathname}?${query.toString()}`);
   const title = document.getElementById('shop-title');
   title.textContent = params.category ? categoryLabel(params.category) : 'Shop all';
+  applyBannerPhoto(params.category);
   loadProducts(params);
 }
 
@@ -69,6 +83,7 @@ function initFromUrl() {
 
   setActivePill(category);
   document.getElementById('shop-title').textContent = category ? categoryLabel(category) : 'Shop all';
+  applyBannerPhoto(category);
 
   loadProducts({
     category,

@@ -2827,13 +2827,37 @@ select:focus-visible {
 
 /* ---------- Shop listing controls ---------- */
 .shop-banner {
+  position: relative;
+  overflow: hidden;
   background: linear-gradient(135deg, var(--plum), #0A1A12 85%);
   border-radius: var(--radius-lg);
   padding: clamp(1.75rem, 4vw, 2.75rem) clamp(1.5rem, 4vw, 2.5rem);
   margin-bottom: 2rem;
 }
 
+.shop-banner-photo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.shop-banner-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.shop-banner-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, rgba(10, 26, 18, 0.92) 0%, rgba(10, 26, 18, 0.72) 45%, rgba(10, 26, 18, 0.35) 100%);
+}
+
 .shop-breadcrumb {
+  position: relative;
+  z-index: 1;
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.6);
   margin-bottom: 0.75rem;
@@ -2844,6 +2868,8 @@ select:focus-visible {
 }
 
 .shop-title-row {
+  position: relative;
+  z-index: 1;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
