@@ -90,7 +90,7 @@ async function updateStatus(req, res, next) {
       await sendMail({
         to: order.email,
         subject: `Order #${order.id} update: ${order.status[0].toUpperCase() + order.status.slice(1)} | ShopXtra`,
-        html: orderStatusEmail(order, order.status),
+        html: orderStatusEmail(order, order.status, req.body.cancelReason),
       });
     }
 

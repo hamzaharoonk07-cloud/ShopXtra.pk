@@ -133,17 +133,26 @@ function orderConfirmationEmail(order) {
   `);
 }
 
-function orderStatusEmail(order, status) {
+function orderStatusEmail(order, status, cancelReason) {
   const messages = {
     shipped: 'Your order is on its way!',
     delivered: 'Your order has been delivered.',
     processing: 'Your order is being processed.',
     cancelled: 'Your order has been cancelled.',
   };
+  const addressLabel = status === 'delivered' ? 'Delivered'
+    : status === 'cancelled' ? 'Was to be delivered'
+    : 'Delivering';
   return layout(`
     <h1 style="color:#1C231D; font-size: 22px; margin-bottom: 4px; font-family: 'Montserrat', Arial, sans-serif; font-weight: 700; letter-spacing: -0.01em;">${messages[status] || 'Order update'}</h1>
     <p style="color:#5A5348;">Order <strong>#${order.id}</strong> status is now: <strong style="color:#C9A24D; text-transform: uppercase;">${status}</strong></p>
-    <p style="color:#5A5348;">Total: ${formatPKR(order.total)}<br>${status === 'delivered' ? 'Delivered' : 'Delivering'} to: ${order.shipping_address}, ${order.shipping_city}</p>
+    ${status === 'cancelled' && cancelReason ? `
+      <div style="background-color:#FBF3E3; border:1px solid #E8D2A0; border-radius: 12px; padding: 14px 18px; margin: 16px 0;">
+        <p style="color:#8A5A16; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.04em; margin: 0 0 6px;">Reason for cancellation</p>
+        <p style="color:#5A5348; font-size: 14px; margin: 0;">${cancelReason}</p>
+      </div>
+    ` : ''}
+    <p style="color:#5A5348;">Total: ${formatPKR(order.total)}<br>${addressLabel} to: ${order.shipping_address}, ${order.shipping_city}</p>
     <p style="color:#5A5348;">You can track this order any time from your ShopXtra account dashboard.</p>
   `);
 }

@@ -676,13 +676,23 @@ function renderOrdersTable() {
       showOrderDetail(id);
     });
     row.querySelector('.status-select').addEventListener('change', async (e) => {
+      const select = e.target;
+      const newStatus = select.value;
+      const order = allOrders.find((o) => String(o.id) === id);
+      let cancelReason;
+      if (newStatus === 'cancelled') {
+        cancelReason = prompt('Reason for cancelling this order? (sent to the customer in the cancellation email)');
+        if (!cancelReason) {
+          select.value = order ? order.status : select.value;
+          return;
+        }
+      }
       await fetch(`/api/orders/${id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: e.target.value }),
+        body: JSON.stringify({ status: newStatus, cancelReason }),
       });
-      const order = allOrders.find((o) => String(o.id) === id);
-      if (order) order.status = e.target.value;
+      if (order) order.status = newStatus;
     });
   });
 }
