@@ -11,7 +11,6 @@ function bundleCardHtml(bundle) {
           <span class="bundle-card-emoji" aria-hidden="true">&#10024;</span>
         </div>
         <div class="bundle-card-body">
-          <span class="bundle-card-name">${bundle.name}</span>
           <p class="bundle-card-desc">${bundle.description || ''}</p>
           <ul class="bundle-card-items">${itemsHtml}</ul>
           <div class="bundle-card-price-row">
