@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <title>ShopXtra: Look after yourself, every single day.</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="index, follow">
@@ -34,6 +35,13 @@
 }
 </script>
 
+<div class="site-bg-video-wrap" id="site-bg-video-wrap" aria-hidden="true">
+  <video class="site-bg-video active" playsinline muted preload="auto"><source src="/assets/bg/bg-electrolytes.mp4" type="video/mp4"></video>
+  <video class="site-bg-video" playsinline muted preload="auto"><source src="/assets/bg/bg-coffee.mp4" type="video/mp4"></video>
+  <video class="site-bg-video" playsinline muted preload="auto"><source src="/assets/bg/bg-cosmetics.mp4" type="video/mp4"></video>
+  <video class="site-bg-video" playsinline muted preload="auto"><source src="/assets/bg/bg-shampoo.mp4" type="video/mp4"></video>
+</div>
+
 <div id="page-loader-slot"></div>
 <div id="navbar-slot"></div>
 
@@ -50,99 +58,17 @@
   </div>
 </div>
 
-<main>
+<main class="home-main">
   <section class="home-hero">
-    <div class="hero-carousel" id="hero-carousel" role="region" aria-roledescription="carousel" aria-label="Featured rituals">
-      <div class="hero-carousel-track" id="hero-carousel-track">
-
-        <div class="hero-slide hero-slide-morning" data-slide="0">
-          <div class="hero-slide-photo">
-            <video autoplay muted loop playsinline poster="/assets/hero/electrolytes-flavors.jpg" aria-label="Electrolyte drink animation on a sunny beach">
-              <source src="/assets/hero/electrolytes-beach.mp4" type="video/mp4">
-            </video>
-          </div>
-          <div class="container hero-slide-inner">
-            <div class="hero-slide-copy">
-              <span class="hero-slide-eyebrow" data-reveal="hero">4 flavors, 1 goal</span>
-              <h1 data-reveal="hero">Wake up faster.<br>Stay hydrated.</h1>
-              <p class="lead" data-reveal="hero">Green apple, peach, pineapple &amp; strawberry. Imported electrolytes.</p>
-              <div class="d-flex gap-3 flex-wrap" data-reveal="hero">
-                <a href="/pages/shop.html?category=electrolytes" class="btn btn-hero-light">Shop electrolytes</a>
-              </div>
-            </div>
-          </div>
+    <div class="container hero-slide-inner" style="min-height: clamp(460px, 54vw, 620px);">
+      <div class="hero-slide-copy">
+        <span class="hero-slide-eyebrow" data-reveal="hero">Electrolytes, coffee, shampoo &amp; cosmetics</span>
+        <h1 data-reveal="hero">Look after yourself,<br>every single day.</h1>
+        <p class="lead" data-reveal="hero">Authentic, imported essentials with Cash on Delivery nationwide.</p>
+        <div class="d-flex gap-3 flex-wrap" data-reveal="hero">
+          <a href="/pages/shop.html" class="btn btn-hero-light">Shop all</a>
+          <a href="/pages/bundles.html" class="btn btn-hero-outline">Explore kits &rarr;</a>
         </div>
-
-        <div class="hero-slide hero-slide-coffee" data-slide="1">
-          <div class="hero-slide-photo">
-            <video autoplay muted loop playsinline poster="/assets/hero/coffee-pour.jpg" aria-label="Iced coffee beverage and coffee grounds video">
-              <source src="/assets/hero/coffee-pour.mp4" type="video/mp4">
-            </video>
-          </div>
-          <div class="container hero-slide-inner">
-            <div class="hero-slide-copy">
-              <span class="hero-slide-eyebrow" data-reveal="hero">Made for iced coffee</span>
-              <h1 data-reveal="hero">Rich roast.<br>One scoop away.</h1>
-              <p class="lead" data-reveal="hero">Instant coffee that actually tastes brewed, over ice, over milk, over everything.</p>
-              <div class="d-flex gap-3 flex-wrap" data-reveal="hero">
-                <a href="/pages/shop.html?category=coffee" class="btn btn-hero-light">Shop coffee</a>
-                <a href="/pages/bundles.html" class="btn btn-hero-outline">Explore kits &rarr;</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="hero-slide hero-slide-midday" data-slide="2">
-          <div class="hero-slide-photo">
-            <video autoplay muted loop playsinline poster="/assets/hero/shampoo-rosemary.jpg" aria-label="Handmade soap bar with fresh oranges and strawberries">
-              <source src="/assets/hero/shampoo-rosemary.mp4" type="video/mp4">
-            </video>
-          </div>
-          <div class="container hero-slide-inner">
-            <div class="hero-slide-copy">
-              <span class="hero-slide-eyebrow" data-reveal="hero">Midday care</span>
-              <h1 data-reveal="hero">Clean that doesn't<br>dry you out.</h1>
-              <p class="lead" data-reveal="hero">Shampoo bars for an everyday routine that actually works.</p>
-              <div class="d-flex gap-3 flex-wrap" data-reveal="hero">
-                <a href="/pages/shop.html?category=shampoo" class="btn btn-hero-light">Shop shampoo &rarr;</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="hero-slide hero-slide-evening" data-slide="3">
-          <div class="hero-slide-photo">
-            <video autoplay muted loop playsinline poster="/assets/hero/cosmetics-flatlay.jpg" aria-label="Cosmetic products display video">
-              <source src="/assets/hero/cosmetics-display.mp4" type="video/mp4">
-            </video>
-          </div>
-          <div class="container hero-slide-inner">
-            <div class="hero-slide-copy">
-              <span class="hero-slide-eyebrow" data-reveal="hero">Evening ritual</span>
-              <h1 data-reveal="hero">Shades that match<br>what you expect.</h1>
-              <p class="lead" data-reveal="hero">Authentic cosmetics, delivered nationwide with Cash on Delivery.</p>
-              <div class="d-flex gap-3 flex-wrap" data-reveal="hero">
-                <a href="/pages/shop.html?category=cosmetics" class="btn btn-hero-light">Shop cosmetics</a>
-                <a href="/pages/bundles.html" class="btn btn-hero-outline">Explore kits &rarr;</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <button type="button" class="hero-carousel-arrow prev" id="hero-prev" aria-label="Previous slide">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-      </button>
-      <button type="button" class="hero-carousel-arrow next" id="hero-next" aria-label="Next slide">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-      </button>
-
-      <div class="hero-carousel-dots" id="hero-carousel-dots" role="tablist" aria-label="Choose ritual">
-        <button type="button" class="active" data-slide-to="0" role="tab" aria-selected="true" aria-label="Morning ritual"></button>
-        <button type="button" data-slide-to="1" role="tab" aria-selected="false" aria-label="Coffee"></button>
-        <button type="button" data-slide-to="2" role="tab" aria-selected="false" aria-label="Midday care"></button>
-        <button type="button" data-slide-to="3" role="tab" aria-selected="false" aria-label="Evening ritual"></button>
       </div>
     </div>
 
@@ -164,19 +90,6 @@
         <a href="/pages/shop.html" class="section-head-link">View all &rarr;</a>
       </div>
       <div class="category-grid" id="category-grid" data-reveal-group></div>
-    </div>
-  </section>
-
-  <section class="py-4">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">Loved by 3,000+ buyers</span>
-          <h2>Bestsellers</h2>
-        </div>
-        <a href="/pages/shop.html" class="section-head-link">View all &rarr;</a>
-      </div>
-      <div class="bestseller-carousel" id="bestseller-grid" data-reveal-group></div>
     </div>
   </section>
 

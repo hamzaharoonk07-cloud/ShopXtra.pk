@@ -10,10 +10,10 @@ function categoryIcon(slug) {
 }
 
 const HOME_CATEGORIES = [
-  { slug: 'electrolytes', name: 'Electrolytes', desc: 'Hydration that wakes you up faster than coffee.', image: '/assets/hero/electrolytes-flavors.jpg' },
-  { slug: 'coffee', name: 'Coffee', desc: 'Rich roasts and cold brew for the daily ritual.', image: '/assets/hero/coffee-pour.jpg' },
-  { slug: 'shampoo', name: 'Shampoo', desc: 'Everyday bars for a clean, simple routine.' },
-  { slug: 'cosmetics', name: 'Cosmetics', desc: 'Shades and finishes that match what you expect.' },
+  { slug: 'electrolytes', name: 'Electrolytes', desc: 'Wake up faster, stay hydrated — green apple, peach, pineapple &amp; strawberry. Imported electrolytes.', image: '/assets/hero/electrolytes-flavors.jpg' },
+  { slug: 'coffee', name: 'Coffee', desc: 'Rich roast, one scoop away — instant coffee that actually tastes brewed, over ice or milk.', image: '/assets/hero/coffee-pour.jpg' },
+  { slug: 'shampoo', name: 'Shampoo', desc: "Clean that doesn't dry you out — shampoo bars for an everyday routine that actually works." },
+  { slug: 'cosmetics', name: 'Cosmetics', desc: 'Shades that match what you expect — authentic cosmetics, delivered nationwide with Cash on Delivery.' },
 ];
 
 function applyCategoryImagesFromProducts(products) {
@@ -73,84 +73,6 @@ async function showSaleBannerIfAny() {
   }
 }
 
-function initHeroCarousel() {
-  const track = document.getElementById('hero-carousel-track');
-  const carousel = document.getElementById('hero-carousel');
-  const dotsWrap = document.getElementById('hero-carousel-dots');
-  const prevBtn = document.getElementById('hero-prev');
-  const nextBtn = document.getElementById('hero-next');
-  if (!track || !carousel) return;
-
-  document.querySelectorAll('.hero-slide-icon[data-icon]').forEach((el) => {
-    el.innerHTML = categoryIcon(el.dataset.icon);
-  });
-
-  const slides = Array.from(track.children);
-  const dots = dotsWrap ? Array.from(dotsWrap.children) : [];
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let index = 0;
-  let timer = null;
-
-  function goTo(i) {
-    index = (i + slides.length) % slides.length;
-    track.style.transform = `translateX(-${index * 100}%)`;
-    dots.forEach((d, di) => {
-      d.classList.toggle('active', di === index);
-      d.setAttribute('aria-selected', di === index ? 'true' : 'false');
-    });
-    slides.forEach((slide, si) => {
-      const video = slide.querySelector('video');
-      if (!video) return;
-      if (si === index) {
-        video.play().catch(() => {});
-      } else {
-        video.pause();
-      }
-    });
-  }
-  function next() { goTo(index + 1); }
-  function prev() { goTo(index - 1); }
-
-  function stopAutoplay() {
-    if (timer) clearInterval(timer);
-    timer = null;
-  }
-  function startAutoplay() {
-    if (prefersReducedMotion || slides.length < 2) return;
-    stopAutoplay();
-    timer = setInterval(next, 5500);
-  }
-
-  prevBtn?.addEventListener('click', () => { prev(); startAutoplay(); });
-  nextBtn?.addEventListener('click', () => { next(); startAutoplay(); });
-  dots.forEach((dot, di) => dot.addEventListener('click', () => { goTo(di); startAutoplay(); }));
-
-  carousel.addEventListener('mouseenter', stopAutoplay);
-  carousel.addEventListener('mouseleave', startAutoplay);
-  carousel.addEventListener('focusin', stopAutoplay);
-  carousel.addEventListener('focusout', startAutoplay);
-
-  carousel.setAttribute('tabindex', '0');
-  carousel.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') { prev(); startAutoplay(); }
-    if (e.key === 'ArrowRight') { next(); startAutoplay(); }
-  });
-
-  let touchStartX = null;
-  carousel.addEventListener('pointerdown', (e) => { touchStartX = e.clientX; });
-  carousel.addEventListener('pointerup', (e) => {
-    if (touchStartX === null) return;
-    const delta = e.clientX - touchStartX;
-    touchStartX = null;
-    if (Math.abs(delta) < 40) return;
-    if (delta < 0) next(); else prev();
-    startAutoplay();
-  });
-
-  goTo(0);
-  startAutoplay();
-}
-
 function renderBundlesVisual() {
   const el = document.getElementById('bundles-band-visual');
   if (!el) return;
@@ -179,37 +101,59 @@ function renderCategoryGrid() {
   `).join('');
 }
 
-function productCardSkeletonHtml() {
-  return `
-    <div class="product-card-skeleton">
-      <div class="skeleton-block skeleton-image"></div>
-      <div class="skeleton-block skeleton-line" style="width:40%;"></div>
-      <div class="skeleton-block skeleton-line" style="width:75%;"></div>
-      <div class="skeleton-block skeleton-line" style="width:35%;"></div>
-    </div>
-  `;
-}
-
-async function loadBestsellers() {
-  const grid = document.getElementById('bestseller-grid');
-  grid.innerHTML = Array(4).fill(productCardSkeletonHtml()).join('');
+async function loadCategoryImages() {
   try {
-    const products = await apiGet('/products?sort=bestseller');
+    const products = await apiGet('/products');
     applyCategoryImagesFromProducts(products);
-    const top = products.slice(0, 4);
-    if (!top.length) {
-      grid.innerHTML = '<p class="text-center py-5">No products yet.</p>';
-      return;
-    }
-    grid.innerHTML = top.map(productCardHtml).join('');
-    document.dispatchEvent(new CustomEvent('shopxtra:products-rendered'));
-  } catch (err) {
-    grid.innerHTML = `<p class="text-center py-5 text-danger">Could not load products: ${err.message}</p>`;
+  } catch {
+    // Static category images from HOME_CATEGORIES stay as the fallback.
   }
 }
 
-initHeroCarousel();
+function initSiteBgVideo() {
+  const wrap = document.getElementById('site-bg-video-wrap');
+  if (!wrap) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+
+  const videos = Array.from(wrap.querySelectorAll('.site-bg-video'));
+  if (!videos.length) return;
+  videos.forEach((v) => { v.loop = true; });
+
+  let activeIndex = 0;
+  videos[0].play().catch(() => {});
+
+  function setActive(i) {
+    if (i === activeIndex) return;
+    videos[activeIndex].classList.remove('active');
+    videos[activeIndex].pause();
+    videos[i].classList.add('active');
+    videos[i].play().catch(() => {});
+    activeIndex = i;
+  }
+
+  function updateFromScroll() {
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0;
+    const segment = Math.min(videos.length - 1, Math.floor(progress * videos.length));
+    setActive(segment);
+    if (videos[segment].paused) videos[segment].play().catch(() => {});
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { updateFromScroll(); ticking = false; });
+  }, { passive: true });
+
+  updateFromScroll();
+}
+
 renderCategoryGrid();
 renderBundlesVisual();
-loadBestsellers();
+loadCategoryImages();
 showSaleBannerIfAny();
+initSiteBgVideo();
