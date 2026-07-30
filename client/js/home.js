@@ -73,19 +73,6 @@ async function showSaleBannerIfAny() {
   }
 }
 
-function renderBundlesVisual() {
-  const el = document.getElementById('bundles-band-visual');
-  if (!el) return;
-  el.innerHTML = `
-    <div class="bundle-visual-pair">
-      <div class="bundle-visual-item">${productIllustration('shampoo')}</div>
-      <span class="bundle-visual-plus">+</span>
-      <div class="bundle-visual-item">${productIllustration('electrolytes')}</div>
-    </div>
-    <span class="mono bundle-visual-label">Midday Ritual Bundle</span>
-  `;
-}
-
 function renderCategoryGrid() {
   const grid = document.getElementById('category-grid');
   if (!grid) return;
@@ -122,6 +109,16 @@ function initSiteBgVideo() {
   if (!videos.length) return;
   videos.forEach((v) => { v.loop = true; });
 
+  function ensureLoaded(video) {
+    if (!video.dataset.src) return;
+    const source = document.createElement('source');
+    source.src = video.dataset.src;
+    source.type = 'video/mp4';
+    video.appendChild(source);
+    video.load();
+    delete video.dataset.src;
+  }
+
   let activeIndex = 0;
   videos[0].play().catch(() => {});
 
@@ -129,6 +126,7 @@ function initSiteBgVideo() {
     if (i === activeIndex) return;
     videos[activeIndex].classList.remove('active');
     videos[activeIndex].pause();
+    ensureLoaded(videos[i]);
     videos[i].classList.add('active');
     videos[i].play().catch(() => {});
     activeIndex = i;
@@ -153,7 +151,6 @@ function initSiteBgVideo() {
 }
 
 renderCategoryGrid();
-renderBundlesVisual();
 loadCategoryImages();
 showSaleBannerIfAny();
 initSiteBgVideo();
