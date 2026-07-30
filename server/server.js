@@ -30,6 +30,13 @@ const migrationsReady = runMigrations().catch((err) => {
   console.error('Migration error:', err.message);
 });
 
+// Static files (JS/CSS/images/uploads) never touch the database, so they're
+// served before the migration gate below - otherwise a cold start makes
+// every single asset on every page wait on unrelated schema migrations,
+// which is what was making pages feel like they hung on load.
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+app.use(express.static(path.join(__dirname, '..', 'client')));
+
 app.use((req, res, next) => {
   migrationsReady.then(() => next()).catch(next);
 });
@@ -38,8 +45,6 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(sitemapRoutes);
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
-app.use(express.static(path.join(__dirname, '..', 'client')));
 
 app.use('/api/health', healthRoutes);
 app.use('/api/products', productRoutes);
