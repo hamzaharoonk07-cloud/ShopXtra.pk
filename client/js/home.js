@@ -18,6 +18,7 @@ const HOME_CATEGORIES = [
 
 function applyCategoryImagesFromProducts(products) {
   HOME_CATEGORIES.forEach((c) => {
+    if (c.image) return;
     const withImage = products.find((p) => p.category === c.slug && p.images && p.images[0]);
     if (withImage) c.image = withImage.images[0];
   });
