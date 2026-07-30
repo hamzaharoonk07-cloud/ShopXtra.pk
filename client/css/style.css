@@ -493,7 +493,7 @@ a {
   background-color: var(--tea-pink);
   border-color: var(--tea-pink);
   color: #fff;
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 0.7rem 1.6rem;
   font-weight: 600;
   font-size: 0.95rem;
@@ -512,7 +512,7 @@ a {
 .btn-outline-plum {
   border: 1.5px solid var(--hairline-strong);
   color: var(--tea-pink);
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 0.65rem 1.5rem;
   font-weight: 600;
   background: #fff;
@@ -732,7 +732,7 @@ a {
   text-align: center;
   color: #fff;
   border: none;
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 0.65rem 1rem;
   background: var(--tea-pink);
   white-space: nowrap;
@@ -837,7 +837,7 @@ a {
   background-color: var(--plum);
   color: var(--ivory-blush);
   border: none;
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 0.55rem 1.1rem;
   font-size: 0.9rem;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -1840,7 +1840,7 @@ select:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 0.85rem 1.6rem;
   font-weight: 600;
   font-size: 0.95rem;
