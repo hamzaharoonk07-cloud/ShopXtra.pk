@@ -122,6 +122,7 @@ function initSiteBgVideo() {
 
   let activeIndex = 0;
   videos[0].play().catch(() => {});
+  if (videos[1]) ensureLoaded(videos[1]);
 
   function setActive(i) {
     if (i === activeIndex) return;
@@ -131,6 +132,7 @@ function initSiteBgVideo() {
     videos[i].classList.add('active');
     videos[i].play().catch(() => {});
     activeIndex = i;
+    if (videos[i + 1]) ensureLoaded(videos[i + 1]);
   }
 
   // Reading scrollHeight forces a layout reflow, so it's cached here and
