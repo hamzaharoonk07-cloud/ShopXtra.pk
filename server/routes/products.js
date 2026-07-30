@@ -16,6 +16,7 @@ router.get('/:slug/reviews', reviewController.list);
 router.post('/:slug/reviews', requireAuth, reviewController.create);
 router.get('/:slug', productController.getBySlug);
 router.post('/:slug/view', attachUserIfPresent, productController.recordView);
+router.post('/reprocess-images', requireAuth, requireRole('admin'), productController.reprocessImages);
 router.post('/', requireAuth, requireRole('admin'), productMedia, productController.create);
 router.put('/:id', requireAuth, requireRole('admin'), productMedia, productController.update);
 router.delete('/:id', requireAuth, requireRole('admin'), productController.remove);

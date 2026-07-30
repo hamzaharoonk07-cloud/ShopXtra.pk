@@ -1,3 +1,37 @@
+function renderPageLoader() {
+  return `
+    <div class="page-loader" id="page-loader">
+      <div class="page-loader-inner">
+        <div class="page-loader-logo-wrap">
+          <img src="/assets/logo-full.png" alt="ShopXtra" class="page-loader-logo page-loader-logo-base">
+          <img src="/assets/logo-full.png" alt="" aria-hidden="true" class="page-loader-logo page-loader-logo-fill">
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function hidePageLoader() {
+  const loader = document.getElementById('page-loader');
+  if (!loader) return;
+  loader.classList.add('is-hidden');
+  setTimeout(() => loader.remove(), 500);
+}
+
+function initPageLoader() {
+  const slot = document.getElementById('page-loader-slot');
+  if (!slot) return;
+  slot.innerHTML = renderPageLoader();
+  if (document.readyState === 'complete') {
+    hidePageLoader();
+    return;
+  }
+  window.addEventListener('load', hidePageLoader);
+  setTimeout(hidePageLoader, 6000);
+}
+
+initPageLoader();
+
 function renderAnnouncementBar() {
   const items = `
     <span>Cash on Delivery nationwide</span>

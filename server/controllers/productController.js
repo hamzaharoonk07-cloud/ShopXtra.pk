@@ -1,6 +1,7 @@
 const productModel = require('../models/productModel');
 const productViewModel = require('../models/productViewModel');
 const { saveImage } = require('../utils/imageStorage');
+const { reprocessAllProductImages } = require('../utils/reprocessImages');
 
 function slugify(name) {
   return name
@@ -175,4 +176,13 @@ async function removeVariant(req, res, next) {
   }
 }
 
-module.exports = { list, getBySlug, recordView, create, update, remove, createVariant, updateVariant, removeVariant };
+async function reprocessImages(req, res, next) {
+  try {
+    const report = await reprocessAllProductImages();
+    res.json(report);
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { list, getBySlug, recordView, create, update, remove, createVariant, updateVariant, removeVariant, reprocessImages };

@@ -578,6 +578,28 @@ document.getElementById('export-products-btn').addEventListener('click', () => {
   downloadCsv('shopxtra-products.csv', rows);
 });
 
+document.getElementById('compress-images-btn').addEventListener('click', async (e) => {
+  const btn = e.currentTarget;
+  if (!confirm('Compress all existing product images now? This re-uploads and replaces images for every product that isn\'t already compressed. It can take a while for many products.')) return;
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Compressing…';
+  try {
+    const res = await fetch('/api/products/reprocess-images', { method: 'POST' });
+    const report = await res.json();
+    if (!res.ok) throw new Error(report.error || 'Request failed');
+    const beforeKB = Math.round(report.totalBefore / 1024);
+    const afterKB = Math.round(report.totalAfter / 1024);
+    const pct = report.totalBefore ? Math.round((1 - report.totalAfter / report.totalBefore) * 100) : 0;
+    alert(`Compressed ${report.processed} image(s).\n${beforeKB}KB -> ${afterKB}KB (${pct}% smaller).`);
+  } catch (err) {
+    alert(err.message || 'Could not compress images.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+});
+
 document.getElementById('add-product-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const errorEl = document.getElementById('add-product-error');

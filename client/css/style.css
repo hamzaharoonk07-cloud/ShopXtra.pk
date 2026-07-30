@@ -5044,3 +5044,71 @@ select:focus-visible {
     flex: 1 1 140px;
   }
 }
+
+/* Full-page loader: shown from script execution until the window "load"
+   event (i.e. roughly until images finish), so it covers the same gap
+   that made the site feel slow before product images were compressed. */
+.page-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ivory-blush);
+  transition: opacity 0.45s ease, visibility 0.45s ease;
+}
+
+.page-loader.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.page-loader-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.page-loader-logo-wrap {
+  position: relative;
+  width: 160px;
+}
+
+.page-loader-logo {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.page-loader-logo-base {
+  opacity: 0.3;
+  filter: grayscale(1);
+}
+
+.page-loader-logo-fill {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(100% 0 0 0);
+  animation: loaderLogoFill 2.4s ease-in-out infinite;
+}
+
+@keyframes loaderLogoFill {
+  0% { clip-path: inset(100% 0 0 0); }
+  50% { clip-path: inset(12% 0 0 0); }
+  100% { clip-path: inset(100% 0 0 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-loader-logo-fill {
+    animation: none;
+    clip-path: inset(12% 0 0 0);
+  }
+}
+
+@media (max-width: 480px) {
+  .page-loader-logo-wrap {
+    width: 120px;
+  }
+}
