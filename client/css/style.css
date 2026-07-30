@@ -1766,7 +1766,8 @@ select:focus-visible {
   object-position: center 45%;
 }
 
-.hero-slide-midday .hero-slide-photo img {
+.hero-slide-midday .hero-slide-photo img,
+.hero-slide-midday .hero-slide-photo video {
   object-position: center 35%;
 }
 
