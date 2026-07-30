@@ -18,6 +18,91 @@ function applyBannerPhoto(category) {
   wrap.innerHTML = photo ? `<img src="${photo}" alt="">` : '';
 }
 
+const CATALOG_CACHE_KEY = 'shopxtra:catalog:v1';
+let catalogPromise = null;
+
+function readCatalogCache() {
+  try {
+    const raw = sessionStorage.getItem(CATALOG_CACHE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeCatalogCache(products) {
+  try {
+    sessionStorage.setItem(CATALOG_CACHE_KEY, JSON.stringify(products));
+  } catch {
+    // sessionStorage unavailable (private mode, quota) — cache is a pure perf optimization
+  }
+}
+
+function fetchCatalog() {
+  return apiGet('/products').then((products) => {
+    writeCatalogCache(products);
+    return products;
+  });
+}
+
+// Returns the full, unfiltered catalog. A cached copy resolves instantly and
+// is refreshed from the network in the background so the next call gets
+// current data without ever blocking the UI on a repeat fetch.
+function getCatalog() {
+  if (catalogPromise) return catalogPromise;
+  const cached = readCatalogCache();
+  if (cached) {
+    catalogPromise = Promise.resolve(cached);
+    fetchCatalog().then((fresh) => { catalogPromise = Promise.resolve(fresh); }).catch(() => {});
+  } else {
+    catalogPromise = fetchCatalog();
+  }
+  return catalogPromise;
+}
+
+function sortCatalog(products, sort) {
+  const list = [...products];
+  if (sort === 'price_asc') {
+    list.sort((a, b) => Number(a.price) - Number(b.price));
+  } else if (sort === 'price_desc') {
+    list.sort((a, b) => Number(b.price) - Number(a.price));
+  } else if (sort === 'bestseller') {
+    list.sort((a, b) => {
+      if (a.is_bestseller !== b.is_bestseller) return (b.is_bestseller ? 1 : 0) - (a.is_bestseller ? 1 : 0);
+      return new Date(b.created_at) - new Date(a.created_at);
+    });
+  } else {
+    list.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  }
+  return list;
+}
+
+function filterCatalog(products, params) {
+  let list = products;
+  if (params.category) list = list.filter((p) => p.category === params.category);
+  if (params.minPrice) list = list.filter((p) => Number(p.price) >= Number(params.minPrice));
+  if (params.maxPrice) list = list.filter((p) => Number(p.price) <= Number(params.maxPrice));
+  if (params.search) {
+    const q = params.search.toLowerCase();
+    list = list.filter((p) => p.name.toLowerCase().includes(q));
+  }
+  return sortCatalog(list, params.sort);
+}
+
+function renderProducts(products) {
+  const grid = document.getElementById('product-grid');
+  if (!products.length) {
+    grid.innerHTML = '<p class="text-center py-5">No products match these filters.</p>';
+    return;
+  }
+  const template = document.createElement('template');
+  template.innerHTML = products.map(productCardHtml).join('');
+  const fragment = document.createDocumentFragment();
+  fragment.append(...template.content.childNodes);
+  grid.replaceChildren(fragment);
+  document.dispatchEvent(new CustomEvent('shopxtra:products-rendered'));
+}
+
 function getParams() {
   return new URLSearchParams(window.location.search);
 }
@@ -34,16 +119,12 @@ function buildQuery(params) {
 
 async function loadProducts(params) {
   const grid = document.getElementById('product-grid');
-  grid.innerHTML = '<p class="text-center py-5">Loading products…</p>';
+  if (!readCatalogCache() && !catalogPromise) {
+    grid.innerHTML = '<p class="text-center py-5">Loading products…</p>';
+  }
   try {
-    const query = buildQuery(params);
-    const products = await apiGet(`/products?${query.toString()}`);
-    if (!products.length) {
-      grid.innerHTML = '<p class="text-center py-5">No products match these filters.</p>';
-      return;
-    }
-    grid.innerHTML = products.map(productCardHtml).join('');
-    document.dispatchEvent(new CustomEvent('shopxtra:products-rendered'));
+    const catalog = await getCatalog();
+    renderProducts(filterCatalog(catalog, params));
   } catch (err) {
     grid.innerHTML = `<p class="text-center py-5 text-danger">Could not load products: ${err.message}</p>`;
   }
