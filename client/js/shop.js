@@ -34,18 +34,15 @@ function buildQuery(params) {
 
 async function loadProducts(params) {
   const grid = document.getElementById('product-grid');
-  const countEl = document.getElementById('shop-count');
   grid.innerHTML = '<p class="text-center py-5">Loading products…</p>';
   try {
     const query = buildQuery(params);
     const products = await apiGet(`/products?${query.toString()}`);
     if (!products.length) {
       grid.innerHTML = '<p class="text-center py-5">No products match these filters.</p>';
-      countEl.textContent = '0 products';
       return;
     }
     grid.innerHTML = products.map(productCardHtml).join('');
-    countEl.textContent = `${products.length} product${products.length === 1 ? '' : 's'}`;
     document.dispatchEvent(new CustomEvent('shopxtra:products-rendered'));
   } catch (err) {
     grid.innerHTML = `<p class="text-center py-5 text-danger">Could not load products: ${err.message}</p>`;

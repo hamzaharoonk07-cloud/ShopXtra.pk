@@ -3015,11 +3015,6 @@ select:focus-visible {
   letter-spacing: -0.01em;
 }
 
-.shop-count {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.65);
-}
-
 .shop-controls-row {
   display: flex;
   justify-content: space-between;
