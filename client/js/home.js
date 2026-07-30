@@ -132,8 +132,19 @@ function initSiteBgVideo() {
     activeIndex = i;
   }
 
+  // Reading scrollHeight forces a layout reflow, so it's cached here and
+  // only recomputed on resize/content-load - not on every scroll tick,
+  // which was causing layout thrashing (and visible video jank) on scroll.
+  let maxScroll = 0;
+  function recalcMaxScroll() {
+    maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+  }
+  recalcMaxScroll();
+  window.addEventListener('resize', recalcMaxScroll, { passive: true });
+  window.addEventListener('load', recalcMaxScroll);
+  document.addEventListener('shopxtra:products-rendered', recalcMaxScroll);
+
   function updateFromScroll() {
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
     const progress = maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0;
     const segment = Math.min(videos.length - 1, Math.floor(progress * videos.length));
     setActive(segment);
