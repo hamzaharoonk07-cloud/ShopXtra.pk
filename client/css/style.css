@@ -5202,6 +5202,16 @@ select:focus-visible {
   color: #fff;
 }
 
+/* On mobile the transparent navbar's collapsed menu has no panel of its
+   own, so it would otherwise show the busy scroll video directly behind
+   the nav links with nothing separating them. display:contents on this
+   element at desktop widths means this never paints there regardless. */
+:root:has(.home-main) .navbar-links-collapse.show {
+  background: rgba(18, 41, 30, 0.92);
+  backdrop-filter: blur(10px);
+  border-radius: 0 0 12px 12px;
+}
+
 .home-main .eyebrow,
 .home-main .section-head h2,
 .home-main .reviews-section h2,
