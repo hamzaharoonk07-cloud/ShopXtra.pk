@@ -25,6 +25,12 @@ router.post('/', async (req, res, next) => {
         html: newsletterWelcomeEmail(),
       });
       emailSent = info !== null;
+
+      await sendMail({
+        to: 'shopxtra9@gmail.com',
+        subject: 'New newsletter subscriber',
+        html: `<p>New newsletter signup: <strong>${email}</strong></p>`,
+      });
     }
 
     res.status(201).json({ message: 'Subscribed', emailSent });
