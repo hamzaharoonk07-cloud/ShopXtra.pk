@@ -17,15 +17,17 @@ router.post('/', async (req, res, next) => {
       [email]
     );
 
+    let emailSent = true;
     if (rowCount > 0) {
-      await sendMail({
+      const info = await sendMail({
         to: email,
         subject: 'Welcome to the ShopXtra list',
         html: newsletterWelcomeEmail(),
       });
+      emailSent = info !== null;
     }
 
-    res.status(201).json({ message: 'Subscribed' });
+    res.status(201).json({ message: 'Subscribed', emailSent });
   } catch (err) {
     next(err);
   }
