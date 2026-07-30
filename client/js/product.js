@@ -64,6 +64,10 @@ async function loadProduct() {
     ` : '';
 
     main.innerHTML = `
+      <button type="button" class="pdp-back-btn" id="pdp-back-btn" aria-label="Go back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        Back
+      </button>
       <nav class="shop-breadcrumb" aria-label="Breadcrumb">
         <a href="/index.html">Home</a> / <a href="/pages/shop.html?category=${product.category}">${categoryLabel(product.category)}</a> / <span>${product.name}</span>
       </nav>
@@ -150,6 +154,14 @@ async function loadProduct() {
     loadReviews(slug);
     initWishlistButton(slug);
     loadRelatedProducts(product);
+
+    document.getElementById('pdp-back-btn').addEventListener('click', () => {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = `/pages/shop.html?category=${product.category}`;
+      }
+    });
 
     if (thumbRail) {
       main.querySelectorAll('.pdp-thumb').forEach((btn) => {

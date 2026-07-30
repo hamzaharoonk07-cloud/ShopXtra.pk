@@ -600,6 +600,25 @@ document.getElementById('compress-images-btn').addEventListener('click', async (
   }
 });
 
+document.getElementById('seed-testimonials-btn').addEventListener('click', async (e) => {
+  const btn = e.currentTarget;
+  if (!confirm('Add 10 testimonials to every product? Skips products/reviewers that already have one, so it\'s safe to run again.')) return;
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Adding…';
+  try {
+    const res = await fetch('/api/products/reviews/seed-testimonials', { method: 'POST' });
+    const report = await res.json();
+    if (!res.ok) throw new Error(report.error || 'Request failed');
+    alert(`Added ${report.inserted} testimonial(s) across ${report.products} product(s).`);
+  } catch (err) {
+    alert(err.message || 'Could not add testimonials.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+});
+
 document.getElementById('add-product-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const errorEl = document.getElementById('add-product-error');

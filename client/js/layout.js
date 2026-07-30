@@ -146,7 +146,7 @@ function renderFooter() {
           <p>Everyday essentials that are imported, authentic, and PKR-priced. Look after yourself, every single day.</p>
           <div class="footer-brand-stats">
             <span>&#9733; 4.8 rated</span>
-            <span>12,000+ orders</span>
+            <span>3,000+ orders</span>
           </div>
         </div>
         <div class="footer-col">

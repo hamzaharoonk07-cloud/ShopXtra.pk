@@ -12,6 +12,7 @@ const productMedia = upload.fields([
 ]);
 
 router.get('/', productController.list);
+router.post('/reviews/seed-testimonials', requireAuth, requireRole('admin'), reviewController.seedAll);
 router.get('/:slug/reviews', reviewController.list);
 router.post('/:slug/reviews', requireAuth, reviewController.create);
 router.get('/:slug', productController.getBySlug);

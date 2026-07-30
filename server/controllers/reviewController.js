@@ -1,4 +1,5 @@
 const reviewModel = require('../models/reviewModel');
+const { seedTestimonials } = require('../utils/seedTestimonials');
 
 async function list(req, res, next) {
   try {
@@ -32,4 +33,13 @@ async function create(req, res, next) {
   }
 }
 
-module.exports = { list, create };
+async function seedAll(req, res, next) {
+  try {
+    const report = await seedTestimonials();
+    res.json(report);
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { list, create, seedAll };
