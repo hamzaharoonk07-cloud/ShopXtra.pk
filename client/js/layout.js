@@ -210,8 +210,8 @@ function renderFooter() {
         </div>
       </div>
       <div class="footer-bottom-bar">
-        <span>&copy; 2026 ShopXtra · Made in Pakistan for Pakistan</span>
-        <span>Cash on Delivery · 5–7 day nationwide delivery</span>
+        <span>&copy; 2026 ShopXtra &middot; Made in Pakistan for Pakistan</span>
+        <span>Cash on Delivery &middot; 5&ndash;7 day nationwide delivery</span>
       </div>
     </footer>
   `;
