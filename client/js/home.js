@@ -10,7 +10,7 @@ function categoryIcon(slug) {
 }
 
 const HOME_CATEGORIES = [
-  { slug: 'electrolytes', name: 'Electrolytes', desc: 'Wake up faster, stay hydrated — green apple, peach, pineapple &amp; strawberry. Imported electrolytes.', image: '/assets/hero/electrolytes-flavors.jpg' },
+  { slug: 'electrolytes', name: 'Electrolytes', desc: 'Wake up faster, stay hydrated — green apple, peach, pineapple &amp; strawberry. Imported electrolytes.', image: '/assets/hero/electrolytes-category.webp' },
   { slug: 'coffee', name: 'Coffee', desc: 'Rich roast, one scoop away — instant coffee that actually tastes brewed, over ice or milk.', image: '/assets/hero/coffee-pour.jpg' },
   { slug: 'shampoo', name: 'Shampoo', desc: "Clean that doesn't dry you out — shampoo bars for an everyday routine that actually works." },
   { slug: 'cosmetics', name: 'Cosmetics', desc: 'Shades that match what you expect — authentic cosmetics, delivered nationwide with Cash on Delivery.' },
