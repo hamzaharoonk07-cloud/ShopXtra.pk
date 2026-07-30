@@ -98,6 +98,15 @@ function initHeroCarousel() {
       d.classList.toggle('active', di === index);
       d.setAttribute('aria-selected', di === index ? 'true' : 'false');
     });
+    slides.forEach((slide, si) => {
+      const video = slide.querySelector('video');
+      if (!video) return;
+      if (si === index) {
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    });
   }
   function next() { goTo(index + 1); }
   function prev() { goTo(index - 1); }
