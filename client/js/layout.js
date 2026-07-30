@@ -196,7 +196,7 @@ function renderFooter() {
         <div class="footer-col">
           <h4>Store information</h4>
           <p style="color:#A8BFA3; font-size:0.85rem; line-height:1.55; margin:0 0 0.9rem;">Authentic products, sourced and sold with transparency and quality you can trust.</p>
-          <p style="margin:0 0 0.35rem;"><strong style="color:#fff;">Phone:</strong> <a href="tel:+923001234567" style="display:inline; padding:0;">+92 300 1234567</a></p>
+          <p style="margin:0 0 0.35rem;"><strong style="color:#fff;">Phone:</strong> <a href="tel:+923272255447" style="display:inline; padding:0;">+92 327 2255447</a></p>
           <p style="margin:0;"><strong style="color:#fff;">Email:</strong> <a href="mailto:shopxtra9@gmail.com" style="display:inline; padding:0;">shopxtra9@gmail.com</a></p>
         </div>
         <div class="footer-col footer-newsletter-col">
