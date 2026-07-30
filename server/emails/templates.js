@@ -95,7 +95,7 @@ function orderConfirmationEmail(order) {
       ${itemsTableHtml(order.items || [])}
       <tr>
         <td colspan="3" style="padding-top: 10px; color:#5A5348;">Subtotal</td>
-        <td style="padding-top: 10px; text-align: right; color:#5A5348;">${formatPKR(order.total + (order.discount_total || 0) - (order.shipping_fee || 0))}</td>
+        <td style="padding-top: 10px; text-align: right; color:#5A5348;">${formatPKR(Number(order.total) + Number(order.discount_total || 0) - Number(order.shipping_fee || 0))}</td>
       </tr>
       ${order.discount_total > 0 ? `
       <tr>
