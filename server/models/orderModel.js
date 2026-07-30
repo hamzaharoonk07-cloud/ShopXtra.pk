@@ -21,22 +21,46 @@ async function createOrder({ userId, email, items, shipping, paymentMethod, prom
     const resolvedItems = [];
 
     for (const item of items) {
+      // Cart items for a chosen variant carry a compound slug
+      // ("base-slug::variantId") so each variant lines up separately in
+      // the cart - split it back apart before looking up the product.
+      const [baseSlug, variantIdRaw] = String(item.slug).split('::');
+      const variantId = variantIdRaw ? Number(variantIdRaw) : null;
+
       const { rows } = await client.query(
         'SELECT id, name, price, stock FROM products WHERE slug = $1 FOR UPDATE',
-        [item.slug]
+        [baseSlug]
       );
       const product = rows[0];
       if (!product) {
-        throw Object.assign(new Error(`Product not found: ${item.slug}`), { status: 400 });
+        throw Object.assign(new Error(`Product not found: ${baseSlug}`), { status: 400 });
       }
-      if (product.stock < item.qty) {
-        throw Object.assign(new Error(`Not enough stock for ${product.name}`), { status: 409 });
-      }
-      const lineTotal = Number(product.price) * item.qty;
-      total += lineTotal;
-      resolvedItems.push({ productId: product.id, qty: item.qty, price: product.price });
 
-      await client.query('UPDATE products SET stock = stock - $1 WHERE id = $2', [item.qty, product.id]);
+      let price = Number(product.price);
+      if (variantId) {
+        const { rows: variantRows } = await client.query(
+          'SELECT id, variant_name, price_modifier, stock FROM product_variants WHERE id = $1 AND product_id = $2 FOR UPDATE',
+          [variantId, product.id]
+        );
+        const variant = variantRows[0];
+        if (!variant) {
+          throw Object.assign(new Error(`Variant not found for ${product.name}`), { status: 400 });
+        }
+        if (variant.stock < item.qty) {
+          throw Object.assign(new Error(`Not enough stock for ${product.name} (${variant.variant_name})`), { status: 409 });
+        }
+        price += Number(variant.price_modifier);
+        await client.query('UPDATE product_variants SET stock = stock - $1 WHERE id = $2', [item.qty, variantId]);
+      } else {
+        if (product.stock < item.qty) {
+          throw Object.assign(new Error(`Not enough stock for ${product.name}`), { status: 409 });
+        }
+        await client.query('UPDATE products SET stock = stock - $1 WHERE id = $2', [item.qty, product.id]);
+      }
+
+      const lineTotal = price * item.qty;
+      total += lineTotal;
+      resolvedItems.push({ productId: product.id, variantId, qty: item.qty, price });
     }
 
     let discount = 0;
@@ -74,9 +98,9 @@ async function createOrder({ userId, email, items, shipping, paymentMethod, prom
 
     for (const item of resolvedItems) {
       await client.query(
-        `INSERT INTO order_items (order_id, product_id, qty, price_at_purchase)
-         VALUES ($1, $2, $3, $4)`,
-        [order.id, item.productId, item.qty, item.price]
+        `INSERT INTO order_items (order_id, product_id, variant_id, qty, price_at_purchase)
+         VALUES ($1, $2, $3, $4, $5)`,
+        [order.id, item.productId, item.variantId, item.qty, item.price]
       );
     }
 
