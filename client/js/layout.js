@@ -18,6 +18,20 @@ function renderAnnouncementBar() {
   `;
 }
 
+function renderCategoryDropdownItem(category, label) {
+  return `
+    <li class="nav-dropdown" data-category="${category}">
+      <span class="nav-dropdown-trigger">
+        <a href="/pages/shop.html?category=${category}">${label}</a>
+        <button type="button" class="nav-dropdown-caret" aria-expanded="false" aria-haspopup="true" aria-label="Show ${label} products">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+      </span>
+      <div class="nav-dropdown-menu" role="menu"></div>
+    </li>
+  `;
+}
+
 function renderNavbar(activePath = '') {
   return `
     ${renderAnnouncementBar()}
@@ -37,10 +51,10 @@ function renderNavbar(activePath = '') {
         <div class="collapse navbar-links-collapse" id="navLinksRow">
           <ul class="navbar-links-row">
             <li><a href="/pages/shop.html">Shop all</a></li>
-            <li><a href="/pages/shop.html?category=electrolytes">Electrolytes</a></li>
-            <li><a href="/pages/shop.html?category=coffee">Coffee</a></li>
-            <li><a href="/pages/shop.html?category=shampoo">Shampoo</a></li>
-            <li><a href="/pages/shop.html?category=cosmetics">Cosmetics</a></li>
+            ${renderCategoryDropdownItem('electrolytes', 'Electrolytes')}
+            ${renderCategoryDropdownItem('coffee', 'Coffee')}
+            ${renderCategoryDropdownItem('shampoo', 'Shampoo')}
+            ${renderCategoryDropdownItem('cosmetics', 'Cosmetics')}
             <li><a href="/pages/bundles.html">Bundles</a></li>
             <li><a href="/pages/why-shopxtra.html">Why Us</a></li>
           </ul>
@@ -181,6 +195,74 @@ function renderBackToTop() {
   onScroll();
 }
 
+function initNavCategoryDropdowns() {
+  const dropdowns = document.querySelectorAll('.nav-dropdown[data-category]');
+  if (!dropdowns.length) return;
+
+  let productsByCategory = null;
+  async function loadProductsByCategory() {
+    if (productsByCategory) return productsByCategory;
+    const products = await apiGet('/products');
+    productsByCategory = {};
+    products.forEach((p) => {
+      (productsByCategory[p.category] || (productsByCategory[p.category] = [])).push(p);
+    });
+    return productsByCategory;
+  }
+
+  const navLinksRow = document.querySelector('.navbar-links-row');
+
+  function closeAll() {
+    dropdowns.forEach((li) => {
+      li.querySelector('.nav-dropdown-menu')?.classList.remove('is-open');
+      li.querySelector('.nav-dropdown-caret')?.setAttribute('aria-expanded', 'false');
+    });
+    navLinksRow?.classList.remove('has-open-dropdown');
+  }
+
+  dropdowns.forEach((li) => {
+    const category = li.dataset.category;
+    const caret = li.querySelector('.nav-dropdown-caret');
+    const menu = li.querySelector('.nav-dropdown-menu');
+    if (!caret || !menu) return;
+
+    caret.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const wasOpen = menu.classList.contains('is-open');
+      closeAll();
+      if (wasOpen) return;
+
+      if (!menu.dataset.loaded) {
+        menu.innerHTML = '<span class="nav-dropdown-loading">Loading&hellip;</span>';
+        menu.classList.add('is-open');
+        caret.setAttribute('aria-expanded', 'true');
+        navLinksRow?.classList.add('has-open-dropdown');
+        try {
+          const byCategory = await loadProductsByCategory();
+          const items = byCategory[category] || [];
+          menu.innerHTML = items.length
+            ? items.map((p) => `<a href="/pages/product.html?slug=${encodeURIComponent(p.slug)}" class="nav-dropdown-item" role="menuitem">${p.name}</a>`).join('')
+              + `<a href="/pages/shop.html?category=${encodeURIComponent(category)}" class="nav-dropdown-viewall" role="menuitem">View all &rarr;</a>`
+            : '<span class="nav-dropdown-empty">No products yet</span>';
+          menu.dataset.loaded = 'true';
+        } catch {
+          menu.innerHTML = '<span class="nav-dropdown-empty">Couldn&rsquo;t load products</span>';
+        }
+        return;
+      }
+
+      menu.classList.add('is-open');
+      caret.setAttribute('aria-expanded', 'true');
+      navLinksRow?.classList.add('has-open-dropdown');
+    });
+  });
+
+  document.addEventListener('click', closeAll);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAll();
+  });
+}
+
 function initNavSearchToggle() {
   const toggle = document.getElementById('nav-search-toggle');
   const row = document.getElementById('navSearchRow');
@@ -200,6 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderWhatsAppFloat();
   renderBackToTop();
   initNavSearchToggle();
+  initNavCategoryDropdowns();
 });
 
 document.addEventListener('click', (e) => {

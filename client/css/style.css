@@ -268,6 +268,10 @@ a {
   display: none;
 }
 
+.navbar-links-row.has-open-dropdown {
+  overflow: visible;
+}
+
 .navbar-links-row a {
   display: inline-block;
   color: #3A473F;
@@ -298,6 +302,102 @@ a {
     justify-self: start;
     padding: 0;
   }
+}
+
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.nav-dropdown-trigger a {
+  padding-right: 0.35rem;
+}
+
+.nav-dropdown-caret {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: none;
+  color: #3A473F;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.nav-dropdown-caret:hover,
+.nav-dropdown-caret:focus-visible {
+  background-color: var(--sand);
+  color: var(--plum);
+}
+
+.nav-dropdown-caret[aria-expanded="true"] {
+  transform: rotate(180deg);
+}
+
+.nav-dropdown-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 210px;
+  max-height: 320px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(18, 41, 30, 0.12);
+  padding: 0.4rem;
+  z-index: 60;
+}
+
+.nav-dropdown-menu.is-open {
+  display: block;
+}
+
+.nav-dropdown-item,
+.nav-dropdown-viewall,
+.nav-dropdown-loading,
+.nav-dropdown-empty {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.82rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 8px;
+  white-space: normal;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.nav-dropdown-item {
+  color: #3A473F;
+  font-weight: 500;
+}
+
+.nav-dropdown-item:hover,
+.nav-dropdown-item:focus-visible {
+  background-color: var(--sand);
+  color: var(--plum);
+}
+
+.nav-dropdown-viewall {
+  color: var(--tea-pink);
+  font-weight: 700;
+  border-top: 1px solid var(--hairline);
+  margin-top: 0.25rem;
+  padding-top: 0.6rem;
+}
+
+.nav-dropdown-loading,
+.nav-dropdown-empty {
+  color: var(--muted);
 }
 
 .nav-icon-btn {
