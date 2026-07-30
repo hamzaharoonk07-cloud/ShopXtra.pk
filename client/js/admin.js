@@ -499,7 +499,6 @@ async function openEditProductModal(product) {
   document.getElementById('ep-name').value = product.name;
   document.getElementById('ep-category').value = product.category;
   document.getElementById('ep-description').value = product.description || '';
-  document.getElementById('ep-ingredients').value = product.ingredients || '';
   document.getElementById('ep-price').value = product.price;
   document.getElementById('ep-compare-price').value = product.compare_at_price || '';
   document.getElementById('ep-stock').value = product.stock;
@@ -538,7 +537,6 @@ document.getElementById('edit-product-form').addEventListener('submit', async (e
     formData.append('name', document.getElementById('ep-name').value);
     formData.append('category', document.getElementById('ep-category').value);
     formData.append('description', document.getElementById('ep-description').value);
-    formData.append('ingredients', document.getElementById('ep-ingredients').value);
     formData.append('price', document.getElementById('ep-price').value);
     formData.append('compare_at_price', document.getElementById('ep-compare-price').value);
     formData.append('stock', document.getElementById('ep-stock').value);

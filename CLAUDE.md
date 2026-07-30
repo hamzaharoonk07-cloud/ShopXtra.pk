@@ -80,7 +80,7 @@ Premium, soft, pink-forward but not childish. Weight comes from a deep plum-brow
 ```
 users            id, name, email, password_hash, phone, created_at
 addresses        id, user_id, line1, city, postal_code, is_default
-products         id, name, slug, category, description, price, stock, images[], ingredients
+products         id, name, slug, category, description, price, stock, images[]
 product_variants id, product_id, variant_name, price_modifier, stock
 orders           id, user_id, status, total, payment_method, created_at
 order_items      id, order_id, product_id, variant_id, qty, price_at_purchase
@@ -93,7 +93,7 @@ reviews          id, product_id, user_id, rating, comment, created_at
 
 ### v1 (build this first)
 - Product browsing: category filters, price range, sort by bestseller/price/new
-- Product detail page: images, variants, description, ingredients, stock status
+- Product detail page: images, variants, description, stock status
 - Cart: add/remove/update quantity, persists in session
 - Checkout: guest or logged-in, address form, COD payment
 - Account: signup/login, order history, saved addresses

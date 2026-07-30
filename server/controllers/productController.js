@@ -53,7 +53,7 @@ async function recordView(req, res, next) {
 
 async function create(req, res, next) {
   try {
-    const { name, category, description, price, compare_at_price, stock, ingredients, is_bestseller } = req.body;
+    const { name, category, description, price, compare_at_price, stock, is_bestseller } = req.body;
     if (!name || !category || price == null || price === '') {
       return res.status(400).json({ error: 'name, category, and price are required' });
     }
@@ -74,7 +74,6 @@ async function create(req, res, next) {
       stock: stock ? Number(stock) : 0,
       images,
       video_url,
-      ingredients,
       is_bestseller: is_bestseller === 'true' || is_bestseller === true,
     });
     res.status(201).json(product);

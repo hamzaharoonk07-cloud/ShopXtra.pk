@@ -120,7 +120,7 @@ function orderConfirmationEmail(order) {
         </td>
         <td style="width: 50%; vertical-align: top; padding-top: 16px;">
           <p style="color:#1C231D; font-weight: bold; margin: 0 0 4px;">Estimated delivery</p>
-          <p style="color:#5A5348; margin: 0; font-size: 13px; line-height: 1.5;">2&ndash;3 business days<br>Ships within 24 hours</p>
+          <p style="color:#5A5348; margin: 0; font-size: 13px; line-height: 1.5;">5&ndash;7 business days<br>Ships within 24 hours</p>
         </td>
       </tr>
     </table>

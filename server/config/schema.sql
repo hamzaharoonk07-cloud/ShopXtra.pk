@@ -28,7 +28,6 @@ CREATE TABLE IF NOT EXISTS products (
   stock INTEGER NOT NULL DEFAULT 0,
   images TEXT[] DEFAULT '{}',
   video_url TEXT,
-  ingredients TEXT,
   is_bestseller BOOLEAN NOT NULL DEFAULT false,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );

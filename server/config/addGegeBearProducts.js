@@ -93,7 +93,7 @@ async function run() {
     console.log(`  -> saved as /pages/product.html?slug=${slug} with ${imageUrls.length} images`);
   }
   await pool.end();
-  console.log('Done. Ingredients were not provided by the supplier. Add the real INCI list per product in the admin panel before relying on it for allergy-sensitive customers.');
+  console.log('Done.');
 }
 
 run().catch((err) => {

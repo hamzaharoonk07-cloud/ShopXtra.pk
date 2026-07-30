@@ -118,23 +118,17 @@ async function loadProduct() {
 
           <div class="pdp-cod-chip">
             <span class="pdp-cod-dot" aria-hidden="true"></span>
-            <span>Cash on Delivery available · Ships within 24 hours · Delivered in 2–3 days</span>
+            <span>Cash on Delivery available · Ships within 24 hours · Delivered in 5–7 days</span>
           </div>
 
           <div class="pdp-accordion">
-            ${product.ingredients ? `
-              <details class="pdp-accordion-item" open>
-                <summary>Ingredients</summary>
-                <p>${product.ingredients}</p>
-              </details>
-            ` : ''}
             <details class="pdp-accordion-item">
               <summary>How to use</summary>
               <p>Follow the instructions on the product label. Store in a cool, dry place away from direct sunlight.</p>
             </details>
             <details class="pdp-accordion-item">
               <summary>Delivery &amp; returns</summary>
-              <p>Cash on Delivery nationwide, with delivery in 2–3 days. Unopened items can be returned within 7 days of delivery.</p>
+              <p>Cash on Delivery nationwide, with delivery in 5–7 days. Unopened items can be returned within 7 days of delivery.</p>
             </details>
           </div>
         </div>

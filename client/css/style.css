@@ -2978,6 +2978,7 @@ select:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
+  min-width: 0;
 }
 
 .pdp-main-image {
