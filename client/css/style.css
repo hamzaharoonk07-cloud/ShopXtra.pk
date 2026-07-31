@@ -5153,3 +5153,77 @@ select:focus-visible {
     width: 120px;
   }
 }
+
+/* Scroll-scrubbed page background: 4 product clips, one active at a
+   time, each scrubbed by scroll position across its own quarter of the
+   page (see initScrollBgVideo in home.js). Sits behind all content at
+   z-index -1; the root background always paints below it regardless. */
+.site-bg-video-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: var(--ivory-blush);
+  transform: translateZ(0);
+}
+
+.site-bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  will-change: opacity;
+}
+
+.site-bg-video.active {
+  opacity: 1;
+}
+
+/* Homepage sections sit directly on the scroll video with no wash, so
+   plain text (not inside its own card) needs a shadow for contrast
+   against whichever bright clip happens to be playing. */
+:root:has(.home-main) .navbar-shopxtra {
+  background-color: transparent;
+  backdrop-filter: none;
+  border-bottom-color: transparent;
+}
+
+:root:has(.home-main) .navbar-links-row a {
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+}
+
+:root:has(.home-main) .navbar-links-row a:hover,
+:root:has(.home-main) .navbar-links-row a:focus-visible {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+/* On mobile the transparent navbar's collapsed menu has no panel of its
+   own, so it would otherwise show the busy scroll video directly behind
+   the nav links with nothing separating them. display:contents on this
+   element at desktop widths means this never paints there regardless. */
+:root:has(.home-main) .navbar-links-collapse.show {
+  background: rgba(18, 41, 30, 0.92);
+  backdrop-filter: blur(10px);
+  border-radius: 0 0 12px 12px;
+}
+
+.home-main .eyebrow,
+.home-main .section-head h2,
+.home-main section:has(.faq-accordion) h2,
+.home-main .section-head-link {
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+}
+
+/* .reviews-section has its own opaque white background (unlike the
+   other homepage sections, which sit directly on the scroll video), so
+   its heading needs the normal dark color - white here was invisible. */
+.home-main .reviews-section h2 {
+  color: var(--plum);
+  text-shadow: none;
+}
