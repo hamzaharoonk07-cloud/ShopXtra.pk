@@ -131,7 +131,13 @@ function initGsapAnimations() {
     });
   }
 
+  // Elements already scrolled past (e.g. browser scroll-restoration jumping straight
+  // to a saved position on reload) never cross the scroll-trigger threshold, so they'd
+  // stay stuck at their hidden state forever. Show those immediately instead of animating.
+  const alreadyPastFold = (el) => el.getBoundingClientRect().top < window.innerHeight;
+
   gsap.utils.toArray('[data-reveal="up"]').forEach((el) => {
+    if (alreadyPastFold(el)) return;
     gsap.set(el, { opacity: 0, y: 36, scale: 0.97 });
     gsap.to(el, {
       opacity: 1,
@@ -145,7 +151,7 @@ function initGsapAnimations() {
 
   gsap.utils.toArray('[data-reveal-group]').forEach((group) => {
     const items = group.querySelectorAll('[data-reveal="item"]');
-    if (!items.length) return;
+    if (!items.length || alreadyPastFold(group)) return;
     gsap.set(items, { opacity: 0, y: 32, scale: 0.96 });
     gsap.to(items, {
       opacity: 1,
@@ -170,10 +176,28 @@ function initGsapAnimations() {
 
   initCounters();
 
+  // Safety net: if a reveal element is visible on screen but its animation never
+  // fired (layout shifted after fonts/images loaded, scroll restoration, etc.),
+  // force it to its final visible state rather than leaving it stuck hidden.
+  const forceStuckRevealsVisible = () => {
+    document.querySelectorAll('[data-reveal="up"], [data-reveal-group] [data-reveal="item"]').forEach((el) => {
+      const style = getComputedStyle(el);
+      if (parseFloat(style.opacity) < 1 && el.getBoundingClientRect().top < window.innerHeight) {
+        gsap.to(el, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: 'power2.out', overwrite: true });
+      }
+    });
+  };
+
   if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(() => ScrollTrigger.refresh());
+    document.fonts.ready.then(() => {
+      ScrollTrigger.refresh();
+      forceStuckRevealsVisible();
+    });
   }
-  window.addEventListener('load', () => ScrollTrigger.refresh());
+  window.addEventListener('load', () => {
+    ScrollTrigger.refresh();
+    setTimeout(forceStuckRevealsVisible, 300);
+  });
 }
 
 function initFaqAccordion() {
