@@ -173,7 +173,14 @@ function initGsapAnimations() {
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(() => ScrollTrigger.refresh());
   }
-  window.addEventListener('load', () => ScrollTrigger.refresh());
+  window.addEventListener('load', () => {
+    ScrollTrigger.refresh();
+    // Content that finishes loading shortly after 'load' (async product/
+    // category fetches, lazy images) shifts page height and leaves
+    // reveal-animation trigger positions stale, which was leaving some
+    // [data-reveal] elements stuck invisible or mid-fade permanently.
+    setTimeout(() => ScrollTrigger.refresh(), 1500);
+  });
 }
 
 function initFaqAccordion() {
