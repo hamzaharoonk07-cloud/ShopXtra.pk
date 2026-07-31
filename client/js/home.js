@@ -95,12 +95,6 @@ async function loadCategoryImages() {
     applyCategoryImagesFromProducts(products);
   } catch {
     // Static category images from HOME_CATEGORIES stay as the fallback.
-  } finally {
-    // Swapping in real product photos can change tile heights, which
-    // shifts every section below - refresh so GSAP's scroll-triggered
-    // reveal animations (data-reveal) don't fire against stale
-    // positions and get stuck mid-fade.
-    if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
   }
 }
 
