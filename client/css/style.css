@@ -378,7 +378,7 @@ a {
   font-size: 0.82rem;
   padding: 0.5rem 0.65rem;
   border-radius: 8px;
-  white-space: normal;
+  white-space: nowrap;
   text-transform: none;
   letter-spacing: normal;
 }
