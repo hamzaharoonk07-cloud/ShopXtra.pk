@@ -384,7 +384,7 @@ a {
   letter-spacing: normal;
 }
 
-.nav-dropdown-item {
+.nav-dropdown-menu .nav-dropdown-item {
   color: var(--tea-pink);
   font-weight: 500;
   cursor: pointer;
