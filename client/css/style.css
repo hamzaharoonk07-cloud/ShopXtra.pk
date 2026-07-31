@@ -385,7 +385,7 @@ a {
 }
 
 .nav-dropdown-item {
-  color: #3A473F;
+  color: var(--tea-pink);
   font-weight: 500;
   cursor: pointer;
 }
