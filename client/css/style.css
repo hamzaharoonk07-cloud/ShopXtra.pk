@@ -395,6 +395,17 @@ a {
   padding-top: 0.6rem;
 }
 
+.nav-dropdown-subhead {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  padding: 0.55rem 0.65rem 0.2rem;
+}
+
 .nav-dropdown-loading,
 .nav-dropdown-empty {
   color: var(--muted);

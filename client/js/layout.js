@@ -258,6 +258,31 @@ function renderBackToTop() {
   onScroll();
 }
 
+const NAV_CATEGORY_SUBGROUPS = {
+  shampoo: [
+    { label: 'Shampoo Bars', match: (name) => /^(Rosemary Shampoo|Rice Shampoo)/i.test(name) },
+  ],
+};
+
+function renderNavDropdownItems(category, items) {
+  const subgroups = NAV_CATEGORY_SUBGROUPS[category] || [];
+  const remaining = [...items];
+  let html = '';
+
+  subgroups.forEach((group) => {
+    const matched = [];
+    for (let i = remaining.length - 1; i >= 0; i--) {
+      if (group.match(remaining[i].name)) matched.unshift(...remaining.splice(i, 1));
+    }
+    if (!matched.length) return;
+    html += `<span class="nav-dropdown-subhead">${group.label}</span>`;
+    html += matched.map((p) => `<a href="/pages/product.html?slug=${encodeURIComponent(p.slug)}" class="nav-dropdown-item" role="menuitem">${p.name}</a>`).join('');
+  });
+
+  html += remaining.map((p) => `<a href="/pages/product.html?slug=${encodeURIComponent(p.slug)}" class="nav-dropdown-item" role="menuitem">${p.name}</a>`).join('');
+  return html;
+}
+
 function initNavCategoryDropdowns() {
   const dropdowns = document.querySelectorAll('.nav-dropdown[data-category]');
   if (!dropdowns.length) return;
@@ -304,7 +329,7 @@ function initNavCategoryDropdowns() {
           const byCategory = await loadProductsByCategory();
           const items = byCategory[category] || [];
           menu.innerHTML = items.length
-            ? items.map((p) => `<a href="/pages/product.html?slug=${encodeURIComponent(p.slug)}" class="nav-dropdown-item" role="menuitem">${p.name}</a>`).join('')
+            ? renderNavDropdownItems(category, items)
               + `<a href="/pages/shop.html?category=${encodeURIComponent(category)}" class="nav-dropdown-viewall" role="menuitem">View all &rarr;</a>`
             : '<span class="nav-dropdown-empty">No products yet</span>';
           menu.dataset.loaded = 'true';
