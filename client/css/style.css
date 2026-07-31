@@ -5216,6 +5216,11 @@ select:focus-visible {
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
 }
 
+:root:has(.home-main) .nav-dropdown-menu .nav-dropdown-item {
+  color: var(--tea-pink);
+  text-shadow: none;
+}
+
 :root:has(.home-main) .navbar-links-row a:hover,
 :root:has(.home-main) .navbar-links-row a:focus-visible {
   background-color: rgba(255, 255, 255, 0.15);
