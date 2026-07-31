@@ -329,6 +329,7 @@ a {
   color: #3A473F;
   border-radius: 50%;
   flex-shrink: 0;
+  cursor: pointer;
   transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
@@ -385,6 +386,7 @@ a {
 .nav-dropdown-item {
   color: #3A473F;
   font-weight: 500;
+  cursor: pointer;
 }
 
 .nav-dropdown-item:hover,
