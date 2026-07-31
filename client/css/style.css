@@ -362,6 +362,12 @@ a {
   display: block;
 }
 
+.nav-dropdown[data-category="shampoo"] .nav-dropdown-menu,
+.nav-dropdown[data-category="cosmetics"] .nav-dropdown-menu {
+  left: auto;
+  right: 0;
+}
+
 .nav-dropdown-item,
 .nav-dropdown-viewall,
 .nav-dropdown-loading,

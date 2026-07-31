@@ -261,6 +261,7 @@ function renderBackToTop() {
 const NAV_CATEGORY_SUBGROUPS = {
   shampoo: [
     { label: 'Shampoo Bars', match: (name) => /^(Rosemary Shampoo|Rice Shampoo)/i.test(name) },
+    { label: 'Pods', match: (name) => /^Laundry Pods/i.test(name) },
   ],
 };
 
