@@ -95,6 +95,11 @@ function renderCategoryGrid() {
     </a>
   `;
   }).join('');
+
+  grid.querySelectorAll('.category-tile-image video').forEach((v) => {
+    v.muted = true;
+    v.play().catch(() => {});
+  });
 }
 
 async function loadCategoryImages() {
