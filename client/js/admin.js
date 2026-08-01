@@ -347,12 +347,24 @@ function renderEditImageGrid() {
 
 let editingProductVariants = [];
 
+let editingVariantId = null;
+
+function resetVariantForm() {
+  editingVariantId = null;
+  document.getElementById('ev-color-name').value = '';
+  document.getElementById('ev-price-modifier').value = '0';
+  document.getElementById('ev-stock').value = '0';
+  document.getElementById('ev-image').value = '';
+  document.getElementById('ev-color-hex').value = '#3C7A5D';
+  document.getElementById('ev-add-btn').textContent = '+ Add variant';
+}
+
 function renderVariantList() {
   const list = document.getElementById('ep-variant-list');
   list.innerHTML = editingProductVariants.length ? editingProductVariants.map((v) => `
     <div class="admin-variant-row" data-id="${v.id}">
       <span class="admin-variant-swatch" style="background:${v.color_hex || 'var(--sand)'};"></span>
-      <span class="admin-variant-name">${v.color_name || v.variant_name}</span>
+      <span class="admin-variant-name" style="cursor:pointer; text-decoration:underline dotted;" title="Click to edit">${v.color_name || v.variant_name}</span>
       <span class="admin-variant-meta">${Number(v.price_modifier) !== 0 ? `${Number(v.price_modifier) > 0 ? '+' : ''}${formatPrice(v.price_modifier)} · ` : ''}${v.stock} in stock</span>
       <button type="button" class="admin-variant-remove" aria-label="Remove variant">&times;</button>
     </div>
@@ -366,8 +378,24 @@ function renderVariantList() {
       const res = await fetch(`/api/products/${productId}/variants/${variantId}`, { method: 'DELETE' });
       if (res.ok || res.status === 404) {
         editingProductVariants = editingProductVariants.filter((v) => String(v.id) !== variantId);
+        if (String(editingVariantId) === variantId) resetVariantForm();
         renderVariantList();
       }
+    });
+  });
+
+  list.querySelectorAll('.admin-variant-name').forEach((nameEl) => {
+    nameEl.addEventListener('click', () => {
+      const row = nameEl.closest('.admin-variant-row');
+      const variant = editingProductVariants.find((v) => String(v.id) === row.dataset.id);
+      if (!variant) return;
+      editingVariantId = variant.id;
+      document.getElementById('ev-color-name').value = variant.color_name || variant.variant_name || '';
+      document.getElementById('ev-price-modifier').value = variant.price_modifier || '0';
+      document.getElementById('ev-stock').value = variant.stock || '0';
+      if (variant.color_hex) document.getElementById('ev-color-hex').value = variant.color_hex;
+      document.getElementById('ev-add-btn').textContent = 'Update variant';
+      document.getElementById('ev-color-name').scrollIntoView({ block: 'center', behavior: 'smooth' });
     });
   });
 }
@@ -463,7 +491,7 @@ document.getElementById('ev-add-btn').addEventListener('click', async () => {
     return;
   }
   const imageFile = document.getElementById('ev-image').files[0];
-  if (flavor && !imageFile) {
+  if (flavor && !imageFile && !editingVariantId) {
     errorEl.textContent = 'A photo is required so this flavour has an image to switch to.';
     errorEl.classList.remove('d-none');
     return;
@@ -479,15 +507,18 @@ document.getElementById('ev-add-btn').addEventListener('click', async () => {
     formData.append('stock', document.getElementById('ev-stock').value || 0);
     if (imageFile) formData.append('image', imageFile);
 
-    const res = await fetch(`/api/products/${productId}/variants`, { method: 'POST', body: formData });
+    const isEditing = editingVariantId != null;
+    const url = isEditing ? `/api/products/${productId}/variants/${editingVariantId}` : `/api/products/${productId}/variants`;
+    const res = await fetch(url, { method: isEditing ? 'PUT' : 'POST', body: formData });
     const body = await res.json();
     if (!res.ok) throw new Error(body.error);
-    editingProductVariants.push(body);
+    if (isEditing) {
+      editingProductVariants = editingProductVariants.map((v) => (v.id === body.id ? body : v));
+    } else {
+      editingProductVariants.push(body);
+    }
+    resetVariantForm();
     renderVariantList();
-    document.getElementById('ev-color-name').value = '';
-    document.getElementById('ev-price-modifier').value = '0';
-    document.getElementById('ev-stock').value = '0';
-    document.getElementById('ev-image').value = '';
   } catch (err) {
     errorEl.textContent = err.message;
     errorEl.classList.remove('d-none');
@@ -507,6 +538,7 @@ async function openEditProductModal(product) {
   clearImagePreview('ep-new-images-preview', 'ep-new-images');
   document.getElementById('edit-product-error').classList.add('d-none');
   document.getElementById('edit-variant-error').classList.add('d-none');
+  resetVariantForm();
   editingProductImages = [...(product.images || [])];
   renderEditImageGrid();
   editingProductVideoUrl = product.video_url || null;
