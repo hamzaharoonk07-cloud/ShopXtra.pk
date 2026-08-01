@@ -10,7 +10,7 @@ function categoryIcon(slug) {
 }
 
 const HOME_CATEGORIES = [
-  { slug: 'electrolytes', name: 'Electrolytes', desc: 'Wake up faster, stay hydrated — green apple, peach, pineapple &amp; strawberry. Imported electrolytes.', image: '/assets/hero/electrolytes-category.webp' },
+  { slug: 'electrolytes', name: 'Electrolytes', desc: 'Wake up faster, stay hydrated — green apple, peach, pineapple &amp; strawberry. Imported electrolytes.', image: '/assets/hero/electrolytes-category.webp', hoverImage: '/assets/hero/electrolytes-flavors.jpg' },
   { slug: 'coffee', name: 'Coffee', desc: 'Rich roast, one scoop away — instant coffee that actually tastes brewed, over ice or milk.', image: '/assets/hero/coffee-pour.jpg' },
   { slug: 'shampoo', name: 'Shampoo', desc: "Clean that doesn't dry you out — shampoo bars for an everyday routine that actually works." },
   { slug: 'cosmetics', name: 'Cosmetics', desc: 'Shades that match what you expect — authentic cosmetics, delivered nationwide with Cash on Delivery.' },
@@ -18,9 +18,13 @@ const HOME_CATEGORIES = [
 
 function applyCategoryImagesFromProducts(products) {
   HOME_CATEGORIES.forEach((c) => {
-    if (c.image) return;
-    const withImage = products.find((p) => p.category === c.slug && p.images && p.images[0]);
-    if (withImage) c.image = withImage.images[0];
+    const inCategory = products.filter((p) => p.category === c.slug && p.images && p.images[0]);
+    if (!c.image && inCategory[0]) c.image = inCategory[0].images[0];
+    if (!c.hoverImage) {
+      const sameProduct = inCategory.find((p) => p.images[0] === c.image && p.images[1]);
+      const otherProduct = inCategory.find((p) => p.images[0] !== c.image);
+      c.hoverImage = (sameProduct && sameProduct.images[1]) || (otherProduct && otherProduct.images[0]) || null;
+    }
   });
   renderCategoryGrid();
 }
@@ -79,7 +83,10 @@ function renderCategoryGrid() {
   if (!grid) return;
   grid.innerHTML = HOME_CATEGORIES.map((c) => `
     <a href="/pages/shop.html?category=${c.slug}" class="category-tile category-tile-${c.slug}" data-reveal="item">
-      <div class="category-tile-image">${c.image ? `<img src="${c.image}" alt="" loading="lazy">` : categoryIcon(c.slug)}</div>
+      <div class="category-tile-image">
+        ${c.image ? `<img src="${c.image}" alt="" loading="lazy">` : categoryIcon(c.slug)}
+        ${c.hoverImage ? `<img src="${c.hoverImage}" alt="" loading="lazy" class="category-tile-image-hover">` : ''}
+      </div>
       <div class="category-tile-foot">
         <span class="category-tile-name">${c.name}</span>
         <p class="category-tile-desc">${c.desc}</p>

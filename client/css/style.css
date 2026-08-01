@@ -2530,6 +2530,7 @@ select:focus-visible {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  position: relative;
 }
 
 .category-tile-image img,
@@ -2556,6 +2557,23 @@ select:focus-visible {
 
 .category-tile:hover .category-tile-image svg {
   transform: scale(1.08);
+}
+
+.category-tile-image-hover {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.category-tile:hover .category-tile-image-hover {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .category-tile-image-hover {
+    transition: none;
+  }
 }
 
 .category-tile-foot {
