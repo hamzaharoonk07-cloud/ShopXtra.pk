@@ -2977,18 +2977,21 @@ select:focus-visible {
   z-index: 0;
 }
 
-.shop-banner-photo img {
+.shop-banner-photo img,
+.shop-banner-photo video {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.shop-banner-photo-cosmetics img {
+.shop-banner-photo-cosmetics img,
+.shop-banner-photo-cosmetics video {
   object-position: center 78%;
 }
 
-.shop-banner-photo-shampoo img {
+.shop-banner-photo-shampoo img,
+.shop-banner-photo-shampoo video {
   object-position: center 30%;
 }
 

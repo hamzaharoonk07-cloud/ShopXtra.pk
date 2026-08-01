@@ -5,6 +5,13 @@ const SHOP_BANNER_PHOTOS = {
   cosmetics: '/assets/hero/cosmetics-flatlay.jpg',
 };
 
+const SHOP_BANNER_VIDEOS = {
+  electrolytes: '/assets/bg/bg-electrolytes.mp4',
+  coffee: '/assets/bg/bg-coffee.mp4',
+  shampoo: '/assets/bg/bg-shampoo.mp4',
+  cosmetics: '/assets/bg/bg-cosmetics.mp4',
+};
+
 function applyBannerPhoto(category) {
   const wrap = document.getElementById('shop-banner-photo');
   if (!wrap) return;
@@ -13,9 +20,17 @@ function applyBannerPhoto(category) {
     wrap.innerHTML = '<img src="/assets/logo-full.png" alt="ShopXtra">';
     return;
   }
+  const video = SHOP_BANNER_VIDEOS[category];
   const photo = SHOP_BANNER_PHOTOS[category];
   wrap.className = 'shop-banner-photo' + (photo ? ` shop-banner-photo-${category}` : '');
-  wrap.innerHTML = photo ? `<img src="${photo}" alt="">` : '';
+  if (video) {
+    wrap.innerHTML = `<video autoplay muted loop playsinline${photo ? ` poster="${photo}"` : ''}><source src="${video}" type="video/mp4"></video>`;
+    const v = wrap.querySelector('video');
+    v.muted = true;
+    v.play().catch(() => {});
+  } else {
+    wrap.innerHTML = photo ? `<img src="${photo}" alt="">` : '';
+  }
 }
 
 const CATALOG_CACHE_KEY = 'shopxtra:catalog:v1';
