@@ -1,3 +1,10 @@
+const CATEGORY_VIDEOS = {
+  electrolytes: '/assets/bg/bg-electrolytes.mp4',
+  coffee: '/assets/bg/bg-coffee.mp4',
+  shampoo: '/assets/bg/bg-shampoo.mp4',
+  cosmetics: '/assets/bg/bg-cosmetics.mp4',
+};
+
 async function loadProduct() {
   const main = document.getElementById('product-main');
   const slug = new URLSearchParams(window.location.search).get('slug');
@@ -9,6 +16,7 @@ async function loadProduct() {
 
   try {
     const product = await apiGet(`/products/${encodeURIComponent(slug)}`);
+    if (!product.video_url) product.video_url = CATEGORY_VIDEOS[product.category] || null;
     document.title = `${product.name} | ShopXtra`;
     updateProductSeo(product, slug);
     fetch(`/api/products/${encodeURIComponent(slug)}/view`, { method: 'POST' }).catch(() => {});
