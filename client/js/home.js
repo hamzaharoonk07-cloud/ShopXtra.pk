@@ -10,10 +10,10 @@ function categoryIcon(slug) {
 }
 
 const HOME_CATEGORIES = [
-  { slug: 'electrolytes', name: 'Electrolytes', desc: 'Wake up faster, stay hydrated — green apple, peach, pineapple &amp; strawberry. Imported electrolytes.', image: '/assets/hero/electrolytes-category.webp' },
-  { slug: 'coffee', name: 'Coffee', desc: 'Rich roast, one scoop away — instant coffee that actually tastes brewed, over ice or milk.', image: '/assets/hero/coffee-pour.jpg' },
-  { slug: 'shampoo', name: 'Shampoo', desc: "Clean that doesn't dry you out — shampoo bars for an everyday routine that actually works." },
-  { slug: 'cosmetics', name: 'Cosmetics', desc: 'Shades that match what you expect — authentic cosmetics, delivered nationwide with Cash on Delivery.' },
+  { slug: 'electrolytes', name: 'Electrolytes', desc: 'Wake up faster, stay hydrated — green apple, peach, pineapple &amp; strawberry. Imported electrolytes.', image: '/assets/hero/electrolytes-category.webp', video: '/assets/bg/bg-electrolytes.mp4' },
+  { slug: 'coffee', name: 'Coffee', desc: 'Rich roast, one scoop away — instant coffee that actually tastes brewed, over ice or milk.', image: '/assets/hero/coffee-pour.jpg', video: '/assets/bg/bg-coffee.mp4' },
+  { slug: 'shampoo', name: 'Shampoo', desc: "Clean that doesn't dry you out — shampoo bars for an everyday routine that actually works.", video: '/assets/bg/bg-shampoo.mp4' },
+  { slug: 'cosmetics', name: 'Cosmetics', desc: 'Shades that match what you expect — authentic cosmetics, delivered nationwide with Cash on Delivery.', video: '/assets/bg/bg-cosmetics.mp4' },
 ];
 
 function applyCategoryImagesFromProducts(products) {
@@ -77,16 +77,24 @@ async function showSaleBannerIfAny() {
 function renderCategoryGrid() {
   const grid = document.getElementById('category-grid');
   if (!grid) return;
-  grid.innerHTML = HOME_CATEGORIES.map((c) => `
+  grid.innerHTML = HOME_CATEGORIES.map((c) => {
+    let media = categoryIcon(c.slug);
+    if (c.video) {
+      media = `<video autoplay muted loop playsinline${c.image ? ` poster="${c.image}"` : ''}><source src="${c.video}" type="video/mp4"></video>`;
+    } else if (c.image) {
+      media = `<img src="${c.image}" alt="" loading="lazy">`;
+    }
+    return `
     <a href="/pages/shop.html?category=${c.slug}" class="category-tile category-tile-${c.slug}" data-reveal="item">
-      <div class="category-tile-image">${c.image ? `<img src="${c.image}" alt="" loading="lazy">` : categoryIcon(c.slug)}</div>
+      <div class="category-tile-image">${media}</div>
       <div class="category-tile-foot">
         <span class="category-tile-name">${c.name}</span>
         <p class="category-tile-desc">${c.desc}</p>
         <span class="category-tile-link">Shop &rarr;</span>
       </div>
     </a>
-  `).join('');
+  `;
+  }).join('');
 }
 
 async function loadCategoryImages() {
@@ -98,73 +106,85 @@ async function loadCategoryImages() {
   }
 }
 
-function initSiteBgVideo() {
-  const wrap = document.getElementById('site-bg-video-wrap');
-  if (!wrap) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+function initHeroCarousel() {
+  const track = document.getElementById('hero-carousel-track');
+  const carousel = document.getElementById('hero-carousel');
+  const dotsWrap = document.getElementById('hero-carousel-dots');
+  const prevBtn = document.getElementById('hero-prev');
+  const nextBtn = document.getElementById('hero-next');
+  if (!track || !carousel) return;
 
-  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  window.scrollTo(0, 0);
+  document.querySelectorAll('.hero-slide-icon[data-icon]').forEach((el) => {
+    el.innerHTML = categoryIcon(el.dataset.icon);
+  });
 
-  const videos = Array.from(wrap.querySelectorAll('.site-bg-video'));
-  if (!videos.length) return;
-  videos.forEach((v) => { v.loop = true; });
+  const slides = Array.from(track.children);
+  const dots = dotsWrap ? Array.from(dotsWrap.children) : [];
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let index = 0;
+  let timer = null;
 
-  function ensureLoaded(video) {
-    if (!video.dataset.src) return;
-    const source = document.createElement('source');
-    source.src = video.dataset.src;
-    source.type = 'video/mp4';
-    video.appendChild(source);
-    video.load();
-    delete video.dataset.src;
+  function goTo(i) {
+    index = (i + slides.length) % slides.length;
+    track.style.transform = `translateX(-${index * 100}%)`;
+    dots.forEach((d, di) => {
+      d.classList.toggle('active', di === index);
+      d.setAttribute('aria-selected', di === index ? 'true' : 'false');
+    });
+    slides.forEach((slide, si) => {
+      const video = slide.querySelector('video');
+      if (!video) return;
+      if (si === index) {
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    });
+  }
+  function next() { goTo(index + 1); }
+  function prev() { goTo(index - 1); }
+
+  function stopAutoplay() {
+    if (timer) clearInterval(timer);
+    timer = null;
+  }
+  function startAutoplay() {
+    if (reduceMotion || slides.length < 2) return;
+    stopAutoplay();
+    timer = setInterval(next, 5500);
   }
 
-  let activeIndex = 0;
-  videos[0].play().catch(() => {});
-  if (videos[1]) ensureLoaded(videos[1]);
+  prevBtn?.addEventListener('click', () => { prev(); startAutoplay(); });
+  nextBtn?.addEventListener('click', () => { next(); startAutoplay(); });
+  dots.forEach((dot, di) => dot.addEventListener('click', () => { goTo(di); startAutoplay(); }));
 
-  function setActive(i) {
-    if (i === activeIndex) return;
-    videos[activeIndex].classList.remove('active');
-    videos[activeIndex].pause();
-    ensureLoaded(videos[i]);
-    videos[i].classList.add('active');
-    videos[i].play().catch(() => {});
-    activeIndex = i;
-    if (videos[i + 1]) ensureLoaded(videos[i + 1]);
-  }
+  carousel.addEventListener('mouseenter', stopAutoplay);
+  carousel.addEventListener('mouseleave', startAutoplay);
+  carousel.addEventListener('focusin', stopAutoplay);
+  carousel.addEventListener('focusout', startAutoplay);
 
-  // Reading scrollHeight forces a layout reflow, so it's cached here and
-  // only recomputed on resize/content-load - not on every scroll tick,
-  // which was causing layout thrashing (and visible video jank) on scroll.
-  let maxScroll = 0;
-  function recalcMaxScroll() {
-    maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-  }
-  recalcMaxScroll();
-  window.addEventListener('resize', recalcMaxScroll, { passive: true });
-  window.addEventListener('load', recalcMaxScroll);
-  document.addEventListener('shopxtra:products-rendered', recalcMaxScroll);
+  carousel.setAttribute('tabindex', '0');
+  carousel.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') { prev(); startAutoplay(); }
+    if (e.key === 'ArrowRight') { next(); startAutoplay(); }
+  });
 
-  function updateFromScroll() {
-    const progress = maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0;
-    const segment = Math.min(videos.length - 1, Math.floor(progress * videos.length));
-    setActive(segment);
-    if (videos[segment].paused) videos[segment].play().catch(() => {});
-  }
+  let touchStartX = null;
+  carousel.addEventListener('pointerdown', (e) => { touchStartX = e.clientX; });
+  carousel.addEventListener('pointerup', (e) => {
+    if (touchStartX === null) return;
+    const delta = e.clientX - touchStartX;
+    touchStartX = null;
+    if (Math.abs(delta) < 40) return;
+    if (delta < 0) next(); else prev();
+    startAutoplay();
+  });
 
-  let ticking = false;
-  window.addEventListener('scroll', () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => { updateFromScroll(); ticking = false; });
-  }, { passive: true });
-
-  updateFromScroll();
+  goTo(0);
+  startAutoplay();
 }
 
+initHeroCarousel();
 renderCategoryGrid();
 loadCategoryImages();
 showSaleBannerIfAny();
-initSiteBgVideo();
