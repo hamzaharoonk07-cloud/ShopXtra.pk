@@ -40,6 +40,14 @@
   --shadow-soft: 0 1px 2px rgba(18, 41, 30, 0.06), 0 14px 30px -14px rgba(18, 41, 30, 0.25);
   --shadow-soft-lg: 0 2px 6px rgba(18, 41, 30, 0.07), 0 24px 44px -26px rgba(18, 41, 30, 0.35);
   --shadow-lift: 0 1px 2px rgba(18, 41, 30, 0.05), 0 32px 60px -28px rgba(18, 41, 30, 0.4);
+
+  /* Bootstrap components (.btn, .form-control, .table, .card, etc.) read
+     font-family from this variable directly, so overriding body's
+     font-family alone doesn't reach them - this is what made the admin
+     panel's Bootstrap-heavy markup fall back to the system font instead
+     of matching the rest of the site. */
+  --bs-body-font-family: 'Montserrat', sans-serif;
+  --bs-font-sans-serif: 'Montserrat', sans-serif;
 }
 
 * {
@@ -883,7 +891,7 @@ a {
 /* ---------- Pills / tabs ---------- */
 .nav-pills .nav-link {
   color: var(--plum);
-  border-radius: 999px;
+  border-radius: 8px;
   font-family: 'Montserrat', sans-serif;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
@@ -1962,20 +1970,18 @@ select:focus-visible {
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   font-size: 1.2rem;
-  color: #fff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+  color: var(--tea-pink);
 }
 
 .hero-stat-label {
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.9);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+  color: var(--muted-body);
 }
 
 .hero-stat-divider {
   width: 1px;
   height: 2.1rem;
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--hairline-strong);
 }
 
 @media (max-width: 767.98px) {
@@ -2698,7 +2704,7 @@ select:focus-visible {
   font-weight: 500;
   color: var(--plum);
   border: 1.5px solid var(--plum);
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 0.4rem 1rem;
   background: transparent;
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -3135,7 +3141,7 @@ select:focus-visible {
 .shop-sort-pill {
   border: 1.5px solid var(--hairline-strong);
   color: var(--plum);
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 0.55rem 1.1rem;
   font-size: 0.85rem;
   font-weight: 500;
@@ -3149,7 +3155,7 @@ select:focus-visible {
   gap: 0.4rem;
   background: none;
   border: 1px solid var(--hairline);
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 0.4rem 0.9rem 0.4rem 0.7rem;
   font-size: 0.85rem;
   color: #3A473F;
@@ -3304,7 +3310,7 @@ select:focus-visible {
 .pdp-flavor-swatch {
   height: 34px;
   padding: 0 0.9rem;
-  border-radius: 999px;
+  border-radius: 8px;
   border: 1.5px solid var(--hairline-strong);
   background: var(--paper);
   color: var(--plum);
@@ -3803,7 +3809,7 @@ select:focus-visible {
 .checkout-promo-row button {
   border: 1.5px solid var(--plum);
   background: transparent;
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 0.65rem 1.25rem;
   font-size: 0.85rem;
   font-weight: 500;
@@ -4552,7 +4558,7 @@ select:focus-visible {
   background: var(--tea-pink);
   border: 1px solid var(--tea-pink);
   color: #fff;
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 0.5rem 0.9rem;
   font-size: 0.8rem;
   font-weight: 600;
@@ -4570,7 +4576,7 @@ select:focus-visible {
   background: none;
   border: 1px solid rgba(245, 241, 232, 0.3);
   color: var(--ivory-blush);
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 0.5rem 0.9rem;
   font-size: 0.8rem;
   margin-top: 0.3rem;
@@ -4607,7 +4613,7 @@ select:focus-visible {
   border: 1.5px solid var(--plum);
   background: transparent;
   color: var(--plum);
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 0.55rem 1.2rem;
   font-size: 0.85rem;
   font-weight: 500;
@@ -4748,7 +4754,7 @@ select:focus-visible {
   background: transparent;
   border: 1.5px solid var(--hairline-strong);
   color: var(--plum);
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 0.4rem 0.9rem;
   font-size: 0.78rem;
   font-weight: 500;
