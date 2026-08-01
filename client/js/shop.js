@@ -20,17 +20,25 @@ function applyBannerPhoto(category) {
     wrap.innerHTML = '<img src="/assets/logo-full.png" alt="ShopXtra">';
     return;
   }
-  const video = SHOP_BANNER_VIDEOS[category];
   const photo = SHOP_BANNER_PHOTOS[category];
   wrap.className = 'shop-banner-photo' + (photo ? ` shop-banner-photo-${category}` : '');
-  if (video) {
-    wrap.innerHTML = `<video autoplay muted loop playsinline${photo ? ` poster="${photo}"` : ''}><source src="${video}" type="video/mp4"></video>`;
-    const v = wrap.querySelector('video');
-    v.muted = true;
-    v.play().catch(() => {});
-  } else {
-    wrap.innerHTML = photo ? `<img src="${photo}" alt="">` : '';
+  wrap.innerHTML = photo ? `<img src="${photo}" alt="">` : '';
+}
+
+function applyPageBgVideo(category) {
+  const wrap = document.getElementById('shop-bg-video-wrap');
+  if (!wrap) return;
+  const video = category ? SHOP_BANNER_VIDEOS[category] : null;
+  if (!video) {
+    wrap.innerHTML = '';
+    wrap.classList.remove('is-active');
+    return;
   }
+  wrap.innerHTML = `<video autoplay muted loop playsinline><source src="${video}" type="video/mp4"></video>`;
+  wrap.classList.add('is-active');
+  const v = wrap.querySelector('video');
+  v.muted = true;
+  v.play().catch(() => {});
 }
 
 const CATALOG_CACHE_KEY = 'shopxtra:catalog:v1';
@@ -168,6 +176,7 @@ function applyAndLoad() {
   const title = document.getElementById('shop-title');
   title.textContent = params.category ? categoryLabel(params.category) : 'Shop all';
   applyBannerPhoto(params.category);
+  applyPageBgVideo(params.category);
   loadProducts(params);
 }
 
@@ -184,6 +193,7 @@ function initFromUrl() {
   setActivePill(category);
   document.getElementById('shop-title').textContent = category ? categoryLabel(category) : 'Shop all';
   applyBannerPhoto(category);
+  applyPageBgVideo(category);
 
   loadProducts({
     category,

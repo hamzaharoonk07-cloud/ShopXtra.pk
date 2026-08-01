@@ -2961,6 +2961,34 @@ select:focus-visible {
   font-size: 0.88rem;
 }
 
+/* ---------- Shop page background video (per selected category) ---------- */
+.shop-bg-video-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: var(--ivory-blush);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.shop-bg-video-wrap.is-active {
+  opacity: 1;
+}
+
+.shop-bg-video-wrap video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.shop-bg-video-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(247, 249, 246, 0.82);
+}
+
 /* ---------- Shop listing controls ---------- */
 .shop-banner {
   position: relative;
