@@ -5240,24 +5240,40 @@ select:focus-visible {
   align-items: center;
 }
 
+.page-loader {
+  background: radial-gradient(ellipse at center, var(--paper) 0%, var(--ivory-blush) 70%);
+}
+
 .page-loader-text {
-  margin-top: 1.1rem;
+  margin-top: 1.4rem;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--muted-body);
   letter-spacing: 0.02em;
   opacity: 1;
-  transition: opacity 0.2s ease;
+  transform: translateY(0);
+  transition: opacity 0.28s ease, transform 0.28s ease;
 }
 
 .page-loader-text.is-swapping {
   opacity: 0;
+  transform: translateY(6px);
 }
 
 .page-loader-logo-wrap {
   position: relative;
   width: 160px;
+  animation: loaderLogoBreathe 2.4s ease-in-out infinite;
+}
+
+.page-loader-logo-wrap::before {
+  content: '';
+  position: absolute;
+  inset: -30%;
+  background: radial-gradient(circle, rgba(31, 92, 62, 0.16) 0%, rgba(31, 92, 62, 0) 70%);
+  animation: loaderGlowPulse 2.4s ease-in-out infinite;
+  z-index: -1;
 }
 
 .page-loader-logo {
@@ -5267,7 +5283,7 @@ select:focus-visible {
 }
 
 .page-loader-logo-base {
-  opacity: 0.3;
+  opacity: 0.25;
   filter: grayscale(1);
 }
 
@@ -5275,7 +5291,9 @@ select:focus-visible {
   position: absolute;
   inset: 0;
   clip-path: inset(100% 0 0 0);
-  animation: loaderLogoFill 2.4s ease-in-out infinite;
+  -webkit-mask-image: linear-gradient(to top, #000 88%, transparent 100%);
+  mask-image: linear-gradient(to top, #000 88%, transparent 100%);
+  animation: loaderLogoFill 2.4s cubic-bezier(0.45, 0, 0.2, 1) infinite;
 }
 
 @keyframes loaderLogoFill {
@@ -5284,10 +5302,24 @@ select:focus-visible {
   100% { clip-path: inset(100% 0 0 0); }
 }
 
+@keyframes loaderLogoBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
+
+@keyframes loaderGlowPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .page-loader-logo-fill {
     animation: none;
     clip-path: inset(12% 0 0 0);
+  }
+  .page-loader-logo-wrap,
+  .page-loader-logo-wrap::before {
+    animation: none;
   }
 }
 
