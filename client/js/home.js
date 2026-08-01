@@ -10,10 +10,10 @@ function categoryIcon(slug) {
 }
 
 const HOME_CATEGORIES = [
-  { slug: 'electrolytes', name: 'Electrolytes', desc: 'Wake up faster, stay hydrated — green apple, peach, pineapple &amp; strawberry. Imported electrolytes.', image: '/assets/hero/electrolytes-category.webp', video: '/assets/bg/bg-electrolytes.mp4' },
-  { slug: 'coffee', name: 'Coffee', desc: 'Rich roast, one scoop away — instant coffee that actually tastes brewed, over ice or milk.', image: '/assets/hero/coffee-pour.jpg', video: '/assets/bg/bg-coffee.mp4' },
-  { slug: 'shampoo', name: 'Shampoo', desc: "Clean that doesn't dry you out — shampoo bars for an everyday routine that actually works.", video: '/assets/bg/bg-shampoo.mp4' },
-  { slug: 'cosmetics', name: 'Cosmetics', desc: 'Shades that match what you expect — authentic cosmetics, delivered nationwide with Cash on Delivery.', video: '/assets/bg/bg-cosmetics.mp4' },
+  { slug: 'electrolytes', name: 'Electrolytes', desc: 'Wake up faster, stay hydrated — green apple, peach, pineapple &amp; strawberry. Imported electrolytes.', image: '/assets/hero/electrolytes-category.webp' },
+  { slug: 'coffee', name: 'Coffee', desc: 'Rich roast, one scoop away — instant coffee that actually tastes brewed, over ice or milk.', image: '/assets/hero/coffee-pour.jpg' },
+  { slug: 'shampoo', name: 'Shampoo', desc: "Clean that doesn't dry you out — shampoo bars for an everyday routine that actually works." },
+  { slug: 'cosmetics', name: 'Cosmetics', desc: 'Shades that match what you expect — authentic cosmetics, delivered nationwide with Cash on Delivery.' },
 ];
 
 function applyCategoryImagesFromProducts(products) {
@@ -77,29 +77,16 @@ async function showSaleBannerIfAny() {
 function renderCategoryGrid() {
   const grid = document.getElementById('category-grid');
   if (!grid) return;
-  grid.innerHTML = HOME_CATEGORIES.map((c) => {
-    let media = categoryIcon(c.slug);
-    if (c.video) {
-      media = `<video autoplay muted loop playsinline${c.image ? ` poster="${c.image}"` : ''}><source src="${c.video}" type="video/mp4"></video>`;
-    } else if (c.image) {
-      media = `<img src="${c.image}" alt="" loading="lazy">`;
-    }
-    return `
+  grid.innerHTML = HOME_CATEGORIES.map((c) => `
     <a href="/pages/shop.html?category=${c.slug}" class="category-tile category-tile-${c.slug}" data-reveal="item">
-      <div class="category-tile-image">${media}</div>
+      <div class="category-tile-image">${c.image ? `<img src="${c.image}" alt="" loading="lazy">` : categoryIcon(c.slug)}</div>
       <div class="category-tile-foot">
         <span class="category-tile-name">${c.name}</span>
         <p class="category-tile-desc">${c.desc}</p>
         <span class="category-tile-link">Shop &rarr;</span>
       </div>
     </a>
-  `;
-  }).join('');
-
-  grid.querySelectorAll('.category-tile-image video').forEach((v) => {
-    v.muted = true;
-    v.play().catch(() => {});
-  });
+  `).join('');
 }
 
 async function loadCategoryImages() {
