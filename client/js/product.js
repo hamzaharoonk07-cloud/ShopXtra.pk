@@ -5,6 +5,33 @@ const CATEGORY_VIDEOS = {
   cosmetics: '/assets/bg/bg-cosmetics.mp4',
 };
 
+function openShadeNoteModal(productName) {
+  return new Promise((resolve) => {
+    const backdrop = document.createElement('div');
+    backdrop.className = 'shade-note-backdrop';
+    backdrop.innerHTML = `
+      <div class="shade-note-modal" role="dialog" aria-modal="true" aria-labelledby="shade-note-title">
+        <h2 id="shade-note-title">Which shade, colour &amp; number?</h2>
+        <p>Tell us exactly which shade, colour and number you'd like for <strong>${productName}</strong>, so we send the right one.</p>
+        <textarea id="shade-note-input" rows="2" placeholder="e.g. Shade 03 Rosewood, matte"></textarea>
+        <button type="button" class="btn btn-plum w-100" id="shade-note-submit">Continue</button>
+      </div>
+    `;
+    document.body.appendChild(backdrop);
+    const input = backdrop.querySelector('#shade-note-input');
+    input.focus();
+    const submit = () => {
+      const value = input.value.trim();
+      backdrop.remove();
+      resolve(value);
+    };
+    backdrop.querySelector('#shade-note-submit').addEventListener('click', submit);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submit();
+    });
+  });
+}
+
 async function loadProduct() {
   const main = document.getElementById('product-main');
   const slug = new URLSearchParams(window.location.search).get('slug');
@@ -21,7 +48,7 @@ async function loadProduct() {
     updateProductSeo(product, slug);
     fetch(`/api/products/${encodeURIComponent(slug)}/view`, { method: 'POST' }).catch(() => {});
 
-    const variants = product.variants || [];
+    const variants = product.category === 'cosmetics' ? [] : (product.variants || []);
     const swatchVariants = variants.filter((v) => v.color_hex || v.image_url);
     const plainVariants = swatchVariants.length ? [] : variants;
     const isColorSwatches = swatchVariants.length > 0 && Boolean(swatchVariants[0].color_hex);
@@ -235,6 +262,11 @@ async function loadProduct() {
       });
     });
 
+    let cosmeticsShadeNote = '';
+    if (product.category === 'cosmetics') {
+      cosmeticsShadeNote = await openShadeNoteModal(product.name);
+    }
+
     const addToCartBtn = document.getElementById('add-to-cart-btn');
     addToCartBtn?.addEventListener('click', (e) => {
       const qty = Number(document.getElementById('qty-input').value) || 1;
@@ -245,6 +277,7 @@ async function loadProduct() {
         price: Number(product.price) + Number(selectedVariant.price_modifier || 0),
         images: selectedVariant.image_url ? [selectedVariant.image_url] : product.images,
       } : product;
+      if (cosmeticsShadeNote) cartProduct.note = cosmeticsShadeNote;
       addToCart(cartProduct, qty);
       const msg = document.getElementById('add-to-cart-msg');
       msg.textContent = 'Added to bag.';
