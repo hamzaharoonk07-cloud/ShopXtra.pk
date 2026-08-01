@@ -30,6 +30,7 @@ function addToCart(product, qty = 1) {
   }
   saveCart(cart);
   openCartDrawer();
+  if (typeof showCartToast === 'function') showCartToast(product);
 }
 
 function updateCartQty(slug, qty) {

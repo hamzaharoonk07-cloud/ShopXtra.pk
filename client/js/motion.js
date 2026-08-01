@@ -325,6 +325,27 @@ function pulseCartBadge() {
   badge.classList.add('badge-pulse');
 }
 
+let cartToastTimer = null;
+function showCartToast(product) {
+  let toast = document.getElementById('cart-added-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'cart-added-toast';
+    toast.className = 'cart-added-toast';
+    document.body.appendChild(toast);
+  }
+  const image = product.images && product.images[0];
+  toast.innerHTML = `
+    ${image ? `<img src="${image}" alt="" class="cart-added-toast-img">` : '<span class="cart-added-toast-check">&#10003;</span>'}
+    <span class="cart-added-toast-text"><strong>${product.name}</strong> added to cart</span>
+  `;
+  clearTimeout(cartToastTimer);
+  toast.classList.remove('visible');
+  void toast.offsetWidth;
+  toast.classList.add('visible');
+  cartToastTimer = setTimeout(() => toast.classList.remove('visible'), 2200);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initNavbarScroll();
   if (prefersReducedMotion) return;

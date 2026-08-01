@@ -1216,6 +1216,68 @@ a {
   margin-top: -9px;
 }
 
+.cart-added-toast {
+  position: fixed;
+  top: 5.5rem;
+  right: 1.25rem;
+  z-index: 2100;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  background: var(--paper);
+  border: 1px solid var(--hairline-strong);
+  border-radius: 8px;
+  box-shadow: var(--shadow-soft-lg);
+  padding: 0.75rem 1.1rem;
+  max-width: 320px;
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.cart-added-toast.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cart-added-toast-img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.cart-added-toast-check {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sand);
+  color: var(--tea-pink);
+  border-radius: 6px;
+  font-size: 1.1rem;
+}
+
+.cart-added-toast-text {
+  font-size: 0.85rem;
+  color: var(--plum);
+  line-height: 1.4;
+}
+
+@media (max-width: 575.98px) {
+  .cart-added-toast {
+    top: auto;
+    bottom: 1.25rem;
+    left: 1rem;
+    right: 1rem;
+    max-width: none;
+  }
+}
+
 /* ---------- Sticky add-to-cart bar ---------- */
 .sticky-add-bar {
   position: fixed;
