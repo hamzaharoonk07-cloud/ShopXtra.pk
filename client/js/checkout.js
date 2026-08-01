@@ -23,16 +23,9 @@ function renderCheckoutSummary() {
 
   const notesStep = document.getElementById('cosmetics-notes-step');
   const notesField = document.getElementById('ship-notes');
-  const cosmeticsItems = cart.filter((item) => item.category === 'cosmetics');
-  const hasCosmetics = cosmeticsItems.length > 0;
+  const hasCosmetics = cart.some((item) => item.category === 'cosmetics');
   notesStep.classList.toggle('d-none', !hasCosmetics);
   notesField.required = hasCosmetics;
-  if (hasCosmetics && !notesField.value) {
-    notesField.value = cosmeticsItems
-      .filter((item) => item.note)
-      .map((item) => `${item.name}: ${item.note}`)
-      .join('\n');
-  }
 
   updateTotals();
 }

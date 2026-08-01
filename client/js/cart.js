@@ -18,7 +18,6 @@ function addToCart(product, qty = 1) {
   const existing = cart.find((item) => item.slug === product.slug);
   if (existing) {
     existing.qty += qty;
-    if (product.note) existing.note = product.note;
   } else {
     cart.push({
       slug: product.slug,
@@ -26,7 +25,6 @@ function addToCart(product, qty = 1) {
       price: Number(product.price),
       category: product.category,
       images: product.images || [],
-      note: product.note || null,
       qty,
     });
   }
