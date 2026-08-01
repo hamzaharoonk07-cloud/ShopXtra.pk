@@ -63,8 +63,9 @@ function writeCatalogCache(products) {
 
 function fetchCatalog() {
   return apiGet('/products').then((products) => {
-    writeCatalogCache(products);
-    return products;
+    const withImages = products.filter((p) => p.images && p.images[0]);
+    writeCatalogCache(withImages);
+    return withImages;
   });
 }
 

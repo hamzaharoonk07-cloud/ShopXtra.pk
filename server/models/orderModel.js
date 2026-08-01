@@ -12,7 +12,7 @@ function computeShippingFee(city, subtotal) {
   return String(city || '').trim().toLowerCase() === 'karachi' ? KARACHI_SHIPPING_FEE : STANDARD_SHIPPING_FEE;
 }
 
-async function createOrder({ userId, email, items, shipping, paymentMethod, promoCode }) {
+async function createOrder({ userId, email, items, shipping, paymentMethod, promoCode, notes }) {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
@@ -89,10 +89,10 @@ async function createOrder({ userId, email, items, shipping, paymentMethod, prom
     const finalTotal = total - discount + shippingFee;
 
     const { rows: orderRows } = await client.query(
-      `INSERT INTO orders (user_id, email, status, total, discount_total, shipping_fee, promo_code, payment_method, shipping_name, shipping_phone, shipping_address, shipping_city, shipping_postal_code)
-       VALUES ($1, $2, 'pending', $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+      `INSERT INTO orders (user_id, email, status, total, discount_total, shipping_fee, promo_code, payment_method, shipping_name, shipping_phone, shipping_address, shipping_city, shipping_postal_code, notes)
+       VALUES ($1, $2, 'pending', $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
        RETURNING *`,
-      [userId || null, email || null, finalTotal, discount, shippingFee, appliedCode, paymentMethod, shipping.name, shipping.phone, shipping.address, shipping.city, shipping.postalCode || null]
+      [userId || null, email || null, finalTotal, discount, shippingFee, appliedCode, paymentMethod, shipping.name, shipping.phone, shipping.address, shipping.city, shipping.postalCode || null, notes || null]
     );
     const order = orderRows[0];
 

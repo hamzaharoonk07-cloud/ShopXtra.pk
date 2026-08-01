@@ -3624,19 +3624,24 @@ select:focus-visible {
 }
 
 .checkout-field input,
-.checkout-field select {
+.checkout-field select,
+.checkout-field textarea {
   background: var(--paper);
   border: 1px solid var(--hairline-strong);
   border-radius: var(--radius-sm);
   padding: 0.8rem 0.9rem;
   font-size: 0.9rem;
   color: var(--plum);
+  font-family: inherit;
+  resize: vertical;
 }
 
 .checkout-field input:focus,
 .checkout-field input:required:valid,
 .checkout-field select:focus,
-.checkout-field select:required:valid {
+.checkout-field select:required:valid,
+.checkout-field textarea:focus,
+.checkout-field textarea:required:valid {
   border-color: var(--plum);
   outline: none;
 }

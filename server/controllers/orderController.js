@@ -4,7 +4,7 @@ const { orderConfirmationEmail, orderStatusEmail } = require('../emails/template
 
 async function create(req, res, next) {
   try {
-    const { items, shipping, paymentMethod, promoCode, email } = req.body;
+    const { items, shipping, paymentMethod, promoCode, email, notes } = req.body;
 
     if (!Array.isArray(items) || !items.length) {
       return res.status(400).json({ error: 'Cart items are required' });
@@ -28,6 +28,7 @@ async function create(req, res, next) {
       shipping,
       paymentMethod: paymentMethod === 'cod' ? 'cod' : 'cod',
       promoCode,
+      notes,
     });
 
     if (order.email) {

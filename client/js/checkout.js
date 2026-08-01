@@ -20,6 +20,13 @@ function renderCheckoutSummary() {
       </div>
     `).join('');
   }
+
+  const notesStep = document.getElementById('cosmetics-notes-step');
+  const notesField = document.getElementById('ship-notes');
+  const hasCosmetics = cart.some((item) => item.category === 'cosmetics');
+  notesStep.classList.toggle('d-none', !hasCosmetics);
+  notesField.required = hasCosmetics;
+
   updateTotals();
 }
 
@@ -117,6 +124,7 @@ document.getElementById('checkout-form').addEventListener('submit', async (e) =>
         },
         paymentMethod: 'cod',
         promoCode: appliedPromo ? appliedPromo.code : undefined,
+        notes: document.getElementById('ship-notes').value.trim() || undefined,
       }),
     });
     const body = await res.json();

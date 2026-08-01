@@ -743,6 +743,11 @@ async function showOrderDetail(id) {
           <div style="font-size:0.75rem; color:#6b5a58; text-transform:uppercase; letter-spacing:0.03em;">Email</div>
           <div>${order.email}</div>
         </div>` : ''}
+        ${order.notes ? `
+        <div class="col-12">
+          <div style="font-size:0.75rem; color:#6b5a58; text-transform:uppercase; letter-spacing:0.03em;">Shade / colour notes</div>
+          <div>${order.notes}</div>
+        </div>` : ''}
       </div>
       <div style="font-size:0.75rem; color:#6b5a58; text-transform:uppercase; letter-spacing:0.03em; margin-bottom:0.4rem;">Items</div>
       ${itemsHtml}

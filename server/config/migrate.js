@@ -20,6 +20,10 @@ async function runMigrations() {
       ADD COLUMN IF NOT EXISTS shipping_fee NUMERIC(10, 2) NOT NULL DEFAULT 0
   `);
   await pool.query(`
+    ALTER TABLE orders
+      ADD COLUMN IF NOT EXISTS notes TEXT
+  `);
+  await pool.query(`
     ALTER TABLE promo_codes
       ADD COLUMN IF NOT EXISTS gift_product_id INTEGER REFERENCES products(id)
   `);

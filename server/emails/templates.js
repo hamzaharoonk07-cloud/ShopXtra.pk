@@ -124,6 +124,11 @@ function orderConfirmationEmail(order) {
         </td>
       </tr>
     </table>
+    ${order.notes ? `
+    <div style="border-top: 1px solid #EFEADE; margin-top: 16px; padding-top: 12px;">
+      <p style="color:#1C231D; font-weight: bold; margin: 0 0 4px;">Shade / colour notes</p>
+      <p style="color:#5A5348; margin: 0; font-size: 13px; line-height: 1.5;">${order.notes}</p>
+    </div>` : ''}
     <p style="color:#7A7266; font-size: 12px; font-style: italic; margin-top: 10px;">Please make sure someone is available at this address with the cash payment during delivery hours.</p>
 
     <div style="border-top: 1px solid #EFEADE; margin-top: 24px; padding-top: 16px;">
