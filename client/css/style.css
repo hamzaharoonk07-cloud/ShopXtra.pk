@@ -4567,7 +4567,8 @@ select:focus-visible {
 .admin-sidebar-caption {
   font-family: 'Montserrat', sans-serif;
   font-size: 1.1rem;
-  color: var(--tea-pink);
+  color: var(--ivory-blush);
+  opacity: 0.85;
 }
 
 .admin-sidebar-nav {
@@ -4581,12 +4582,13 @@ select:focus-visible {
   text-align: left;
   background: none;
   border: none;
+  border-left: 3px solid transparent;
   color: var(--sand);
   padding: 0.7rem 0.9rem;
   border-radius: var(--radius-sm);
   font-size: 0.92rem;
   font-weight: 500;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .admin-nav-link:hover {
@@ -4594,8 +4596,10 @@ select:focus-visible {
 }
 
 .admin-nav-link.active {
-  background: var(--tea-pink);
-  color: var(--plum);
+  background: rgba(245, 241, 232, 0.14);
+  border-left-color: var(--gold);
+  color: #fff;
+  font-weight: 600;
 }
 
 .admin-sidebar-foot {
@@ -4659,6 +4663,8 @@ select:focus-visible {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--hairline-strong);
 }
 
 .admin-page-head h1 {
@@ -4701,6 +4707,12 @@ select:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.admin-stat-card:hover {
+  box-shadow: var(--shadow-soft-lg);
+  transform: translateY(-2px);
 }
 
 .admin-stat-card-warn {
