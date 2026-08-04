@@ -58,6 +58,19 @@ async function getById(req, res, next) {
   try {
     const order = await orderModel.findById(req.params.id);
     if (!order) return res.status(404).json({ error: 'Order not found' });
+
+    // This is hit publicly right after checkout (order-confirmation page) and
+    // from the track-order page, so it can't require login - but without some
+    // check anyone could enumerate sequential order IDs and read every
+    // customer's name, phone and address. Require either being the logged-in
+    // owner or knowing the order's phone number, same as /track.
+    const isOwner = req.user && order.user_id === req.user.id;
+    const phone = req.query.phone;
+    const phoneMatches = phone && order.shipping_phone.replace(/\D/g, '') === String(phone).replace(/\D/g, '');
+    if (!isOwner && !phoneMatches) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
     res.json(order);
   } catch (err) {
     next(err);

@@ -131,6 +131,10 @@ document.getElementById('checkout-form').addEventListener('submit', async (e) =>
     if (!res.ok) throw new Error(body.error);
 
     localStorage.removeItem(CART_KEY);
+    // Kept out of the URL (not localStorage/history) since it's used once to
+    // let the confirmation page prove it's the customer who just placed this
+    // order, then cleared - see order-confirmation.js.
+    sessionStorage.setItem('shopxtra_last_order_phone', document.getElementById('ship-phone').value);
     submitBtn.innerHTML = '<span class="btn-checkmark" aria-hidden="true">&#10004;</span> Order placed!';
     submitBtn.classList.add('btn-success-state');
 

@@ -191,7 +191,14 @@ function renderFooter() {
           <a href="/pages/contact.html">Contact us</a>
           <a href="/pages/account.html">Your account</a>
           <a href="/pages/bundles.html">Kits &amp; bundles</a>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
           <a href="/pages/privacy-policy.html">Privacy policy</a>
+          <a href="/pages/terms-and-conditions.html">Terms &amp; conditions</a>
+          <a href="/pages/return-refund-policy.html">Return &amp; refund policy</a>
+          <a href="/pages/shipping-policy.html">Shipping policy</a>
+          <a href="/pages/cancellation-policy.html">Cancellation policy</a>
         </div>
         <div class="footer-col">
           <h4>Store information</h4>

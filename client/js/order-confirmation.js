@@ -8,7 +8,9 @@ async function loadConfirmation() {
   }
 
   try {
-    const order = await apiGet(`/orders/${encodeURIComponent(orderId)}`);
+    const lastOrderPhone = sessionStorage.getItem('shopxtra_last_order_phone') || '';
+    sessionStorage.removeItem('shopxtra_last_order_phone');
+    const order = await apiGet(`/orders/${encodeURIComponent(orderId)}?phone=${encodeURIComponent(lastOrderPhone)}`);
     const itemsHtml = order.items.map((item) => `
       <div class="d-flex justify-content-between mb-2">
         <span>${item.name} <span class="mono" style="color:#6b5a58;">x${item.qty}</span></span>
