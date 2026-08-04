@@ -45,7 +45,13 @@ async function loadBundles() {
       document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   } catch (err) {
-    grid.innerHTML = `<p class="text-center py-5 text-danger">Could not load bundles: ${err.message}</p>`;
+    grid.innerHTML = `
+      <div class="text-center py-5">
+        <p class="text-danger mb-3">Could not load bundles: ${err.message}</p>
+        <button type="button" class="btn btn-plum" id="bundles-retry-btn">Retry</button>
+      </div>
+    `;
+    document.getElementById('bundles-retry-btn').addEventListener('click', loadBundles);
   }
 }
 

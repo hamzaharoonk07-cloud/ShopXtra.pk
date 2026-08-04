@@ -150,7 +150,16 @@ async function loadProducts(params) {
     const catalog = await getCatalog();
     renderProducts(filterCatalog(catalog, params));
   } catch (err) {
-    grid.innerHTML = `<p class="text-center py-5 text-danger">Could not load products: ${err.message}</p>`;
+    grid.innerHTML = `
+      <div class="text-center py-5">
+        <p class="text-danger mb-3">Could not load products: ${err.message}</p>
+        <button type="button" class="btn btn-plum" id="products-retry-btn">Retry</button>
+      </div>
+    `;
+    document.getElementById('products-retry-btn').addEventListener('click', () => {
+      catalogPromise = null;
+      loadProducts(params);
+    });
   }
 }
 

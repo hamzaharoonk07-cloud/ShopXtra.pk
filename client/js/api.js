@@ -1,7 +1,22 @@
 const API_BASE = '/api';
 
 async function apiGet(path) {
-  const res = await fetch(`${API_BASE}${path}`);
+  // Without a timeout, a hung request (slow mobile connection, server not
+  // responding) never resolves or rejects - the caller's catch block never
+  // fires, and pages are stuck showing "Loading..." forever with no way to
+  // recover short of a manual refresh. This turns that into a real error
+  // after 15s so callers can show a Retry button instead.
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+  let res;
+  try {
+    res = await fetch(`${API_BASE}${path}`, { signal: controller.signal });
+  } catch (err) {
+    if (err.name === 'AbortError') throw new Error('Request timed out - check your connection and try again.');
+    throw err;
+  } finally {
+    clearTimeout(timeout);
+  }
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
     throw new Error(body.error || `Request failed: ${res.status}`);
