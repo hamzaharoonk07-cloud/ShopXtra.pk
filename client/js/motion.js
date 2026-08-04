@@ -102,6 +102,10 @@ function initCounters() {
       start: 'top 95%',
       once: true,
       onEnter: () => {
+        // The HTML already shows the real final number so it's correct even
+        // if this script never runs (slow connection, crawler) - only reset
+        // to 0 right before the count-up animation actually starts.
+        el.textContent = '0';
         gsap.to(counter, {
           value: target,
           duration: 1.4,
