@@ -36,12 +36,14 @@ async function submitTrackForm() {
 
     const itemCount = order.items.reduce((sum, item) => sum + item.qty, 0);
 
+    const orderDate = new Date(order.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+
     resultEl.innerHTML = `
       <div class="track-result-card">
         <div class="track-result-head">
           <div>
             <h2>Order SX-${order.id}</h2>
-            <span class="track-result-meta">${itemCount} item${itemCount === 1 ? '' : 's'} · ${formatPrice(order.total)} · Cash on Delivery</span>
+            <span class="track-result-meta">Placed ${orderDate} · ${itemCount} item${itemCount === 1 ? '' : 's'} · ${formatPrice(order.total)} · Cash on Delivery</span>
           </div>
           <span class="track-status-pill">${order.status}</span>
         </div>
@@ -55,7 +57,11 @@ async function submitTrackForm() {
           <span>Total</span>
           <span class="price">${formatPrice(order.total)}</span>
         </div>
-        <p class="mb-0 mt-2" style="color:#6b5a58; font-size: 0.85rem;">${order.shipping_address}, ${order.shipping_city}</p>
+        <hr>
+        <div style="font-size: 0.85rem; color:#6b5a58;">
+          <p class="mb-1"><strong style="color:var(--plum);">${order.shipping_name}</strong></p>
+          <p class="mb-0">${order.shipping_address}, ${order.shipping_city}${order.shipping_postal_code ? ` ${order.shipping_postal_code}` : ''}</p>
+        </div>
       </div>
     `;
   } catch (err) {
