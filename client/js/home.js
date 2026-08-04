@@ -123,6 +123,20 @@ function initHeroCarousel() {
   let index = 0;
   let timer = null;
 
+  // Only slide 0's video has a real src on page load - the other 3 (~6MB
+  // combined) were all downloading simultaneously on every homepage visit
+  // regardless of which slide was visible, which was a big chunk of the
+  // "loading feels slow" complaint. Load each slide's video source lazily,
+  // right before it's needed, and pre-fetch the next one for a smooth switch.
+  function ensureVideoLoaded(slide) {
+    const video = slide?.querySelector('video');
+    const source = video?.querySelector('source[data-src]');
+    if (!source) return;
+    source.src = source.dataset.src;
+    delete source.dataset.src;
+    video.load();
+  }
+
   function goTo(i) {
     index = (i + slides.length) % slides.length;
     track.style.transform = `translateX(-${index * 100}%)`;
@@ -130,6 +144,8 @@ function initHeroCarousel() {
       d.classList.toggle('active', di === index);
       d.setAttribute('aria-selected', di === index ? 'true' : 'false');
     });
+    ensureVideoLoaded(slides[index]);
+    ensureVideoLoaded(slides[(index + 1) % slides.length]);
     slides.forEach((slide, si) => {
       const video = slide.querySelector('video');
       if (!video) return;
