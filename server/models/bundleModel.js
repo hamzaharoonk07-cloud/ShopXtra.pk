@@ -30,4 +30,52 @@ async function findBySlug(slug) {
   return bundle;
 }
 
-module.exports = { findAll, findBySlug };
+async function findById(id) {
+  const { rows } = await pool.query('SELECT * FROM bundles WHERE id = $1', [id]);
+  if (!rows[0]) return null;
+  const [bundle] = await attachItems(rows);
+  return bundle;
+}
+
+async function setItems(bundleId, productIds) {
+  await pool.query('DELETE FROM bundle_items WHERE bundle_id = $1', [bundleId]);
+  for (const productId of productIds) {
+    await pool.query('INSERT INTO bundle_items (bundle_id, product_id) VALUES ($1, $2)', [bundleId, productId]);
+  }
+}
+
+async function create({ name, slug, description, ritualTime, discountPercent, productIds }) {
+  const { rows } = await pool.query(
+    `INSERT INTO bundles (name, slug, description, ritual_time, discount_percent)
+     VALUES ($1, $2, $3, $4, $5)
+     RETURNING *`,
+    [name, slug, description || null, ritualTime, discountPercent]
+  );
+  const bundle = rows[0];
+  await setItems(bundle.id, productIds || []);
+  return findById(bundle.id);
+}
+
+async function update(id, { name, slug, description, ritualTime, discountPercent, productIds }) {
+  const { rows } = await pool.query(
+    `UPDATE bundles SET
+       name = COALESCE($2, name),
+       slug = COALESCE($3, slug),
+       description = COALESCE($4, description),
+       ritual_time = COALESCE($5, ritual_time),
+       discount_percent = COALESCE($6, discount_percent)
+     WHERE id = $1
+     RETURNING *`,
+    [id, name, slug, description, ritualTime, discountPercent]
+  );
+  if (!rows[0]) return null;
+  if (productIds) await setItems(id, productIds);
+  return findById(id);
+}
+
+async function remove(id) {
+  const { rowCount } = await pool.query('DELETE FROM bundles WHERE id = $1', [id]);
+  return rowCount > 0;
+}
+
+module.exports = { findAll, findBySlug, findById, create, update, remove };

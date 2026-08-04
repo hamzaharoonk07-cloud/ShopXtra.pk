@@ -1133,6 +1133,139 @@ async function loadUsers() {
 
 document.getElementById('user-search').addEventListener('input', renderUsersTable);
 
+let allBundles = [];
+let editingBundleId = null;
+
+function renderBundleProductChecklist() {
+  const wrap = document.getElementById('bundle-product-checklist');
+  wrap.innerHTML = allProducts.map((p) => `
+    <div class="form-check">
+      <input type="checkbox" class="form-check-input bundle-product-checkbox" id="bp-${p.id}" value="${p.id}">
+      <label class="form-check-label" for="bp-${p.id}" style="font-size:0.85rem;">${p.name} <span style="color:#a89490;">(${p.category}, Rs ${p.price})</span></label>
+    </div>
+  `).join('');
+}
+
+function resetBundleForm() {
+  editingBundleId = null;
+  document.getElementById('bundle-form-title').textContent = 'Create bundle';
+  document.getElementById('bundle-submit-btn').textContent = 'Create';
+  document.getElementById('bundle-cancel-edit-btn').classList.add('d-none');
+  document.getElementById('bundle-id').value = '';
+  document.getElementById('bundle-name').value = '';
+  document.getElementById('bundle-ritual-time').value = '';
+  document.getElementById('bundle-discount').value = '10';
+  document.getElementById('bundle-description').value = '';
+  document.querySelectorAll('.bundle-product-checkbox').forEach((cb) => { cb.checked = false; });
+}
+
+function renderBundlesTable() {
+  const tbody = document.getElementById('bundles-table-body');
+  tbody.innerHTML = allBundles.length ? allBundles.map((b) => `
+    <tr data-id="${b.id}">
+      <td>${b.name}</td>
+      <td style="text-transform:capitalize;">${b.ritual_time}</td>
+      <td>${b.discount_percent}%</td>
+      <td>${b.items.length}</td>
+      <td>Rs ${b.bundle_price}</td>
+      <td class="text-end">
+        <button type="button" class="btn btn-outline-plum btn-sm edit-bundle-btn">Edit</button>
+        <button type="button" class="btn btn-sm text-danger delete-bundle-btn">Delete</button>
+      </td>
+    </tr>
+  `).join('') : '<tr><td colspan="6" style="color:#a89490;">No bundles yet.</td></tr>';
+
+  tbody.querySelectorAll('.edit-bundle-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = Number(btn.closest('tr').dataset.id);
+      const bundle = allBundles.find((b) => b.id === id);
+      if (!bundle) return;
+      editingBundleId = id;
+      document.getElementById('bundle-form-title').textContent = `Edit "${bundle.name}"`;
+      document.getElementById('bundle-submit-btn').textContent = 'Save changes';
+      document.getElementById('bundle-cancel-edit-btn').classList.remove('d-none');
+      document.getElementById('bundle-id').value = id;
+      document.getElementById('bundle-name').value = bundle.name;
+      document.getElementById('bundle-ritual-time').value = bundle.ritual_time;
+      document.getElementById('bundle-discount').value = bundle.discount_percent;
+      document.getElementById('bundle-description').value = bundle.description || '';
+      const itemIds = new Set(bundle.items.map((p) => p.id));
+      document.querySelectorAll('.bundle-product-checkbox').forEach((cb) => {
+        cb.checked = itemIds.has(Number(cb.value));
+      });
+      document.getElementById('bundle-name').scrollIntoView({ block: 'center', behavior: 'smooth' });
+    });
+  });
+
+  tbody.querySelectorAll('.delete-bundle-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const id = Number(btn.closest('tr').dataset.id);
+      if (!confirm('Delete this bundle? This cannot be undone.')) return;
+      const res = await fetch(`/api/bundles/${id}`, { method: 'DELETE' });
+      if (res.ok || res.status === 404) {
+        allBundles = allBundles.filter((b) => b.id !== id);
+        renderBundlesTable();
+      }
+    });
+  });
+}
+
+async function loadBundles() {
+  const tbody = document.getElementById('bundles-table-body');
+  try {
+    allBundles = await apiGet('/bundles');
+    renderBundlesTable();
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="6" class="text-danger">Could not load bundles: ${err.message}</td></tr>`;
+  }
+}
+
+document.getElementById('bundle-cancel-edit-btn').addEventListener('click', resetBundleForm);
+
+document.getElementById('add-bundle-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const errorEl = document.getElementById('add-bundle-error');
+  errorEl.classList.add('d-none');
+
+  const productIds = Array.from(document.querySelectorAll('.bundle-product-checkbox:checked')).map((cb) => Number(cb.value));
+  if (!productIds.length) {
+    errorEl.textContent = 'Select at least one product for this bundle.';
+    errorEl.classList.remove('d-none');
+    return;
+  }
+
+  const payload = {
+    name: document.getElementById('bundle-name').value.trim(),
+    ritualTime: document.getElementById('bundle-ritual-time').value,
+    discountPercent: document.getElementById('bundle-discount').value || 10,
+    description: document.getElementById('bundle-description').value.trim(),
+    productIds,
+  };
+
+  try {
+    const url = editingBundleId ? `/api/bundles/${editingBundleId}` : '/api/bundles';
+    const method = editingBundleId ? 'PUT' : 'POST';
+    const res = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const body = await safeJson(res);
+    if (!res.ok) throw new Error(body.error);
+
+    if (editingBundleId) {
+      allBundles = allBundles.map((b) => (b.id === editingBundleId ? body : b));
+    } else {
+      allBundles.push(body);
+    }
+    renderBundlesTable();
+    resetBundleForm();
+  } catch (err) {
+    errorEl.textContent = err.message;
+    errorEl.classList.remove('d-none');
+  }
+});
+
 (async () => {
   try {
     const res = await fetch('/api/auth/me');
@@ -1145,9 +1278,11 @@ document.getElementById('user-search').addEventListener('input', renderUsersTabl
     document.getElementById('admin-whoami').textContent = user.email;
 
     await Promise.all([loadProducts(), loadUsers(), loadOrders()]);
+    renderBundleProductChecklist();
     await loadOverview();
     loadPromoCodes();
     loadBanners();
+    loadBundles();
   } catch {
     document.getElementById('admin-loading').classList.add('d-none');
     document.getElementById('admin-denied').classList.remove('d-none');

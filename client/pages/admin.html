@@ -33,6 +33,7 @@
     <nav class="admin-sidebar-nav" id="admin-tabs">
       <button class="admin-nav-link active" data-tab="overview">Overview</button>
       <button class="admin-nav-link" data-tab="products">Products</button>
+      <button class="admin-nav-link" data-tab="bundles">Bundles</button>
       <button class="admin-nav-link" data-tab="orders">Orders</button>
       <button class="admin-nav-link" data-tab="promo">Promo codes</button>
       <button class="admin-nav-link" data-tab="banner">Sale banner</button>
@@ -138,6 +139,44 @@
               <tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th></th></tr>
             </thead>
             <tbody id="products-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-bundles" class="d-none">
+      <div class="admin-page-head"><h1>Bundles</h1></div>
+      <div class="admin-panel mb-4">
+        <h2 id="bundle-form-title">Create bundle</h2>
+        <form id="add-bundle-form" class="row g-2">
+          <input type="hidden" id="bundle-id">
+          <div class="col-md-4"><input class="form-control" id="bundle-name" placeholder="Name, e.g. Morning Ritual" required></div>
+          <div class="col-md-3">
+            <select class="form-select" id="bundle-ritual-time" required>
+              <option value="">Ritual time</option>
+              <option value="morning">Morning</option>
+              <option value="midday">Midday</option>
+              <option value="evening">Evening</option>
+            </select>
+          </div>
+          <div class="col-md-2"><input type="number" class="form-control" id="bundle-discount" placeholder="Discount %" min="0" max="100" value="10"></div>
+          <div class="col-md-3"><button type="submit" class="btn btn-plum w-100" id="bundle-submit-btn">Create</button></div>
+          <div class="col-12"><input class="form-control" id="bundle-description" placeholder="Description (optional)"></div>
+          <div class="col-12">
+            <label class="form-label mono d-block" style="font-size:0.75rem;">Products in this bundle</label>
+            <div id="bundle-product-checklist" style="max-height:220px; overflow-y:auto; border:1px solid var(--hairline-strong); border-radius:8px; padding:0.75rem;"></div>
+          </div>
+        </form>
+        <p class="text-danger d-none mt-2" id="add-bundle-error"></p>
+        <button type="button" class="btn btn-outline-plum btn-sm d-none mt-2" id="bundle-cancel-edit-btn">Cancel edit</button>
+      </div>
+      <div class="admin-panel">
+        <div class="table-responsive">
+          <table class="table align-middle admin-table">
+            <thead>
+              <tr><th>Name</th><th>Ritual</th><th>Discount</th><th>Items</th><th>Price</th><th></th></tr>
+            </thead>
+            <tbody id="bundles-table-body"></tbody>
           </table>
         </div>
       </div>
