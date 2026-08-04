@@ -1,12 +1,15 @@
-const { Pool } = require('pg');
 require('dotenv').config({ path: require('path').join(__dirname, '..', '..', '.env') });
 
+// Neon's own driver keeps a WebSocket connection warm instead of doing a
+// fresh TCP+TLS handshake per request like node-postgres does - that
+// handshake was adding ~1s to every single API call (confirmed by direct
+// timing). Only used when DATABASE_URL points at Neon; falls back to plain
+// node-postgres for local/non-Neon setups (DB_HOST etc).
 const pool = process.env.DATABASE_URL
-  ? new Pool({
+  ? new (require('@neondatabase/serverless').Pool)({
       connectionString: process.env.DATABASE_URL,
-      ssl: { rejectUnauthorized: false },
     })
-  : new Pool({
+  : new (require('pg').Pool)({
       host: process.env.DB_HOST,
       port: process.env.DB_PORT,
       database: process.env.DB_NAME,
