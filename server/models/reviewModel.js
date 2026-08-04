@@ -2,7 +2,7 @@ const pool = require('../config/db');
 
 async function findByProductSlug(slug) {
   const { rows } = await pool.query(
-    `SELECT r.id, r.rating, r.comment, r.created_at, u.name AS user_name
+    `SELECT r.id, r.rating, r.comment, r.created_at, r.verified_purchase, u.name AS user_name
      FROM reviews r
      JOIN products p ON p.id = r.product_id
      JOIN users u ON u.id = r.user_id
@@ -24,11 +24,22 @@ async function create({ slug, userId, rating, comment }) {
   const product = productRows[0];
   if (!product) return null;
 
+  // "Verified buyer" should only ever mean the reviewer actually has a
+  // delivered order containing this product - never assumed by default.
+  const { rows: purchaseRows } = await pool.query(
+    `SELECT 1 FROM orders o
+     JOIN order_items oi ON oi.order_id = o.id
+     WHERE o.user_id = $1 AND oi.product_id = $2 AND o.status = 'delivered'
+     LIMIT 1`,
+    [userId, product.id]
+  );
+  const verifiedPurchase = purchaseRows.length > 0;
+
   const { rows } = await pool.query(
-    `INSERT INTO reviews (product_id, user_id, rating, comment)
-     VALUES ($1, $2, $3, $4)
+    `INSERT INTO reviews (product_id, user_id, rating, comment, verified_purchase)
+     VALUES ($1, $2, $3, $4, $5)
      RETURNING *`,
-    [product.id, userId, rating, comment || null]
+    [product.id, userId, rating, comment || null, verifiedPurchase]
   );
   return rows[0];
 }

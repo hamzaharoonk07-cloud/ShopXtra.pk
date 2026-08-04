@@ -35,6 +35,9 @@ async function runMigrations() {
     ALTER TABLE orders
       ADD COLUMN IF NOT EXISTS notes TEXT;
 
+    ALTER TABLE reviews
+      ADD COLUMN IF NOT EXISTS verified_purchase BOOLEAN NOT NULL DEFAULT false;
+
     ALTER TABLE promo_codes
       ADD COLUMN IF NOT EXISTS gift_product_id INTEGER REFERENCES products(id);
 

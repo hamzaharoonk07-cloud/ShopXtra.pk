@@ -416,7 +416,7 @@ async function loadReviews(slug) {
           <span class="review-avatar">${(r.user_name || '?').charAt(0).toUpperCase()}</span>
           <div class="d-flex flex-column">
             <span class="review-author-name">${r.user_name}</span>
-            <span class="review-author-meta">Verified buyer · ${new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+            <span class="review-author-meta">${r.verified_purchase ? 'Verified buyer · ' : ''}${new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
           </div>
         </div>
       </div>
