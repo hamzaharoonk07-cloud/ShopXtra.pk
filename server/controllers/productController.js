@@ -25,6 +25,13 @@ async function list(req, res, next) {
       search,
       onSale: sale === 'true',
     });
+    // Neon closes idle connections aggressively, so every cold request pays a
+    // full TLS handshake before the query even runs (~1s, confirmed by direct
+    // timing). Short edge caching means repeat browsing/filtering (the common
+    // case) skips the database round-trip entirely instead of eating that
+    // delay on every click - the real fix is switching DATABASE_URL to Neon's
+    // pooled connection string, but that needs a value only the user has.
+    res.set('Cache-Control', 'public, max-age=20, stale-while-revalidate=60');
     res.json(products);
   } catch (err) {
     next(err);
@@ -35,6 +42,7 @@ async function getBySlug(req, res, next) {
   try {
     const product = await productModel.findBySlug(req.params.slug);
     if (!product) return res.status(404).json({ error: 'Product not found' });
+    res.set('Cache-Control', 'public, max-age=20, stale-while-revalidate=60');
     res.json(product);
   } catch (err) {
     next(err);
