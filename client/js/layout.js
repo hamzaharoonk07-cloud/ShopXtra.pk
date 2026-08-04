@@ -406,7 +406,7 @@ document.addEventListener('submit', async (e) => {
     const body = await res.json();
     if (!res.ok) throw new Error(body.error);
     msg.textContent = body.emailSent === false
-      ? 'You\'re on the list, but the welcome email couldn\'t be sent - check back later.'
+      ? 'You\'re on the list, but the welcome email couldn\'t be sent. Check back later.'
       : 'You\'re on the list. Thank you!';
     msg.style.color = 'var(--tea-pink)';
     emailInput.value = '';

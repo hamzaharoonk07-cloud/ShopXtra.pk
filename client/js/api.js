@@ -12,7 +12,7 @@ async function apiGet(path) {
   try {
     res = await fetch(`${API_BASE}${path}`, { signal: controller.signal });
   } catch (err) {
-    if (err.name === 'AbortError') throw new Error('Request timed out - check your connection and try again.');
+    if (err.name === 'AbortError') throw new Error('Request timed out. Check your connection and try again.');
     throw err;
   } finally {
     clearTimeout(timeout);
