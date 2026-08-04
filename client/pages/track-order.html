@@ -21,19 +21,27 @@
 <div id="navbar-slot"></div>
 
 <main class="container py-5" style="max-width: 640px;">
-  <div class="text-center mb-4">
+  <div class="text-center mb-4" data-reveal="hero">
+    <span class="category-tint tint-cosmetics mb-3 d-inline-block">Order status</span>
     <h1>Track your order</h1>
-    <p style="color:#6b5a58;">Enter your order ID and the phone number used at checkout.</p>
+    <p style="color:#6b5a58;">Enter your order ID and the phone number used at checkout to see where your order is.</p>
   </div>
 
-  <form id="track-form" class="track-form-row">
-    <input type="text" class="track-pill-input" id="track-order-id" placeholder="Order ID e.g. SX-6" required>
-    <input type="tel" class="track-pill-input" id="track-phone" placeholder="0300 1234567" required>
-    <button type="submit" class="btn btn-plum">Track</button>
-  </form>
-  <p class="text-danger d-none mb-3 text-center" id="track-error"></p>
+  <div class="filter-panel mb-4" data-reveal="up">
+    <div class="text-center mb-3" style="color:var(--tea-pink);">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="8" width="13" height="9" rx="1.5"/><path d="M15.5 11h3l3 3v3h-6z"/><circle cx="7" cy="19" r="1.7"/><circle cx="17" cy="19" r="1.7"/></svg>
+    </div>
+    <form id="track-form" class="track-form-row">
+      <input type="text" class="track-pill-input" id="track-order-id" placeholder="Order ID e.g. SX-6" required>
+      <input type="tel" class="track-pill-input" id="track-phone" placeholder="0300 1234567" required>
+      <button type="submit" class="btn btn-plum">Track</button>
+    </form>
+    <p class="text-danger d-none mb-0 mt-3 text-center" id="track-error"></p>
+  </div>
 
-  <div id="track-result" class="mt-4"></div>
+  <p class="text-center mb-4" style="color:#9a8a87; font-size:0.85rem;">Can't find your order ID? Check your confirmation email, or <a href="https://wa.me/923272255447" target="_blank" rel="noopener">message us on WhatsApp</a>.</p>
+
+  <div id="track-result"></div>
 </main>
 
 <div id="footer-slot"></div>
