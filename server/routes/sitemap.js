@@ -14,6 +14,11 @@ router.get('/sitemap.xml', async (req, res) => {
     { loc: '/pages/about.html', priority: '0.5', freq: 'monthly' },
     { loc: '/pages/contact.html', priority: '0.5', freq: 'monthly' },
     { loc: '/pages/track-order.html', priority: '0.3', freq: 'monthly' },
+    { loc: '/pages/privacy-policy.html', priority: '0.2', freq: 'monthly' },
+    { loc: '/pages/terms-and-conditions.html', priority: '0.2', freq: 'monthly' },
+    { loc: '/pages/return-refund-policy.html', priority: '0.2', freq: 'monthly' },
+    { loc: '/pages/shipping-policy.html', priority: '0.2', freq: 'monthly' },
+    { loc: '/pages/cancellation-policy.html', priority: '0.2', freq: 'monthly' },
   ];
 
   let productUrls = [];
