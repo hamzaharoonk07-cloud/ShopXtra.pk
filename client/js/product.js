@@ -267,10 +267,10 @@ async function loadRelatedProducts(product) {
 }
 
 function updateProductSeo(product, slug) {
-  const url = `https://shop-xtra-pk.vercel.app/pages/product.html?slug=${encodeURIComponent(slug)}`;
+  const url = `https://www.shopxtra.store/pages/product.html?slug=${encodeURIComponent(slug)}`;
   const description = (product.description || '').slice(0, 160) ||
     `${product.name}: authentic, PKR-priced, delivered nationwide across Pakistan with Cash on Delivery.`;
-  const image = (product.images && product.images[0]) || 'https://shop-xtra-pk.vercel.app/assets/logo-full.png';
+  const image = (product.images && product.images[0]) || 'https://www.shopxtra.store/assets/logo-full.png';
 
   const setMeta = (selector, attr, value) => {
     let el = document.querySelector(selector);
