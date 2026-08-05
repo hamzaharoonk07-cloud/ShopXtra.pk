@@ -1,11 +1,13 @@
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 
 const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
 const { notFound, errorHandler } = require('./middleware/errorHandler');
+const productModel = require('./models/productModel');
 const healthRoutes = require('./routes/health');
 const productRoutes = require('./routes/products');
 const newsletterRoutes = require('./routes/newsletter');
@@ -39,6 +41,52 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 // request /favicon.ico directly regardless of the <link rel="icon"> tag -
 // without this it 404s even though the real icon works fine everywhere else.
 app.get('/favicon.ico', (req, res) => res.sendFile(path.join(__dirname, '..', 'client', 'assets', 'favicon.png')));
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+// The real product name/description/image only get set client-side after
+// product.js fetches the product - fine for Google (it renders JS before
+// indexing) but link-preview crawlers (WhatsApp, Facebook) don't run JS, so
+// a shared product link would otherwise always show the generic ShopXtra
+// title/logo instead of the actual product. Rewriting the static file's
+// meta tags server-side, only when a known slug is present, fixes that
+// without turning this into a templated/SSR page for every other route.
+app.get('/pages/product.html', async (req, res, next) => {
+  try {
+    const slug = req.query.slug;
+    if (!slug) return next();
+    await migrationsReady;
+    const product = await productModel.findBySlug(slug);
+    if (!product) return next();
+
+    const filePath = path.join(__dirname, '..', 'client', 'pages', 'product.html');
+    let html = fs.readFileSync(filePath, 'utf8');
+    const title = escapeHtml(`${product.name} | ShopXtra`);
+    const description = escapeHtml(
+      (product.description || '').slice(0, 160) ||
+      `${product.name}: authentic, PKR-priced, delivered nationwide across Pakistan with Cash on Delivery.`
+    );
+    const url = `https://www.shopxtra.store/pages/product.html?slug=${encodeURIComponent(slug)}`;
+    const image = (product.images && product.images[0]) || 'https://www.shopxtra.store/assets/logo-full.png';
+
+    html = html
+      .replace(/<title>.*?<\/title>/, `<title>${title}</title>`)
+      .replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${description}">`)
+      .replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${url}">`)
+      .replace(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${title}">`)
+      .replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${description}">`)
+      .replace(/<meta property="og:url" content="[^"]*">/, `<meta property="og:url" content="${url}">`)
+      .replace(/<meta property="og:image" content="[^"]*">/, `<meta property="og:image" content="${image}">`);
+
+    res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
+    res.send(html);
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.use(express.static(path.join(__dirname, '..', 'client')));
 
 app.use((req, res, next) => {
