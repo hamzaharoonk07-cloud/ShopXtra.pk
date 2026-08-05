@@ -80,6 +80,17 @@ async function runMigrations() {
 
     CREATE INDEX IF NOT EXISTS idx_product_views_user_id ON product_views(user_id);
     CREATE INDEX IF NOT EXISTS idx_product_views_product_id ON product_views(product_id);
+
+    CREATE TABLE IF NOT EXISTS cart_events (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+      qty INTEGER NOT NULL DEFAULT 1,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_cart_events_product_id ON cart_events(product_id);
+    CREATE INDEX IF NOT EXISTS idx_cart_events_created_at ON cart_events(created_at);
   `);
 }
 

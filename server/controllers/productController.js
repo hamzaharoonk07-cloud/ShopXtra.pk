@@ -1,5 +1,6 @@
 const productModel = require('../models/productModel');
 const productViewModel = require('../models/productViewModel');
+const cartEventModel = require('../models/cartEventModel');
 const { saveImage } = require('../utils/imageStorage');
 const { reprocessAllProductImages } = require('../utils/reprocessImages');
 
@@ -55,6 +56,25 @@ async function recordView(req, res, next) {
     if (!product) return res.status(404).json({ error: 'Product not found' });
     await productViewModel.record(product.id, req.user?.id);
     res.status(204).end();
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function recordCartAdd(req, res, next) {
+  try {
+    const product = await productModel.findBySlug(req.params.slug);
+    if (!product) return res.status(404).json({ error: 'Product not found' });
+    await cartEventModel.record(product.id, req.user?.id, Number(req.body?.qty) || 1);
+    res.status(204).end();
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function listCartEvents(req, res, next) {
+  try {
+    res.json(await cartEventModel.findRecent());
   } catch (err) {
     next(err);
   }
@@ -193,4 +213,4 @@ async function reprocessImages(req, res, next) {
   }
 }
 
-module.exports = { list, getBySlug, recordView, create, update, remove, createVariant, updateVariant, removeVariant, reprocessImages };
+module.exports = { list, getBySlug, recordView, recordCartAdd, listCartEvents, create, update, remove, createVariant, updateVariant, removeVariant, reprocessImages };

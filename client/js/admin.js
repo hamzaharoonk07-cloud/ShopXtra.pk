@@ -969,15 +969,14 @@ document.getElementById('broadcast-form').addEventListener('submit', async (e) =
   const btn = e.target.querySelector('button');
   btn.disabled = true;
   try {
-    const res = await fetch('/api/newsletter/broadcast', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        subject: document.getElementById('broadcast-subject').value,
-        message: document.getElementById('broadcast-message').value,
-      }),
-    });
-    const body = await res.json();
+    const formData = new FormData();
+    formData.append('subject', document.getElementById('broadcast-subject').value);
+    formData.append('message', document.getElementById('broadcast-message').value);
+    const imageFile = document.getElementById('broadcast-image').files[0];
+    if (imageFile) formData.append('image', imageFile);
+
+    const res = await fetch('/api/newsletter/broadcast', { method: 'POST', body: formData });
+    const body = await safeJson(res);
     if (!res.ok) throw new Error(body.error);
     statusEl.textContent = body.message;
     statusEl.style.color = 'var(--tea-pink)';
@@ -991,6 +990,44 @@ document.getElementById('broadcast-form').addEventListener('submit', async (e) =
     btn.disabled = false;
   }
 });
+
+async function loadSubscribers() {
+  const tbody = document.getElementById('subscribers-table-body');
+  const countEl = document.getElementById('subscriber-count');
+  try {
+    const subs = await apiGet('/newsletter/subscribers');
+    if (countEl) countEl.textContent = `(${subs.length})`;
+    tbody.innerHTML = subs.length
+      ? subs.map((s) => `
+          <tr>
+            <td>${s.email}</td>
+            <td>${new Date(s.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+          </tr>
+        `).join('')
+      : '<tr><td colspan="2" style="color:#6b5a58;">No subscribers yet.</td></tr>';
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="2" class="text-danger">Could not load subscribers: ${err.message}</td></tr>`;
+  }
+}
+
+async function loadCartEvents() {
+  const tbody = document.getElementById('cart-events-table-body');
+  try {
+    const events = await apiGet('/products/cart-events');
+    tbody.innerHTML = events.length
+      ? events.map((ev) => `
+          <tr>
+            <td>${ev.product_name}</td>
+            <td>${ev.qty}</td>
+            <td>${ev.user_email || 'Guest'}</td>
+            <td>${new Date(ev.created_at).toLocaleString('en-US', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' })}</td>
+          </tr>
+        `).join('')
+      : '<tr><td colspan="4" style="color:#6b5a58;">No cart activity yet.</td></tr>';
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="4" class="text-danger">Could not load cart activity: ${err.message}</td></tr>`;
+  }
+}
 
 document.getElementById('add-promo-form').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -1291,6 +1328,8 @@ document.getElementById('add-bundle-form').addEventListener('submit', async (e) 
     loadPromoCodes();
     loadBanners();
     loadBundles();
+    loadSubscribers();
+    loadCartEvents();
   } catch {
     document.getElementById('admin-loading').classList.add('d-none');
     document.getElementById('admin-denied').classList.remove('d-none');

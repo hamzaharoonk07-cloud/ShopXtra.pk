@@ -36,6 +36,7 @@
       <button class="admin-nav-link" data-tab="bundles">Bundles</button>
       <button class="admin-nav-link" data-tab="orders">Orders</button>
       <button class="admin-nav-link" data-tab="promo">Promo codes</button>
+      <button class="admin-nav-link" data-tab="activity">Activity</button>
       <button class="admin-nav-link" data-tab="banner">Sale banner</button>
       <button class="admin-nav-link" data-tab="users">Users</button>
     </nav>
@@ -213,15 +214,6 @@
     <section id="tab-promo" class="d-none">
       <div class="admin-page-head"><h1>Promo codes</h1></div>
       <div class="admin-panel mb-4">
-        <h2>Email newsletter subscribers</h2>
-        <form id="broadcast-form" class="row g-2">
-          <div class="col-md-4"><input class="form-control" id="broadcast-subject" placeholder="Subject, e.g. Weekend Sale: 20% off Coffee" required></div>
-          <div class="col-md-6"><input class="form-control" id="broadcast-message" placeholder="Message" required></div>
-          <div class="col-md-2"><button type="submit" class="btn btn-plum w-100">Send</button></div>
-        </form>
-        <p class="d-none mt-2" id="broadcast-status"></p>
-      </div>
-      <div class="admin-panel mb-4">
         <h2>Create promo code</h2>
         <form id="add-promo-form" class="row g-2">
           <div class="col-md-3"><input class="form-control" id="promo-code-input" placeholder="CODE" style="text-transform:uppercase;" required></div>
@@ -250,6 +242,42 @@
               <tr><th>Code</th><th>Type</th><th>Value</th><th>Status</th><th></th></tr>
             </thead>
             <tbody id="promo-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-activity" class="d-none">
+      <div class="admin-page-head"><h1>Activity</h1></div>
+
+      <div class="admin-panel mb-4">
+        <h2>Email newsletter subscribers</h2>
+        <p style="color:#7A7266; font-size:0.85rem; margin-top:-0.5rem;">Sends to every subscribed email. Attaching an image makes the email more eye-catching.</p>
+        <form id="broadcast-form" class="row g-2">
+          <div class="col-md-3"><input class="form-control" id="broadcast-subject" placeholder="Subject, e.g. Weekend Sale: 20% off Coffee" required></div>
+          <div class="col-md-4"><input class="form-control" id="broadcast-message" placeholder="Message" required></div>
+          <div class="col-md-3"><input type="file" accept="image/*" class="form-control" id="broadcast-image"></div>
+          <div class="col-md-2"><button type="submit" class="btn btn-plum w-100">Send</button></div>
+        </form>
+        <p class="d-none mt-2" id="broadcast-status"></p>
+      </div>
+
+      <div class="admin-panel mb-4">
+        <h2>Newsletter subscribers <span id="subscriber-count" style="color:#7A7266; font-weight:400; font-size:0.85rem;"></span></h2>
+        <div class="table-responsive">
+          <table class="table align-middle admin-table">
+            <thead><tr><th>Email</th><th>Subscribed</th></tr></thead>
+            <tbody id="subscribers-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="admin-panel">
+        <h2>Recent cart activity</h2>
+        <div class="table-responsive">
+          <table class="table align-middle admin-table">
+            <thead><tr><th>Product</th><th>Qty</th><th>Customer</th><th>When</th></tr></thead>
+            <tbody id="cart-events-table-body"></tbody>
           </table>
         </div>
       </div>

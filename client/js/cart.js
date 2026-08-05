@@ -31,6 +31,13 @@ function addToCart(product, qty = 1) {
   saveCart(cart);
   openCartDrawer();
   if (typeof showCartToast === 'function') showCartToast(product);
+  if (product.slug) {
+    fetch(`/api/products/${product.slug}/cart-add`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ qty }),
+    }).catch(() => {});
+  }
 }
 
 function updateCartQty(slug, qty) {

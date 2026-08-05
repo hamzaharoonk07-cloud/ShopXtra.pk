@@ -162,21 +162,32 @@ function orderStatusEmail(order, status, cancelReason) {
   `);
 }
 
-function newsletterWelcomeEmail() {
+function newsletterWelcomeEmail(products = []) {
+  const images = products.filter((p) => p.images && p.images[0]).slice(0, 4).map((p) => p.images[0]);
+  const collage = images.length ? `
+    <table style="width:100%; border-collapse:collapse; margin: 20px 0;">
+      <tr>
+        ${images.map((img) => `
+          <td style="width:${Math.floor(100 / images.length)}%; padding:4px; vertical-align:top;">
+            <img src="${img}" alt="" style="width:100%; height:110px; object-fit:cover; border-radius:10px; display:block; border:1px solid #EFEADE;">
+          </td>
+        `).join('')}
+      </tr>
+    </table>
+  ` : '';
   return layout(`
-    <h1 style="color:#1C231D; font-size: 22px; margin-bottom: 4px; font-family: 'Montserrat', Arial, sans-serif; font-weight: 700; letter-spacing: -0.01em;">You're on the list.</h1>
-    <p style="color:#5A5348; margin-top: 0;">Thanks for joining the ShopXtra newsletter. You'll be the first to hear about new drops, ritual bundle discounts, and upcoming sales.</p>
-    <p style="color:#5A5348;">In the meantime, here's 10% off any Ritual Bundle with the code:</p>
-    <div style="background-color:#EAF3E3; border:1px dashed #B8D9A3; border-radius: 12px; padding: 14px 16px; text-align:center; margin: 16px 0;">
-      <span style="color:#1C231D; font-size: 16px; font-weight: bold; letter-spacing: 1px;">RITUAL10</span>
-    </div>
-    <p style="color:#7A7266; font-size: 13px;">No spam, ever. Just the occasional email when there's something worth telling you about.</p>
+    <h1 style="color:#1C231D; font-size: 22px; margin-bottom: 4px; font-family: 'Montserrat', Arial, sans-serif; font-weight: 700; letter-spacing: -0.01em;">Welcome to the family.</h1>
+    <p style="color:#5A5348; margin-top: 0;">We're genuinely glad you're here. From your morning electrolytes to your evening skincare, ShopXtra is built around the small rituals that make your day feel a little better.</p>
+    ${collage}
+    <p style="color:#5A5348;">You'll be the first to hear about new drops, bundle offers, and upcoming sales, straight from us, whenever there's something worth telling you about.</p>
+    <p style="color:#7A7266; font-size: 13px;">No spam, ever. Just the occasional email that's actually worth opening.</p>
   `);
 }
 
-function saleAnnouncementEmail({ subject, message }) {
+function saleAnnouncementEmail({ subject, message, imageUrl }) {
   return layout(`
     <h1 style="color:#1C231D; font-size: 22px; margin-bottom: 4px; font-family: 'Montserrat', Arial, sans-serif; font-weight: 700; letter-spacing: -0.01em;">${subject}</h1>
+    ${imageUrl ? `<img src="${imageUrl}" alt="" style="width:100%; height:auto; border-radius:12px; margin: 12px 0; display:block; border:1px solid #EFEADE;">` : ''}
     <p style="color:#5A5348; white-space: pre-line;">${message}</p>
     <div style="text-align:center; margin-top: 24px;">
       <a href="${SITE_URL}/pages/sale.html" style="display:inline-block; background-color:#1C231D; color:#F5F0E6; text-decoration:none; border-radius:999px; padding: 12px 28px; font-family: 'Montserrat', Arial, sans-serif; font-size: 14px;">Shop the sale</a>
