@@ -1,6 +1,6 @@
 function bundleCardHtml(bundle) {
   const itemsHtml = bundle.items.map((p) => `
-    <li><span class="bundle-item-dot" aria-hidden="true"></span>${p.name}</li>
+    <li><span class="bundle-item-dot" aria-hidden="true"></span><a href="/pages/product.html?slug=${encodeURIComponent(p.slug)}" class="bundle-item-link">${p.name}</a></li>
   `).join('');
 
   const photos = bundle.items.filter((p) => p.images && p.images[0]).slice(0, 2);

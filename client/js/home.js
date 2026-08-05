@@ -90,8 +90,10 @@ async function showNewsletterModalIfNeeded(bannerShown) {
   try {
     const products = await apiGet('/products');
     const withImages = products.filter((p) => p.images && p.images[0]);
-    const picks = withImages.filter((p) => p.is_bestseller).slice(0, 4);
-    images = (picks.length ? picks : withImages.slice(0, 4)).map((p) => p.images[0]);
+    const bestsellers = withImages.filter((p) => p.is_bestseller);
+    const rest = withImages.filter((p) => !p.is_bestseller);
+    const picks = [...bestsellers, ...rest].slice(0, 4);
+    images = picks.map((p) => p.images[0]);
   } catch {
     return;
   }
