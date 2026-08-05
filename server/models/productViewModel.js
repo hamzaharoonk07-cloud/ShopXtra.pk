@@ -34,4 +34,8 @@ async function mostViewed(limit = 5) {
   return rows;
 }
 
-module.exports = { record, findByUserId, mostViewed };
+async function clearAll() {
+  await pool.query('DELETE FROM product_views');
+}
+
+module.exports = { record, findByUserId, mostViewed, clearAll };

@@ -127,6 +127,19 @@ async function runMigrations() {
       ADD COLUMN IF NOT EXISTS password_reset_expires TIMESTAMPTZ;
 
     CREATE INDEX IF NOT EXISTS idx_users_password_reset_token ON users(password_reset_token);
+
+    ALTER TABLE bundles
+      ADD COLUMN IF NOT EXISTS stock INTEGER NOT NULL DEFAULT 0,
+      ADD COLUMN IF NOT EXISTS video_url TEXT,
+      ADD COLUMN IF NOT EXISTS images TEXT[] DEFAULT '{}';
+
+    -- Bundles moved from a single image_url to a products-style images[]
+    -- array (multiple photos + a video, same as regular products) - carry
+    -- any existing single image over so it isn't lost.
+    UPDATE bundles SET images = ARRAY[image_url]
+      WHERE image_url IS NOT NULL AND (images IS NULL OR array_length(images, 1) IS NULL);
+
+    ALTER TABLE reviews ADD COLUMN IF NOT EXISTS image_url TEXT;
   `);
 }
 

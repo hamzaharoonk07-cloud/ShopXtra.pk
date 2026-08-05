@@ -2,7 +2,7 @@ const pool = require('../config/db');
 
 async function findByProductSlug(slug) {
   const { rows } = await pool.query(
-    `SELECT r.id, r.rating, r.comment, r.created_at, r.verified_purchase, u.name AS user_name
+    `SELECT r.id, r.rating, r.comment, r.image_url, r.created_at, r.verified_purchase, u.name AS user_name
      FROM reviews r
      JOIN products p ON p.id = r.product_id
      JOIN users u ON u.id = r.user_id
@@ -19,7 +19,7 @@ async function findByProductSlug(slug) {
   return { reviews: rows, average: statsRows[0].average, count: statsRows[0].count };
 }
 
-async function create({ slug, userId, rating, comment }) {
+async function create({ slug, userId, rating, comment, imageUrl }) {
   const { rows: productRows } = await pool.query('SELECT id FROM products WHERE slug = $1', [slug]);
   const product = productRows[0];
   if (!product) return null;
@@ -36,10 +36,10 @@ async function create({ slug, userId, rating, comment }) {
   const verifiedPurchase = purchaseRows.length > 0;
 
   const { rows } = await pool.query(
-    `INSERT INTO reviews (product_id, user_id, rating, comment, verified_purchase)
-     VALUES ($1, $2, $3, $4, $5)
+    `INSERT INTO reviews (product_id, user_id, rating, comment, verified_purchase, image_url)
+     VALUES ($1, $2, $3, $4, $5, $6)
      RETURNING *`,
-    [product.id, userId, rating, comment || null, verifiedPurchase]
+    [product.id, userId, rating, comment || null, verifiedPurchase, imageUrl || null]
   );
   return rows[0];
 }

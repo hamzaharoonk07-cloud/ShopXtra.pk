@@ -163,6 +163,11 @@ async function updateStatus(id, status) {
   return rows[0] || null;
 }
 
+async function remove(id) {
+  const { rowCount } = await pool.query('DELETE FROM orders WHERE id = $1', [id]);
+  return rowCount > 0;
+}
+
 async function getOverview() {
   const { rows: totals } = await pool.query(
     `SELECT COUNT(*)::int AS order_count, COALESCE(SUM(total), 0) AS revenue
@@ -196,6 +201,7 @@ module.exports = {
   findByUserId,
   findAll,
   updateStatus,
+  remove,
   getOverview,
   VALID_STATUSES,
 };

@@ -427,6 +427,7 @@ async function loadReviews(slug) {
       <div class="review-card-v2" data-reveal="item">
         <span class="review-stars">${starsHtml(r.rating)}</span>
         ${r.comment ? `<p class="review-quote">"${r.comment}"</p>` : ''}
+        ${r.image_url ? `<img src="${thumbSrc(r.image_url)}" ${thumbFallbackAttr(r.image_url)} alt="Photo from ${r.user_name}'s review" class="review-photo" loading="lazy">` : ''}
         <div class="review-author-row">
           <span class="review-avatar">${(r.user_name || '?').charAt(0).toUpperCase()}</span>
           <div class="d-flex flex-column">
@@ -449,6 +450,9 @@ async function loadReviews(slug) {
           </div>
           <input type="hidden" id="review-rating" value="0">
           <textarea class="form-control mb-2" id="review-comment" rows="2" placeholder="Share your thoughts (optional)"></textarea>
+          <label class="form-label mono d-block" style="font-size:0.75rem;" for="review-image">Add a photo (optional)</label>
+          <input type="file" class="form-control mb-2" id="review-image" accept="image/jpeg,image/png,image/webp,image/gif">
+          <div id="review-image-preview" class="mb-2"></div>
           <p class="text-danger d-none mb-2" id="review-error"></p>
           <button type="submit" class="btn btn-outline-plum btn-sm">Submit review</button>
         </form>
@@ -466,18 +470,25 @@ async function loadReviews(slug) {
         });
       });
 
+      document.getElementById('review-image').addEventListener('change', (e) => {
+        const preview = document.getElementById('review-image-preview');
+        const file = e.target.files[0];
+        preview.innerHTML = file ? `<img src="${URL.createObjectURL(file)}" alt="" style="max-width:120px; border-radius:8px; display:block;">` : '';
+      });
+
       document.getElementById('review-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         const errorEl = document.getElementById('review-error');
         errorEl.classList.add('d-none');
         try {
+          const formData = new FormData();
+          formData.append('rating', Number(ratingInput.value));
+          formData.append('comment', document.getElementById('review-comment').value);
+          const imageFile = document.getElementById('review-image').files[0];
+          if (imageFile) formData.append('image', imageFile);
           const res = await fetch(`/api/products/${encodeURIComponent(slug)}/reviews`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              rating: Number(ratingInput.value),
-              comment: document.getElementById('review-comment').value,
-            }),
+            body: formData,
           });
           const body = await res.json();
           if (!res.ok) throw new Error(body.error);

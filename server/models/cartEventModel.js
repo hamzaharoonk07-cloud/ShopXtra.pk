@@ -21,4 +21,8 @@ async function findRecent(limit = 100) {
   return rows;
 }
 
-module.exports = { record, findRecent };
+async function clearAll() {
+  await pool.query('DELETE FROM cart_events');
+}
+
+module.exports = { record, findRecent, clearAll };

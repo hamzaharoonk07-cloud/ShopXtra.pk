@@ -186,6 +186,14 @@ function renderFooter() {
             <span>&#9733; 4.8 rated</span>
             <span>3,000+ orders</span>
           </div>
+          <div class="footer-social-row">
+            <a href="https://www.instagram.com/shopxtraofficial/" target="_blank" rel="noopener" aria-label="ShopXtra on Instagram" class="footer-social-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="2.5" width="19" height="19" rx="5"></rect><circle cx="12" cy="12" r="4.3"></circle><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"></circle></svg>
+            </a>
+            <a href="https://share.google/Ch2tTnA3qJM4Tob15" target="_blank" rel="noopener" aria-label="Find ShopXtra on Google" class="footer-social-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M21.35 11.1h-9.17v2.92h5.26c-.23 1.44-1.62 4.22-5.26 4.22-3.17 0-5.75-2.62-5.75-5.85s2.58-5.85 5.75-5.85c1.8 0 3.01.77 3.7 1.43l2.52-2.43C16.96 3.9 14.83 3 12.18 3 6.94 3 2.7 7.24 2.7 12.4s4.24 9.4 9.48 9.4c5.47 0 9.1-3.85 9.1-9.26 0-.62-.07-1.09-.15-1.44z"></path></svg>
+            </a>
+          </div>
         </div>
         <div class="footer-col">
           <h4>Shop</h4>

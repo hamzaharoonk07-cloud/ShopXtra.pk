@@ -116,6 +116,16 @@ async function updateStatus(req, res, next) {
   }
 }
 
+async function remove(req, res, next) {
+  try {
+    const deleted = await orderModel.remove(req.params.id);
+    if (!deleted) return res.status(404).json({ error: 'Order not found' });
+    res.status(204).end();
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function track(req, res, next) {
   try {
     const { orderId, phone } = req.body;
@@ -141,4 +151,4 @@ async function overview(req, res, next) {
   }
 }
 
-module.exports = { create, getById, listMine, listAll, updateStatus, overview, track };
+module.exports = { create, getById, listMine, listAll, updateStatus, remove, overview, track };

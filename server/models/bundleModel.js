@@ -3,25 +3,23 @@ const pool = require('../config/db');
 // Cart/checkout/stock/order-emails are all built around the products table,
 // so rather than rework that whole pipeline, every bundle gets a mirrored
 // row there that behaves exactly like a real product to it. "bundle-" keeps
-// its slug from ever colliding with an actual product's slug. Stock is set
-// high since bundles aren't tracked per-unit the way real inventory is.
-const MIRROR_STOCK = 999999;
-
+// its slug from ever colliding with an actual product's slug.
 function mirrorSlug(bundleSlug) {
   return `bundle-${bundleSlug}`;
 }
 
 async function syncMirrorProduct(bundle) {
   await pool.query(
-    `INSERT INTO products (name, slug, category, description, price, stock, images, is_bundle)
-     VALUES ($1, $2, NULL, $3, $4, $5, $6, true)
+    `INSERT INTO products (name, slug, category, description, price, stock, images, video_url, is_bundle)
+     VALUES ($1, $2, NULL, $3, $4, $5, $6, $7, true)
      ON CONFLICT (slug) DO UPDATE SET
        name = EXCLUDED.name,
        description = EXCLUDED.description,
        price = EXCLUDED.price,
+       stock = EXCLUDED.stock,
        images = EXCLUDED.images,
-       stock = $5`,
-    [bundle.name, mirrorSlug(bundle.slug), bundle.description || null, bundle.price, MIRROR_STOCK, bundle.image_url ? [bundle.image_url] : []]
+       video_url = EXCLUDED.video_url`,
+    [bundle.name, mirrorSlug(bundle.slug), bundle.description || null, bundle.price, bundle.stock || 0, bundle.images || [], bundle.video_url || null]
   );
 }
 
@@ -40,19 +38,19 @@ async function findById(id) {
   return rows[0] || null;
 }
 
-async function create({ name, slug, description, price, imageUrl }) {
+async function create({ name, slug, description, price, stock, images, videoUrl }) {
   const { rows } = await pool.query(
-    `INSERT INTO bundles (name, slug, description, price, image_url)
-     VALUES ($1, $2, $3, $4, $5)
+    `INSERT INTO bundles (name, slug, description, price, stock, images, video_url)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)
      RETURNING *`,
-    [name, slug, description || null, price, imageUrl || null]
+    [name, slug, description || null, price, stock || 0, images || [], videoUrl || null]
   );
   const bundle = rows[0];
   await syncMirrorProduct(bundle);
   return bundle;
 }
 
-async function update(id, { name, slug, description, price, imageUrl }) {
+async function update(id, { name, slug, description, price, stock, images, videoUrl }) {
   const existing = await findById(id);
   if (!existing) return null;
 
@@ -62,10 +60,12 @@ async function update(id, { name, slug, description, price, imageUrl }) {
        slug = COALESCE($3, slug),
        description = COALESCE($4, description),
        price = COALESCE($5, price),
-       image_url = COALESCE($6, image_url)
+       stock = COALESCE($6, stock),
+       images = COALESCE($7, images),
+       video_url = COALESCE($8, video_url)
      WHERE id = $1
      RETURNING *`,
-    [id, name, slug, description, price, imageUrl]
+    [id, name, slug, description, price, stock, images, videoUrl]
   );
   const bundle = rows[0];
   if (!bundle) return null;

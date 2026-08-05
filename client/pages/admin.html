@@ -12,7 +12,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="/assets/favicon.png">
 <link href="/css/vendor/bootstrap.min.css" rel="stylesheet">
-<link href="/css/style.css?v=20260806e" rel="stylesheet">
+<link href="/css/style.css?v=20260806g" rel="stylesheet">
 
 <div id="admin-loading" class="text-center py-5">Loading…</div>
 <div id="admin-denied" class="d-none filter-panel text-center py-5" style="max-width: 480px; margin: 3rem auto;">
@@ -49,6 +49,7 @@
       <div class="admin-page-head">
         <h1>Overview</h1>
         <span class="admin-page-sub" id="overview-updated"></span>
+        <button type="button" class="admin-export-btn" id="reset-insights-btn">Reset insights</button>
       </div>
       <div class="admin-stat-grid" id="overview-stats"></div>
 
@@ -150,12 +151,18 @@
           <input type="hidden" id="bundle-id">
           <div class="col-md-5"><input class="form-control" id="bundle-name" placeholder="Name, e.g. Everyday Essentials" required></div>
           <div class="col-md-2"><input type="number" class="form-control" id="bundle-price" placeholder="Price (Rs)" min="0" required></div>
-          <div class="col-md-5"><button type="submit" class="btn btn-plum w-100" id="bundle-submit-btn">Create</button></div>
+          <div class="col-md-2"><input type="number" class="form-control" id="bundle-stock" placeholder="Stock" min="0" value="0"></div>
+          <div class="col-md-3"><button type="submit" class="btn btn-plum w-100" id="bundle-submit-btn">Create</button></div>
           <div class="col-12"><input class="form-control" id="bundle-description" placeholder="Description (optional)"></div>
           <div class="col-md-6">
-            <label class="form-label mono d-block" style="font-size:0.75rem;" for="bundle-image">Bundle image</label>
-            <input type="file" class="form-control" id="bundle-image" accept="image/jpeg,image/png,image/webp,image/gif">
+            <label class="form-label mono d-block" style="font-size:0.75rem;" for="bundle-image">Bundle images (up to 6)</label>
+            <input type="file" class="form-control" id="bundle-image" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
             <div class="admin-image-preview-grid" id="bundle-image-preview"></div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label mono d-block" style="font-size:0.75rem;" for="bundle-video">Bundle video (optional)</label>
+            <input type="file" class="form-control" id="bundle-video" accept="video/mp4,video/webm,video/quicktime">
+            <div class="admin-video-preview" id="bundle-video-preview"></div>
           </div>
         </form>
         <p class="text-danger d-none mt-2" id="add-bundle-error"></p>
@@ -165,7 +172,7 @@
         <div class="table-responsive">
           <table class="table align-middle admin-table">
             <thead>
-              <tr><th>Image</th><th>Name</th><th>Price</th><th></th></tr>
+              <tr><th>Image</th><th>Name</th><th>Price</th><th>Stock</th><th></th></tr>
             </thead>
             <tbody id="bundles-table-body"></tbody>
           </table>
@@ -329,6 +336,9 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="order-detail-body">Loading…</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm text-danger" id="order-detail-delete-btn">Delete order</button>
+      </div>
     </div>
   </div>
 </div>

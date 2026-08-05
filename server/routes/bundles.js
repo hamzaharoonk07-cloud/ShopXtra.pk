@@ -6,6 +6,11 @@ const { saveImage } = require('../utils/imageStorage');
 
 const router = express.Router();
 
+const bundleMedia = upload.fields([
+  { name: 'images', maxCount: 6 },
+  { name: 'video', maxCount: 1 },
+]);
+
 function slugify(name) {
   return name
     .toLowerCase()
@@ -32,19 +37,24 @@ router.get('/:slug', async (req, res, next) => {
   }
 });
 
-router.post('/', requireAuth, requireRole('admin'), upload.single('image'), async (req, res, next) => {
+router.post('/', requireAuth, requireRole('admin'), bundleMedia, async (req, res, next) => {
   try {
-    const { name, description, price } = req.body;
+    const { name, description, price, stock } = req.body;
     if (!name || price == null || price === '' || Number.isNaN(Number(price))) {
       return res.status(400).json({ error: 'A name and price are required' });
     }
-    const imageUrl = req.file ? await saveImage(req.file) : null;
+    const imageFiles = (req.files && req.files.images) || [];
+    const videoFile = req.files && req.files.video && req.files.video[0];
+    const images = imageFiles.length ? await Promise.all(imageFiles.map(saveImage)) : [];
+    const videoUrl = videoFile ? await saveImage(videoFile) : null;
     const bundle = await bundleModel.create({
       name,
       slug: slugify(name),
       description,
       price: Number(price),
-      imageUrl,
+      stock: stock ? Number(stock) : 0,
+      images,
+      videoUrl,
     });
     res.status(201).json(bundle);
   } catch (err) {
@@ -53,16 +63,27 @@ router.post('/', requireAuth, requireRole('admin'), upload.single('image'), asyn
   }
 });
 
-router.put('/:id', requireAuth, requireRole('admin'), upload.single('image'), async (req, res, next) => {
+router.put('/:id', requireAuth, requireRole('admin'), bundleMedia, async (req, res, next) => {
   try {
-    const { name, description, price } = req.body;
-    const imageUrl = req.file ? await saveImage(req.file) : undefined;
+    const data = { ...req.body };
+    const existingImages = data.existingImages ? JSON.parse(data.existingImages) : undefined;
+    delete data.existingImages;
+    const imageFiles = (req.files && req.files.images) || [];
+    const videoFile = req.files && req.files.video && req.files.video[0];
+    const uploaded = imageFiles.length ? await Promise.all(imageFiles.map(saveImage)) : [];
+    const images = existingImages || uploaded.length ? [...(existingImages || []), ...uploaded] : undefined;
+    let videoUrl;
+    if (videoFile) videoUrl = await saveImage(videoFile);
+    else if (data.removeVideo === 'true') videoUrl = null;
+
     const bundle = await bundleModel.update(req.params.id, {
-      name,
-      slug: name ? slugify(name) : undefined,
-      description,
-      price: price != null && price !== '' ? Number(price) : undefined,
-      imageUrl,
+      name: data.name,
+      slug: data.name ? slugify(data.name) : undefined,
+      description: data.description,
+      price: data.price != null && data.price !== '' ? Number(data.price) : undefined,
+      stock: data.stock != null && data.stock !== '' ? Number(data.stock) : undefined,
+      images,
+      videoUrl,
     });
     if (!bundle) return res.status(404).json({ error: 'Bundle not found' });
     res.json(bundle);

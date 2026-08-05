@@ -93,6 +93,7 @@ CREATE TABLE IF NOT EXISTS reviews (
   user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
   comment TEXT,
+  image_url TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE (product_id, user_id)
 );
@@ -120,6 +121,9 @@ CREATE TABLE IF NOT EXISTS bundles (
   discount_percent NUMERIC(5, 2) NOT NULL DEFAULT 10,
   price NUMERIC(10, 2),
   image_url TEXT,
+  images TEXT[] DEFAULT '{}',
+  video_url TEXT,
+  stock INTEGER NOT NULL DEFAULT 0,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 

@@ -1,5 +1,6 @@
 const reviewModel = require('../models/reviewModel');
 const { seedTestimonials } = require('../utils/seedTestimonials');
+const { saveImage } = require('../utils/imageStorage');
 
 async function list(req, res, next) {
   try {
@@ -17,11 +18,13 @@ async function create(req, res, next) {
     if (!Number.isInteger(ratingNum) || ratingNum < 1 || ratingNum > 5) {
       return res.status(400).json({ error: 'Rating must be an integer between 1 and 5' });
     }
+    const imageUrl = req.file ? await saveImage(req.file) : null;
     const review = await reviewModel.create({
       slug: req.params.slug,
       userId: req.user.id,
       rating: ratingNum,
       comment,
+      imageUrl,
     });
     if (!review) return res.status(404).json({ error: 'Product not found' });
     res.status(201).json(review);

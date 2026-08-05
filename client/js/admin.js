@@ -736,6 +736,20 @@ async function showOrderDetail(id) {
   body.innerHTML = 'Loading…';
   modal.show();
 
+  const deleteBtn = document.getElementById('order-detail-delete-btn');
+  deleteBtn.onclick = async () => {
+    if (!confirm(`Permanently delete order #${id}? This cannot be undone.`)) return;
+    const res = await fetch(`/api/orders/${id}`, { method: 'DELETE' });
+    if (res.ok) {
+      allOrders = allOrders.filter((o) => String(o.id) !== String(id));
+      renderOrdersTable();
+      modal.hide();
+    } else {
+      const errBody = await safeJson(res);
+      alert(errBody.error || 'Could not delete order.');
+    }
+  };
+
   try {
     const order = await apiGet(`/orders/${id}`);
     document.getElementById('orderDetailModalLabel').textContent = `Order #${order.id}`;
@@ -1010,6 +1024,25 @@ async function loadSubscribers() {
   }
 }
 
+document.getElementById('reset-insights-btn').addEventListener('click', async (e) => {
+  if (!confirm('Reset insights? This permanently clears product-view and cart-activity history (Most viewed, Most wishlisted stays, Activity tab) so tracking starts fresh. Orders and revenue are not affected.')) return;
+  const btn = e.currentTarget;
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Resetting…';
+  try {
+    const res = await fetch('/api/products/reset-insights', { method: 'POST' });
+    if (!res.ok) throw new Error((await safeJson(res)).error || 'Request failed');
+    await loadOverview();
+    loadCartEvents();
+  } catch (err) {
+    alert(err.message || 'Could not reset insights.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+});
+
 async function loadCartEvents() {
   const tbody = document.getElementById('cart-events-table-body');
   try {
@@ -1180,39 +1213,49 @@ document.getElementById('user-search').addEventListener('input', renderUsersTabl
 
 let allBundles = [];
 let editingBundleId = null;
+let editingBundleImages = [];
+let editingBundleVideoUrl = null;
+let editingBundleVideoRemoved = false;
+
+initImagePreview('bundle-image', 'bundle-image-preview');
+initVideoPreview('bundle-video', 'bundle-video-preview');
 
 function resetBundleForm() {
   editingBundleId = null;
+  editingBundleImages = [];
+  editingBundleVideoUrl = null;
+  editingBundleVideoRemoved = false;
   document.getElementById('bundle-form-title').textContent = 'Create bundle';
   document.getElementById('bundle-submit-btn').textContent = 'Create';
   document.getElementById('bundle-cancel-edit-btn').classList.add('d-none');
   document.getElementById('bundle-id').value = '';
   document.getElementById('bundle-name').value = '';
   document.getElementById('bundle-price').value = '';
+  document.getElementById('bundle-stock').value = '0';
   document.getElementById('bundle-description').value = '';
   document.getElementById('bundle-image').value = '';
-  document.getElementById('bundle-image-preview').innerHTML = '';
+  clearImagePreview('bundle-image-preview', 'bundle-image');
+  document.getElementById('bundle-video').value = '';
+  clearVideoPreview('bundle-video-preview', 'bundle-video');
 }
-
-document.getElementById('bundle-image').addEventListener('change', (e) => {
-  const preview = document.getElementById('bundle-image-preview');
-  const file = e.target.files[0];
-  preview.innerHTML = file ? `<img src="${URL.createObjectURL(file)}" alt="" style="max-width:140px; border-radius:8px; display:block; margin-top:0.5rem;">` : '';
-});
 
 function renderBundlesTable() {
   const tbody = document.getElementById('bundles-table-body');
-  tbody.innerHTML = allBundles.length ? allBundles.map((b) => `
+  tbody.innerHTML = allBundles.length ? allBundles.map((b) => {
+    const cover = (b.images && b.images[0]) || b.image_url;
+    return `
     <tr data-id="${b.id}">
-      <td>${b.image_url ? `<img src="${thumbSrc(b.image_url)}" ${thumbFallbackAttr(b.image_url)} alt="" style="width:48px; height:48px; object-fit:cover; border-radius:6px;">` : '&mdash;'}</td>
+      <td>${cover ? `<img src="${thumbSrc(cover)}" ${thumbFallbackAttr(cover)} alt="" style="width:48px; height:48px; object-fit:cover; object-position:top; border-radius:6px;">` : '&mdash;'}</td>
       <td>${b.name}</td>
       <td>${b.price != null ? `Rs ${b.price}` : '<span style="color:#c96b5a;">Not set</span>'}</td>
+      <td>${b.stock}</td>
       <td class="text-end">
         <button type="button" class="btn btn-outline-plum btn-sm edit-bundle-btn">Edit</button>
         <button type="button" class="btn btn-sm text-danger delete-bundle-btn">Delete</button>
       </td>
     </tr>
-  `).join('') : '<tr><td colspan="4" style="color:#a89490;">No bundles yet.</td></tr>';
+  `;
+  }).join('') : '<tr><td colspan="5" style="color:#a89490;">No bundles yet.</td></tr>';
 
   tbody.querySelectorAll('.edit-bundle-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -1226,11 +1269,15 @@ function renderBundlesTable() {
       document.getElementById('bundle-id').value = id;
       document.getElementById('bundle-name').value = bundle.name;
       document.getElementById('bundle-price').value = bundle.price;
+      document.getElementById('bundle-stock').value = bundle.stock || 0;
       document.getElementById('bundle-description').value = bundle.description || '';
       document.getElementById('bundle-image').value = '';
-      document.getElementById('bundle-image-preview').innerHTML = bundle.image_url
-        ? `<img src="${thumbSrc(bundle.image_url)}" ${thumbFallbackAttr(bundle.image_url)} alt="" style="max-width:140px; border-radius:8px; display:block; margin-top:0.5rem;">`
-        : '';
+      clearImagePreview('bundle-image-preview', 'bundle-image');
+      editingBundleImages = [...(bundle.images || (bundle.image_url ? [bundle.image_url] : []))];
+      editingBundleVideoUrl = bundle.video_url || null;
+      editingBundleVideoRemoved = false;
+      document.getElementById('bundle-video').value = '';
+      clearVideoPreview('bundle-video-preview', 'bundle-video');
       document.getElementById('bundle-name').scrollIntoView({ block: 'center', behavior: 'smooth' });
     });
   });
@@ -1257,7 +1304,7 @@ async function loadBundles() {
     allBundles = await apiGet('/bundles');
     renderBundlesTable();
   } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="4" class="text-danger">Could not load bundles: ${err.message}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" class="text-danger">Could not load bundles: ${err.message}</td></tr>`;
   }
 }
 
@@ -1271,9 +1318,13 @@ document.getElementById('add-bundle-form').addEventListener('submit', async (e) 
   const formData = new FormData();
   formData.append('name', document.getElementById('bundle-name').value.trim());
   formData.append('price', document.getElementById('bundle-price').value);
+  formData.append('stock', document.getElementById('bundle-stock').value || 0);
   formData.append('description', document.getElementById('bundle-description').value.trim());
-  const imageFile = document.getElementById('bundle-image').files[0];
-  if (imageFile) formData.append('image', imageFile);
+  formData.append('existingImages', JSON.stringify(editingBundleImages));
+  (imagePreviewFiles['bundle-image'] || []).forEach((file) => formData.append('images', file));
+  const videoFile = document.getElementById('bundle-video').files[0];
+  if (videoFile) formData.append('video', videoFile);
+  else if (editingBundleVideoRemoved) formData.append('removeVideo', 'true');
 
   try {
     const url = editingBundleId ? `/api/bundles/${editingBundleId}` : '/api/bundles';

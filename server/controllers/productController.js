@@ -80,6 +80,16 @@ async function listCartEvents(req, res, next) {
   }
 }
 
+async function resetInsights(req, res, next) {
+  try {
+    await productViewModel.clearAll();
+    await cartEventModel.clearAll();
+    res.status(204).end();
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function create(req, res, next) {
   try {
     const { name, category, description, price, compare_at_price, stock, is_bestseller } = req.body;
@@ -213,4 +223,4 @@ async function reprocessImages(req, res, next) {
   }
 }
 
-module.exports = { list, getBySlug, recordView, recordCartAdd, listCartEvents, create, update, remove, createVariant, updateVariant, removeVariant, reprocessImages };
+module.exports = { list, getBySlug, recordView, recordCartAdd, listCartEvents, resetInsights, create, update, remove, createVariant, updateVariant, removeVariant, reprocessImages };
