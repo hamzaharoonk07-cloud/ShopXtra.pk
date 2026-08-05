@@ -2104,13 +2104,25 @@ select:focus-visible {
   }
   /* flex-wrap left the 4th stat ("Imported Products", much longer than the
      other three short numbers) to wrap onto its own line trailing a
-     now-orphaned divider, which looked misaligned/half-hidden. A fixed 2x2
-     grid keeps every stat in its own equal-width cell regardless of how
-     long its text is. */
+     now-orphaned divider, and a 2-column grid still crowded neighbouring
+     rows in the same column together with barely any gap. A single stacked
+     column with a hairline between rows (instead of the vertical dividers,
+     which have nothing to sit between once there's only one per row) gives
+     every stat its own clear space regardless of text length. */
   .hero-trust-bar {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.25rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .hero-stat {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--hairline-strong);
+  }
+  .hero-stat:last-child {
+    border-bottom: none;
   }
   .hero-stat-divider {
     display: none;
