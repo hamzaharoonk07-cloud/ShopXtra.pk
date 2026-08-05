@@ -1,25 +1,21 @@
-function bundleCardHtml(bundle) {
-  const photosHtml = bundle.image_url
-    ? `<img src="${thumbSrc(bundle.image_url)}" ${thumbFallbackAttr(bundle.image_url)} alt="" loading="lazy" decoding="async">`
-    : `<span class="bundle-card-emoji" aria-hidden="true">&#10024;</span>`;
-
-  return `
-    <div class="col-md-4" id="${bundle.slug}" data-reveal="item">
-      <div class="bundle-card h-100" data-slug="${bundle.slug}" role="button" tabindex="0">
-        <div class="bundle-card-image">
-          ${photosHtml}
-        </div>
-        <div class="bundle-card-body">
-          <h3 class="bundle-card-name">${bundle.name}</h3>
-          ${bundle.description ? `<p class="bundle-card-desc">${bundle.description}</p>` : ''}
-          <div class="bundle-card-price-row">
-            <span class="bundle-card-price">${formatPrice(bundle.price)}</span>
-          </div>
-          <button type="button" class="btn btn-plum w-100 add-bundle-btn" data-slug="${bundle.slug}">Add kit to bag</button>
-        </div>
-      </div>
-    </div>
-  `;
+// Every bundle has a mirrored row in the products table (see
+// bundleModel.js) so it can ride the normal cart/checkout pipeline - reusing
+// productCardHtml() here means bundles look, link, and "Add to cart" exactly
+// like regular product cards, and the mirror row's own product.html page
+// becomes a real bundle detail page for free.
+function bundleAsProduct(bundle) {
+  return {
+    slug: `bundle-${bundle.slug}`,
+    name: bundle.name,
+    price: bundle.price,
+    compare_at_price: null,
+    stock: 1,
+    images: bundle.image_url ? [bundle.image_url] : [],
+    category: 'bundle',
+    is_bestseller: false,
+    review_count: 0,
+    avg_rating: null,
+  };
 }
 
 async function loadBundles() {
@@ -28,42 +24,12 @@ async function loadBundles() {
     // Bundles created before price replaced the discount/products model
     // have no price set - skip them rather than show a broken "Rs NaN" card.
     const bundles = (await apiGet('/bundles')).filter((b) => b.price != null);
-    grid.innerHTML = bundles.map(bundleCardHtml).join('');
-    document.dispatchEvent(new CustomEvent('shopxtra:products-rendered'));
-
-    function addBundleToCart(slug) {
-      const bundle = bundles.find((b) => b.slug === slug);
-      if (!bundle) return;
-      // Bundles ride the normal cart/checkout pipeline via a mirrored
-      // products row the server keeps in sync (see bundleModel.js) -
-      // "bundle-" + slug is that row's slug, matching what
-      // orderModel.createOrder looks up at checkout.
-      addToCart({
-        slug: `bundle-${bundle.slug}`,
-        name: bundle.name,
-        price: Number(bundle.price),
-        category: 'bundle',
-        images: bundle.image_url ? [bundle.image_url] : [],
-      }, 1);
-      window.location.href = '/pages/checkout.html';
+    if (!bundles.length) {
+      grid.innerHTML = '<p class="text-center py-5">No kits available right now.</p>';
+      return;
     }
-
-    grid.querySelectorAll('.bundle-card').forEach((card) => {
-      card.addEventListener('click', (e) => {
-        if (e.target.closest('.add-bundle-btn')) return;
-        addBundleToCart(card.dataset.slug);
-      });
-      card.addEventListener('keydown', (e) => {
-        if (e.key !== 'Enter' && e.key !== ' ') return;
-        if (e.target.closest('.add-bundle-btn')) return;
-        e.preventDefault();
-        addBundleToCart(card.dataset.slug);
-      });
-    });
-
-    grid.querySelectorAll('.add-bundle-btn').forEach((btn) => {
-      btn.addEventListener('click', () => addBundleToCart(btn.dataset.slug));
-    });
+    grid.innerHTML = bundles.map((b) => productCardHtml(bundleAsProduct(b))).join('');
+    document.dispatchEvent(new CustomEvent('shopxtra:products-rendered'));
 
     const hash = window.location.hash.slice(1);
     if (hash) {

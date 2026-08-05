@@ -195,4 +195,15 @@ function saleAnnouncementEmail({ subject, message, imageUrl }) {
   `);
 }
 
-module.exports = { orderConfirmationEmail, orderStatusEmail, newsletterWelcomeEmail, saleAnnouncementEmail };
+function passwordResetEmail(resetUrl) {
+  return layout(`
+    <h1 style="color:#1C231D; font-size: 22px; margin-bottom: 4px; font-family: 'Montserrat', Arial, sans-serif; font-weight: 700; letter-spacing: -0.01em;">Reset your password</h1>
+    <p style="color:#5A5348; margin-top: 0;">We received a request to reset the password on your ShopXtra account. Click below to choose a new one - this link expires in 1 hour.</p>
+    <div style="text-align:center; margin: 24px 0;">
+      <a href="${resetUrl}" style="display:inline-block; background-color:#1C231D; color:#F5F0E6; text-decoration:none; border-radius:999px; padding: 12px 32px; font-family: 'Montserrat', Arial, sans-serif; font-size: 14px; font-weight: bold;">Reset password</a>
+    </div>
+    <p style="color:#7A7266; font-size: 13px;">If you didn't request this, you can safely ignore this email - your password won't change.</p>
+  `);
+}
+
+module.exports = { orderConfirmationEmail, orderStatusEmail, newsletterWelcomeEmail, saleAnnouncementEmail, passwordResetEmail };

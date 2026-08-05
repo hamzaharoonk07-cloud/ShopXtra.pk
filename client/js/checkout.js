@@ -9,16 +9,19 @@ function renderCheckoutSummary() {
     itemsEl.innerHTML = '<p style="color:#6b5a58;">Your cart is empty.</p>';
     submitBtn.disabled = true;
   } else {
-    itemsEl.innerHTML = cart.map((item) => `
-      <div class="checkout-summary-item">
+    itemsEl.innerHTML = cart.map((item) => {
+      const baseSlug = String(item.slug).split('::')[0];
+      return `
+      <a class="checkout-summary-item" href="/pages/product.html?slug=${encodeURIComponent(baseSlug)}" target="_blank" rel="noopener">
         <div class="checkout-summary-thumb">${productMediaHtml(item)}</div>
         <div class="checkout-summary-item-info">
           <span class="checkout-summary-item-name">${item.name}</span>
           <span class="checkout-summary-item-qty">Qty ${item.qty}</span>
         </div>
         <span class="checkout-summary-item-price">${formatPrice(item.price * item.qty)}</span>
-      </div>
-    `).join('');
+      </a>
+    `;
+    }).join('');
   }
 
   const notesStep = document.getElementById('cosmetics-notes-step');

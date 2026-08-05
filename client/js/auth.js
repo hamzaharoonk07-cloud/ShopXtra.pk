@@ -234,6 +234,44 @@ document.getElementById('signup-form')?.addEventListener('submit', async (e) => 
   }
 });
 
+document.getElementById('show-forgot-password-btn')?.addEventListener('click', () => {
+  document.getElementById('login-form').classList.add('d-none');
+  document.getElementById('signup-form').classList.add('d-none');
+  document.getElementById('auth-tabs').classList.add('d-none');
+  document.getElementById('forgot-password-form').classList.remove('d-none');
+});
+
+document.getElementById('back-to-login-btn')?.addEventListener('click', () => {
+  document.getElementById('forgot-password-form').classList.add('d-none');
+  document.getElementById('auth-tabs').classList.remove('d-none');
+  document.getElementById('login-form').classList.remove('d-none');
+});
+
+document.getElementById('forgot-password-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = document.getElementById('forgot-password-message');
+  const btn = e.target.querySelector('button[type="submit"]');
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/auth/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: document.getElementById('forgot-email').value }),
+    });
+    const body = await res.json();
+    if (!res.ok) throw new Error(body.error);
+    msg.textContent = body.message;
+    msg.style.color = 'var(--tea-pink)';
+    msg.classList.remove('d-none');
+  } catch (err) {
+    msg.textContent = err.message;
+    msg.style.color = '#b3413a';
+    msg.classList.remove('d-none');
+  } finally {
+    btn.disabled = false;
+  }
+});
+
 document.getElementById('logout-btn')?.addEventListener('click', async () => {
   await fetch('/api/auth/logout', { method: 'POST' });
   document.getElementById('account-logged-in').classList.add('d-none');

@@ -5,8 +5,12 @@ CREATE TABLE IF NOT EXISTS users (
   password_hash VARCHAR(255) NOT NULL,
   phone VARCHAR(20),
   role VARCHAR(20) NOT NULL DEFAULT 'customer',
+  password_reset_token VARCHAR(255),
+  password_reset_expires TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+CREATE INDEX IF NOT EXISTS idx_users_password_reset_token ON users(password_reset_token);
 
 CREATE TABLE IF NOT EXISTS addresses (
   id SERIAL PRIMARY KEY,

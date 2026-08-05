@@ -1,5 +1,10 @@
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const userModel = require('../models/userModel');
+const { sendMail } = require('../config/mailer');
+const { passwordResetEmail } = require('../emails/templates');
+
+const SITE_URL = process.env.SITE_URL || 'http://localhost:4000';
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -86,4 +91,43 @@ async function updateMe(req, res, next) {
   }
 }
 
-module.exports = { signup, login, logout, me, updateMe };
+async function forgotPassword(req, res, next) {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'email is required' });
+
+    // Always respond the same way whether or not the email exists, so this
+    // can't be used to enumerate registered accounts.
+    const user = await userModel.findByEmail(email);
+    if (user) {
+      const token = crypto.randomBytes(32).toString('hex');
+      const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+      const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+      await userModel.setResetToken(email, tokenHash, expiresAt);
+      const resetUrl = `${SITE_URL}/pages/reset-password.html?token=${token}`;
+      await sendMail({ to: email, subject: 'Reset your ShopXtra password', html: passwordResetEmail(resetUrl) });
+    }
+    res.json({ message: 'If an account exists for that email, a reset link is on its way.' });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function resetPassword(req, res, next) {
+  try {
+    const { token, password } = req.body;
+    if (!token || !password) return res.status(400).json({ error: 'token and password are required' });
+    if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters' });
+
+    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+    const user = await userModel.findByResetToken(tokenHash);
+    if (!user) return res.status(400).json({ error: 'This reset link is invalid or has expired' });
+
+    await userModel.resetPassword(user.id, password);
+    res.json({ message: 'Password updated. You can log in now.' });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { signup, login, logout, me, updateMe, forgotPassword, resetPassword };

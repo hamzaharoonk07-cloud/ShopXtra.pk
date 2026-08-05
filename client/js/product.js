@@ -63,13 +63,16 @@ async function loadProduct() {
       </div>
     ` : '';
 
+    const categoryUrl = product.is_bundle ? '/pages/bundles.html' : `/pages/shop.html?category=${product.category}`;
+    const categoryText = product.is_bundle ? 'Kits & Bundles' : categoryLabel(product.category);
+
     main.innerHTML = `
       <button type="button" class="pdp-back-btn" id="pdp-back-btn" aria-label="Go back">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
         Back
       </button>
       <nav class="shop-breadcrumb" aria-label="Breadcrumb">
-        <a href="/index.html">Home</a> / <a href="/pages/shop.html?category=${product.category}">${categoryLabel(product.category)}</a> / <span>${product.name}</span>
+        <a href="/index.html">Home</a> / <a href="${categoryUrl}">${categoryText}</a> / <span>${product.name}</span>
       </nav>
 
       <div class="pdp-grid">
@@ -80,7 +83,7 @@ async function loadProduct() {
           ${thumbRail}
         </div>
         <div class="pdp-info">
-          <span class="eyebrow">${categoryLabel(product.category)}${product.is_bestseller ? ' · Bestseller' : ''}</span>
+          <span class="eyebrow">${categoryText}${product.is_bestseller ? ' · Bestseller' : ''}</span>
           <h1 class="pdp-title">${product.name}</h1>
           <div class="pdp-stars-row" id="reviews-summary-inline"></div>
           <div class="pdp-price-row">
@@ -163,7 +166,7 @@ async function loadProduct() {
       if (window.history.length > 1) {
         window.history.back();
       } else {
-        window.location.href = `/pages/shop.html?category=${product.category}`;
+        window.location.href = categoryUrl;
       }
     });
 

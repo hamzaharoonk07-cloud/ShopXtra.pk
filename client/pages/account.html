@@ -12,7 +12,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="/assets/favicon.png">
 <link href="/css/vendor/bootstrap.min.css" rel="stylesheet">
-<link href="/css/style.css?v=20260806b" rel="stylesheet">
+<link href="/css/style.css?v=20260806c" rel="stylesheet">
 
 <div id="page-loader-slot"></div>
 <div id="navbar-slot"></div>
@@ -43,6 +43,19 @@
       </div>
       <p class="text-danger mb-3 d-none" id="login-error"></p>
       <button type="submit" class="btn btn-plum w-100">Log in</button>
+      <button type="button" class="btn btn-link btn-sm mt-2 p-0" id="show-forgot-password-btn">Forgot password?</button>
+    </form>
+
+    <form id="forgot-password-form" class="filter-panel d-none">
+      <h2 class="h4 mb-3">Reset your password</h2>
+      <p style="color:#6b5a58; font-size:0.9rem;">Enter your account email and we'll send you a link to reset your password.</p>
+      <div class="mb-3">
+        <label class="form-label" for="forgot-email">Email</label>
+        <input type="email" class="form-control" id="forgot-email" required>
+      </div>
+      <p class="d-none mb-3" id="forgot-password-message"></p>
+      <button type="submit" class="btn btn-plum w-100">Send reset link</button>
+      <button type="button" class="btn btn-link btn-sm mt-2 p-0" id="back-to-login-btn">Back to log in</button>
     </form>
 
     <form id="signup-form" class="filter-panel d-none">

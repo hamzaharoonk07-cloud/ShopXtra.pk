@@ -56,4 +56,31 @@ async function setRole(id, role) {
   return rows[0] || null;
 }
 
-module.exports = { create, findByEmail, findById, verifyPassword, findAll, setRole, updateProfile };
+async function setResetToken(email, tokenHash, expiresAt) {
+  const { rows } = await pool.query(
+    'UPDATE users SET password_reset_token = $2, password_reset_expires = $3 WHERE email = $1 RETURNING id, email',
+    [email, tokenHash, expiresAt]
+  );
+  return rows[0] || null;
+}
+
+async function findByResetToken(tokenHash) {
+  const { rows } = await pool.query(
+    'SELECT * FROM users WHERE password_reset_token = $1 AND password_reset_expires > now()',
+    [tokenHash]
+  );
+  return rows[0] || null;
+}
+
+async function resetPassword(id, password) {
+  const password_hash = await bcrypt.hash(password, SALT_ROUNDS);
+  await pool.query(
+    'UPDATE users SET password_hash = $2, password_reset_token = NULL, password_reset_expires = NULL WHERE id = $1',
+    [id, password_hash]
+  );
+}
+
+module.exports = {
+  create, findByEmail, findById, verifyPassword, findAll, setRole, updateProfile,
+  setResetToken, findByResetToken, resetPassword,
+};
