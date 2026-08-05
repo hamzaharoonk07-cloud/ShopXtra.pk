@@ -35,6 +35,10 @@ const migrationsReady = runMigrations().catch((err) => {
 // every single asset on every page wait on unrelated schema migrations,
 // which is what was making pages feel like they hung on load.
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+// Some crawlers (including Google's favicon fetcher) and older browsers
+// request /favicon.ico directly regardless of the <link rel="icon"> tag -
+// without this it 404s even though the real icon works fine everywhere else.
+app.get('/favicon.ico', (req, res) => res.sendFile(path.join(__dirname, '..', 'client', 'assets', 'favicon.png')));
 app.use(express.static(path.join(__dirname, '..', 'client')));
 
 app.use((req, res, next) => {
