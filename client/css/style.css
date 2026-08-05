@@ -4086,6 +4086,7 @@ select:focus-visible {
 
 .bundle-card-photos img {
   flex: 1;
+  min-width: 0;
   height: 100%;
   object-fit: cover;
 }
@@ -4683,10 +4684,12 @@ select:focus-visible {
   gap: 2px;
   min-height: 200px;
   max-height: 340px;
+  overflow: hidden;
 }
 
 .newsletter-modal-images img {
   flex: 1;
+  min-width: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
