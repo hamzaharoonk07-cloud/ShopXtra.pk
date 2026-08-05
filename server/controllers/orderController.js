@@ -65,9 +65,10 @@ async function getById(req, res, next) {
     // customer's name, phone and address. Require either being the logged-in
     // owner or knowing the order's phone number, same as /track.
     const isOwner = req.user && order.user_id === req.user.id;
+    const isAdmin = req.user?.role === 'admin';
     const phone = req.query.phone;
     const phoneMatches = phone && order.shipping_phone.replace(/\D/g, '') === String(phone).replace(/\D/g, '');
-    if (!isOwner && !phoneMatches) {
+    if (!isOwner && !isAdmin && !phoneMatches) {
       return res.status(404).json({ error: 'Order not found' });
     }
 
