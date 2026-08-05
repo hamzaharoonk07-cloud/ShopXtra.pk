@@ -80,48 +80,6 @@ async function showSaleBannerIfAny() {
   }
 }
 
-async function showNewsletterModalIfNeeded(bannerShown) {
-  const modal = document.getElementById('newsletterModalToast');
-  const backdrop = document.getElementById('newsletterModalBackdrop');
-  if (!modal || !backdrop) return;
-  if (localStorage.getItem('shopxtra_newsletter_modal_seen')) return;
-
-  let images = [];
-  try {
-    const products = await apiGet('/products');
-    const withImages = products.filter((p) => p.images && p.images[0]);
-    const bestsellers = withImages.filter((p) => p.is_bestseller);
-    const rest = withImages.filter((p) => !p.is_bestseller);
-    const picks = [...bestsellers, ...rest].slice(0, 4);
-    images = picks.map((p) => p.images[0]);
-  } catch {
-    return;
-  }
-  if (!images.length) return;
-
-  document.getElementById('newsletter-modal-images').innerHTML =
-    images.map((img) => `<img src="${thumbSrc(img)}" ${thumbFallbackAttr(img)} alt="" loading="lazy" decoding="async">`).join('');
-
-  const dismiss = () => {
-    modal.classList.remove('visible');
-    backdrop.classList.remove('visible');
-    modal.setAttribute('aria-hidden', 'true');
-    backdrop.setAttribute('aria-hidden', 'true');
-  };
-  document.getElementById('newsletter-modal-close').addEventListener('click', dismiss, { once: true });
-  backdrop.addEventListener('click', dismiss, { once: true });
-  window.closeNewsletterModal = dismiss;
-
-  const reveal = () => {
-    modal.classList.add('visible');
-    modal.setAttribute('aria-hidden', 'false');
-    backdrop.classList.add('visible');
-    backdrop.setAttribute('aria-hidden', 'false');
-    localStorage.setItem('shopxtra_newsletter_modal_seen', '1');
-  };
-  setTimeout(reveal, bannerShown ? 8000 : 1600);
-}
-
 function renderCategoryGrid() {
   const grid = document.getElementById('category-grid');
   if (!grid) return;
@@ -246,4 +204,4 @@ function initHeroCarousel() {
 initHeroCarousel();
 renderCategoryGrid();
 loadCategoryImages();
-showSaleBannerIfAny().then((bannerShown) => showNewsletterModalIfNeeded(bannerShown));
+showSaleBannerIfAny();

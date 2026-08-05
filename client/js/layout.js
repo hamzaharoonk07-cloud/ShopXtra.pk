@@ -402,12 +402,10 @@ document.addEventListener('click', (e) => {
 });
 
 document.addEventListener('submit', async (e) => {
-  const isFooter = e.target.id === 'newsletter-form';
-  const isModal = e.target.id === 'newsletter-modal-form';
-  if (!isFooter && !isModal) return;
+  if (e.target.id !== 'newsletter-form') return;
   e.preventDefault();
-  const emailInput = document.getElementById(isFooter ? 'newsletter-email' : 'newsletter-modal-email');
-  const msg = document.getElementById(isFooter ? 'newsletter-msg' : 'newsletter-modal-status');
+  const emailInput = document.getElementById('newsletter-email');
+  const msg = document.getElementById('newsletter-msg');
   try {
     const res = await fetch('/api/newsletter', {
       method: 'POST',
@@ -420,14 +418,9 @@ document.addEventListener('submit', async (e) => {
       ? 'You\'re on the list, but the welcome email couldn\'t be sent. Check back later.'
       : 'You\'re on the list. Thank you!';
     msg.style.color = 'var(--tea-pink)';
-    msg.classList.remove('d-none');
     emailInput.value = '';
-    if (isModal && typeof window.closeNewsletterModal === 'function') {
-      setTimeout(window.closeNewsletterModal, 1600);
-    }
   } catch (err) {
     msg.textContent = err.message || 'Something went wrong.';
     msg.style.color = '#e8a5a0';
-    msg.classList.remove('d-none');
   }
 });
