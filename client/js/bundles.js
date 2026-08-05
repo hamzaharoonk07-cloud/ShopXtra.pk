@@ -3,12 +3,17 @@ function bundleCardHtml(bundle) {
     <li><span class="bundle-item-dot" aria-hidden="true"></span>${p.name}</li>
   `).join('');
 
+  const photos = bundle.items.filter((p) => p.images && p.images[0]).slice(0, 2);
+  const photosHtml = photos.length
+    ? `<div class="bundle-card-photos">${photos.map((p) => `<img src="${thumbSrc(p.images[0])}" ${thumbFallbackAttr(p.images[0])} alt="" loading="lazy" decoding="async">`).join('')}</div>`
+    : `<span class="bundle-card-emoji" aria-hidden="true">&#10024;</span>`;
+
   return `
     <div class="col-md-4" id="${bundle.slug}" data-reveal="item">
       <div class="bundle-card h-100">
         <div class="bundle-card-image">
           <span class="bundle-card-badge">Save ${bundle.discount_percent}%</span>
-          <span class="bundle-card-emoji" aria-hidden="true">&#10024;</span>
+          ${photosHtml}
         </div>
         <div class="bundle-card-body">
           <p class="bundle-card-desc">${bundle.description || ''}</p>
@@ -34,9 +39,11 @@ async function loadBundles() {
     grid.querySelectorAll('.add-bundle-btn').forEach((btn) => {
       btn.addEventListener('click', async () => {
         const bundle = bundles.find((b) => b.slug === btn.dataset.slug);
-        bundle.items.forEach((p) => addToCart(p, 1));
-        const promoCode = `${bundle.ritual_time.toUpperCase()}-RITUAL`;
-        window.location.href = `/pages/checkout.html?promo=${encodeURIComponent(promoCode)}`;
+        bundle.items.forEach((p) => {
+          const discountedPrice = Number((Number(p.price) * (1 - bundle.discount_percent / 100)).toFixed(2));
+          addToCart({ ...p, price: discountedPrice }, 1);
+        });
+        window.location.href = '/pages/checkout.html';
       });
     });
 
