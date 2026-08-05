@@ -34,9 +34,9 @@
   --tint-cosmetics-bg: #F0E4E6;
   --tint-cosmetics-ink: #5C3A44;
 
-  --radius-lg: 1.375rem;
-  --radius-md: 1.125rem;
-  --radius-sm: 0.75rem;
+  --radius-lg: 0;
+  --radius-md: 0;
+  --radius-sm: 0;
   --shadow-soft: 0 1px 2px rgba(18, 41, 30, 0.06), 0 14px 30px -14px rgba(18, 41, 30, 0.25);
   --shadow-soft-lg: 0 2px 6px rgba(18, 41, 30, 0.07), 0 24px 44px -26px rgba(18, 41, 30, 0.35);
   --shadow-lift: 0 1px 2px rgba(18, 41, 30, 0.05), 0 32px 60px -28px rgba(18, 41, 30, 0.4);
