@@ -2699,7 +2699,7 @@ select:focus-visible {
 }
 
 .category-tile-electrolytes { background: var(--tint-electrolytes-bg); }
-.category-tile-electrolytes .category-tile-image { background: linear-gradient(150deg, var(--tint-electrolytes-bg), #EAF3DF); color: var(--tint-electrolytes-ink); aspect-ratio: 1 / 1; }
+.category-tile-electrolytes .category-tile-image { background: linear-gradient(150deg, var(--tint-electrolytes-bg), #EAF3DF); color: var(--tint-electrolytes-ink); }
 .category-tile-electrolytes .category-tile-image img { object-fit: cover; }
 .category-tile-coffee { background: var(--tint-coffee-bg); }
 .category-tile-coffee .category-tile-image { background: linear-gradient(150deg, var(--tint-coffee-bg), #F2EBE0); color: var(--tint-coffee-ink); }
