@@ -112,6 +112,9 @@ async function loadProduct() {
             <button class="btn btn-outline-plum" id="wishlist-btn" aria-label="Add to wishlist" aria-pressed="false">
               <span id="wishlist-icon" aria-hidden="true">&#9825;</span>
             </button>
+            <button class="btn btn-outline-plum" id="share-btn" aria-label="Share this product">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+            </button>
           </div>
           <p id="add-to-cart-msg" class="mt-2 mb-0" role="status"></p>
 
@@ -153,6 +156,7 @@ async function loadProduct() {
 
     loadReviews(slug);
     initWishlistButton(slug);
+    initShareButton(product, slug);
     loadRelatedProducts(product);
 
     document.getElementById('pdp-back-btn').addEventListener('click', () => {
@@ -512,6 +516,34 @@ function initStickyAddBar(product, mainAddBtn) {
     { threshold: 0 }
   );
   observer.observe(mainAddBtn);
+}
+
+function initShareButton(product, slug) {
+  const btn = document.getElementById('share-btn');
+  if (!btn) return;
+  const url = `https://www.shopxtra.store/pages/product.html?slug=${encodeURIComponent(slug)}`;
+  const msg = document.getElementById('add-to-cart-msg');
+
+  function flashMessage(text) {
+    if (!msg) return;
+    msg.textContent = text;
+    msg.style.color = 'var(--tea-pink)';
+    setTimeout(() => { if (msg.textContent === text) msg.textContent = ''; }, 2500);
+  }
+
+  btn.addEventListener('click', async () => {
+    const shareData = { title: `${product.name} | ShopXtra`, text: `Check out ${product.name} on ShopXtra`, url };
+    if (navigator.share) {
+      try { await navigator.share(shareData); } catch { /* user cancelled */ }
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      flashMessage('Link copied to clipboard.');
+    } catch {
+      flashMessage(url);
+    }
+  });
 }
 
 async function initWishlistButton(slug) {
