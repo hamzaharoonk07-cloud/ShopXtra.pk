@@ -4,9 +4,11 @@ function bundleCardHtml(bundle) {
   `).join('');
 
   const photos = bundle.items.filter((p) => p.images && p.images[0]).slice(0, 2);
-  const photosHtml = photos.length
-    ? `<div class="bundle-card-photos">${photos.map((p) => `<img src="${thumbSrc(p.images[0])}" ${thumbFallbackAttr(p.images[0])} alt="" loading="lazy" decoding="async">`).join('')}</div>`
-    : `<span class="bundle-card-emoji" aria-hidden="true">&#10024;</span>`;
+  const photosHtml = bundle.image_url
+    ? `<img src="${thumbSrc(bundle.image_url)}" ${thumbFallbackAttr(bundle.image_url)} alt="" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;">`
+    : photos.length
+      ? `<div class="bundle-card-photos">${photos.map((p) => `<img src="${thumbSrc(p.images[0])}" ${thumbFallbackAttr(p.images[0])} alt="" loading="lazy" decoding="async">`).join('')}</div>`
+      : `<span class="bundle-card-emoji" aria-hidden="true">&#10024;</span>`;
 
   return `
     <div class="col-md-4" id="${bundle.slug}" data-reveal="item">

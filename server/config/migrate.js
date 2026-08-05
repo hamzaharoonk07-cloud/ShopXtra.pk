@@ -91,6 +91,15 @@ async function runMigrations() {
 
     CREATE INDEX IF NOT EXISTS idx_cart_events_product_id ON cart_events(product_id);
     CREATE INDEX IF NOT EXISTS idx_cart_events_created_at ON cart_events(created_at);
+
+    ALTER TABLE bundles
+      ADD COLUMN IF NOT EXISTS image_url TEXT;
+
+    -- "Ritual" (morning/midday/evening) naming has been dropped from the
+    -- bundle admin UI and customer-facing copy - the column stays (existing
+    -- rows keep their value, nothing reads it anymore) but is no longer
+    -- required so new bundles can be created without it.
+    ALTER TABLE bundles ALTER COLUMN ritual_time DROP NOT NULL;
   `);
 }
 

@@ -1198,18 +1198,25 @@ function resetBundleForm() {
   document.getElementById('bundle-cancel-edit-btn').classList.add('d-none');
   document.getElementById('bundle-id').value = '';
   document.getElementById('bundle-name').value = '';
-  document.getElementById('bundle-ritual-time').value = '';
   document.getElementById('bundle-discount').value = '10';
   document.getElementById('bundle-description').value = '';
+  document.getElementById('bundle-image').value = '';
+  document.getElementById('bundle-image-preview').innerHTML = '';
   document.querySelectorAll('.bundle-product-checkbox').forEach((cb) => { cb.checked = false; });
 }
+
+document.getElementById('bundle-image').addEventListener('change', (e) => {
+  const preview = document.getElementById('bundle-image-preview');
+  const file = e.target.files[0];
+  preview.innerHTML = file ? `<img src="${URL.createObjectURL(file)}" alt="" style="max-width:140px; border-radius:8px; display:block; margin-top:0.5rem;">` : '';
+});
 
 function renderBundlesTable() {
   const tbody = document.getElementById('bundles-table-body');
   tbody.innerHTML = allBundles.length ? allBundles.map((b) => `
     <tr data-id="${b.id}">
+      <td>${b.image_url ? `<img src="${thumbSrc(b.image_url)}" ${thumbFallbackAttr(b.image_url)} alt="" style="width:48px; height:48px; object-fit:cover; border-radius:6px;">` : '&mdash;'}</td>
       <td>${b.name}</td>
-      <td style="text-transform:capitalize;">${b.ritual_time}</td>
       <td>${b.discount_percent}%</td>
       <td>${b.items.length}</td>
       <td>Rs ${b.bundle_price}</td>
@@ -1231,9 +1238,12 @@ function renderBundlesTable() {
       document.getElementById('bundle-cancel-edit-btn').classList.remove('d-none');
       document.getElementById('bundle-id').value = id;
       document.getElementById('bundle-name').value = bundle.name;
-      document.getElementById('bundle-ritual-time').value = bundle.ritual_time;
       document.getElementById('bundle-discount').value = bundle.discount_percent;
       document.getElementById('bundle-description').value = bundle.description || '';
+      document.getElementById('bundle-image').value = '';
+      document.getElementById('bundle-image-preview').innerHTML = bundle.image_url
+        ? `<img src="${thumbSrc(bundle.image_url)}" ${thumbFallbackAttr(bundle.image_url)} alt="" style="max-width:140px; border-radius:8px; display:block; margin-top:0.5rem;">`
+        : '';
       const itemIds = new Set(bundle.items.map((p) => p.id));
       document.querySelectorAll('.bundle-product-checkbox').forEach((cb) => {
         cb.checked = itemIds.has(Number(cb.value));
@@ -1279,22 +1289,18 @@ document.getElementById('add-bundle-form').addEventListener('submit', async (e) 
     return;
   }
 
-  const payload = {
-    name: document.getElementById('bundle-name').value.trim(),
-    ritualTime: document.getElementById('bundle-ritual-time').value,
-    discountPercent: document.getElementById('bundle-discount').value || 10,
-    description: document.getElementById('bundle-description').value.trim(),
-    productIds,
-  };
+  const formData = new FormData();
+  formData.append('name', document.getElementById('bundle-name').value.trim());
+  formData.append('discountPercent', document.getElementById('bundle-discount').value || 10);
+  formData.append('description', document.getElementById('bundle-description').value.trim());
+  formData.append('productIds', JSON.stringify(productIds));
+  const imageFile = document.getElementById('bundle-image').files[0];
+  if (imageFile) formData.append('image', imageFile);
 
   try {
     const url = editingBundleId ? `/api/bundles/${editingBundleId}` : '/api/bundles';
     const method = editingBundleId ? 'PUT' : 'POST';
-    const res = await fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+    const res = await fetch(url, { method, body: formData });
     const body = await safeJson(res);
     if (!res.ok) throw new Error(body.error);
 

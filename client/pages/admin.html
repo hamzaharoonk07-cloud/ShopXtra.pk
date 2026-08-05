@@ -148,18 +148,15 @@
         <h2 id="bundle-form-title">Create bundle</h2>
         <form id="add-bundle-form" class="row g-2">
           <input type="hidden" id="bundle-id">
-          <div class="col-md-4"><input class="form-control" id="bundle-name" placeholder="Name, e.g. Morning Ritual" required></div>
-          <div class="col-md-3">
-            <select class="form-select" id="bundle-ritual-time" required>
-              <option value="">Ritual time</option>
-              <option value="morning">Morning</option>
-              <option value="midday">Midday</option>
-              <option value="evening">Evening</option>
-            </select>
-          </div>
+          <div class="col-md-5"><input class="form-control" id="bundle-name" placeholder="Name, e.g. Everyday Essentials" required></div>
           <div class="col-md-2"><input type="number" class="form-control" id="bundle-discount" placeholder="Discount %" min="0" max="100" value="10"></div>
-          <div class="col-md-3"><button type="submit" class="btn btn-plum w-100" id="bundle-submit-btn">Create</button></div>
+          <div class="col-md-5"><button type="submit" class="btn btn-plum w-100" id="bundle-submit-btn">Create</button></div>
           <div class="col-12"><input class="form-control" id="bundle-description" placeholder="Description (optional)"></div>
+          <div class="col-md-6">
+            <label class="form-label mono d-block" style="font-size:0.75rem;" for="bundle-image">Bundle image (optional)</label>
+            <input type="file" class="form-control" id="bundle-image" accept="image/jpeg,image/png,image/webp,image/gif">
+            <div class="admin-image-preview-grid" id="bundle-image-preview"></div>
+          </div>
           <div class="col-12">
             <label class="form-label mono d-block" style="font-size:0.75rem;">Products in this bundle</label>
             <div id="bundle-product-checklist" style="max-height:220px; overflow-y:auto; border:1px solid var(--hairline-strong); border-radius:8px; padding:0.75rem;"></div>
@@ -172,7 +169,7 @@
         <div class="table-responsive">
           <table class="table align-middle admin-table">
             <thead>
-              <tr><th>Name</th><th>Ritual</th><th>Discount</th><th>Items</th><th>Price</th><th></th></tr>
+              <tr><th>Image</th><th>Name</th><th>Discount</th><th>Items</th><th>Price</th><th></th></tr>
             </thead>
             <tbody id="bundles-table-body"></tbody>
           </table>

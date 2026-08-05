@@ -111,8 +111,9 @@ CREATE TABLE IF NOT EXISTS bundles (
   name VARCHAR(200) NOT NULL,
   slug VARCHAR(220) UNIQUE NOT NULL,
   description TEXT,
-  ritual_time VARCHAR(20) NOT NULL CHECK (ritual_time IN ('morning', 'midday', 'evening')),
+  ritual_time VARCHAR(20) CHECK (ritual_time IN ('morning', 'midday', 'evening')),
   discount_percent NUMERIC(5, 2) NOT NULL DEFAULT 10,
+  image_url TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 

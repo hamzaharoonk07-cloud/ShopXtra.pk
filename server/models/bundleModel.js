@@ -16,10 +16,7 @@ async function attachItems(bundles) {
 }
 
 async function findAll() {
-  const { rows } = await pool.query(`
-    SELECT * FROM bundles
-    ORDER BY CASE ritual_time WHEN 'morning' THEN 1 WHEN 'midday' THEN 2 WHEN 'evening' THEN 3 END
-  `);
+  const { rows } = await pool.query('SELECT * FROM bundles ORDER BY created_at DESC');
   return attachItems(rows);
 }
 
@@ -44,29 +41,29 @@ async function setItems(bundleId, productIds) {
   }
 }
 
-async function create({ name, slug, description, ritualTime, discountPercent, productIds }) {
+async function create({ name, slug, description, discountPercent, productIds, imageUrl }) {
   const { rows } = await pool.query(
-    `INSERT INTO bundles (name, slug, description, ritual_time, discount_percent)
+    `INSERT INTO bundles (name, slug, description, discount_percent, image_url)
      VALUES ($1, $2, $3, $4, $5)
      RETURNING *`,
-    [name, slug, description || null, ritualTime, discountPercent]
+    [name, slug, description || null, discountPercent, imageUrl || null]
   );
   const bundle = rows[0];
   await setItems(bundle.id, productIds || []);
   return findById(bundle.id);
 }
 
-async function update(id, { name, slug, description, ritualTime, discountPercent, productIds }) {
+async function update(id, { name, slug, description, discountPercent, productIds, imageUrl }) {
   const { rows } = await pool.query(
     `UPDATE bundles SET
        name = COALESCE($2, name),
        slug = COALESCE($3, slug),
        description = COALESCE($4, description),
-       ritual_time = COALESCE($5, ritual_time),
-       discount_percent = COALESCE($6, discount_percent)
+       discount_percent = COALESCE($5, discount_percent),
+       image_url = COALESCE($6, image_url)
      WHERE id = $1
      RETURNING *`,
-    [id, name, slug, description, ritualTime, discountPercent]
+    [id, name, slug, description, discountPercent, imageUrl]
   );
   if (!rows[0]) return null;
   if (productIds) await setItems(id, productIds);
