@@ -149,17 +149,13 @@
         <form id="add-bundle-form" class="row g-2">
           <input type="hidden" id="bundle-id">
           <div class="col-md-5"><input class="form-control" id="bundle-name" placeholder="Name, e.g. Everyday Essentials" required></div>
-          <div class="col-md-2"><input type="number" class="form-control" id="bundle-discount" placeholder="Discount %" min="0" max="100" value="10"></div>
+          <div class="col-md-2"><input type="number" class="form-control" id="bundle-price" placeholder="Price (Rs)" min="0" required></div>
           <div class="col-md-5"><button type="submit" class="btn btn-plum w-100" id="bundle-submit-btn">Create</button></div>
           <div class="col-12"><input class="form-control" id="bundle-description" placeholder="Description (optional)"></div>
           <div class="col-md-6">
-            <label class="form-label mono d-block" style="font-size:0.75rem;" for="bundle-image">Bundle image (optional)</label>
+            <label class="form-label mono d-block" style="font-size:0.75rem;" for="bundle-image">Bundle image</label>
             <input type="file" class="form-control" id="bundle-image" accept="image/jpeg,image/png,image/webp,image/gif">
             <div class="admin-image-preview-grid" id="bundle-image-preview"></div>
-          </div>
-          <div class="col-12">
-            <label class="form-label mono d-block" style="font-size:0.75rem;">Products in this bundle</label>
-            <div id="bundle-product-checklist" style="max-height:220px; overflow-y:auto; border:1px solid var(--hairline-strong); border-radius:8px; padding:0.75rem;"></div>
           </div>
         </form>
         <p class="text-danger d-none mt-2" id="add-bundle-error"></p>
@@ -169,7 +165,7 @@
         <div class="table-responsive">
           <table class="table align-middle admin-table">
             <thead>
-              <tr><th>Image</th><th>Name</th><th>Discount</th><th>Items</th><th>Price</th><th></th></tr>
+              <tr><th>Image</th><th>Name</th><th>Price</th><th></th></tr>
             </thead>
             <tbody id="bundles-table-body"></tbody>
           </table>

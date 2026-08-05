@@ -34,18 +34,16 @@ router.get('/:slug', async (req, res, next) => {
 
 router.post('/', requireAuth, requireRole('admin'), upload.single('image'), async (req, res, next) => {
   try {
-    const { name, description, discountPercent } = req.body;
-    const productIds = req.body.productIds ? JSON.parse(req.body.productIds) : [];
-    if (!name || !Array.isArray(productIds) || !productIds.length) {
-      return res.status(400).json({ error: 'A name and at least one product are required' });
+    const { name, description, price } = req.body;
+    if (!name || price == null || price === '' || Number.isNaN(Number(price))) {
+      return res.status(400).json({ error: 'A name and price are required' });
     }
     const imageUrl = req.file ? await saveImage(req.file) : null;
     const bundle = await bundleModel.create({
       name,
       slug: slugify(name),
       description,
-      discountPercent: discountPercent != null ? Number(discountPercent) : 10,
-      productIds: productIds.map(Number),
+      price: Number(price),
       imageUrl,
     });
     res.status(201).json(bundle);
@@ -57,15 +55,13 @@ router.post('/', requireAuth, requireRole('admin'), upload.single('image'), asyn
 
 router.put('/:id', requireAuth, requireRole('admin'), upload.single('image'), async (req, res, next) => {
   try {
-    const { name, description, discountPercent } = req.body;
-    const productIds = req.body.productIds ? JSON.parse(req.body.productIds) : undefined;
+    const { name, description, price } = req.body;
     const imageUrl = req.file ? await saveImage(req.file) : undefined;
     const bundle = await bundleModel.update(req.params.id, {
       name,
       slug: name ? slugify(name) : undefined,
       description,
-      discountPercent: discountPercent != null ? Number(discountPercent) : undefined,
-      productIds: Array.isArray(productIds) ? productIds.map(Number) : undefined,
+      price: price != null && price !== '' ? Number(price) : undefined,
       imageUrl,
     });
     if (!bundle) return res.status(404).json({ error: 'Bundle not found' });
@@ -81,6 +77,11 @@ router.delete('/:id', requireAuth, requireRole('admin'), async (req, res, next) 
     if (!deleted) return res.status(404).json({ error: 'Bundle not found' });
     res.status(204).end();
   } catch (err) {
+    if (err.code === '23503') {
+      return res.status(409).json({
+        error: 'This bundle has existing orders and cannot be deleted. Remove it from the storefront by other means instead.',
+      });
+    }
     next(err);
   }
 });

@@ -1181,16 +1181,6 @@ document.getElementById('user-search').addEventListener('input', renderUsersTabl
 let allBundles = [];
 let editingBundleId = null;
 
-function renderBundleProductChecklist() {
-  const wrap = document.getElementById('bundle-product-checklist');
-  wrap.innerHTML = allProducts.map((p) => `
-    <div class="form-check">
-      <input type="checkbox" class="form-check-input bundle-product-checkbox" id="bp-${p.id}" value="${p.id}">
-      <label class="form-check-label" for="bp-${p.id}" style="font-size:0.85rem;">${p.name} <span style="color:#a89490;">(${p.category}, Rs ${p.price})</span></label>
-    </div>
-  `).join('');
-}
-
 function resetBundleForm() {
   editingBundleId = null;
   document.getElementById('bundle-form-title').textContent = 'Create bundle';
@@ -1198,11 +1188,10 @@ function resetBundleForm() {
   document.getElementById('bundle-cancel-edit-btn').classList.add('d-none');
   document.getElementById('bundle-id').value = '';
   document.getElementById('bundle-name').value = '';
-  document.getElementById('bundle-discount').value = '10';
+  document.getElementById('bundle-price').value = '';
   document.getElementById('bundle-description').value = '';
   document.getElementById('bundle-image').value = '';
   document.getElementById('bundle-image-preview').innerHTML = '';
-  document.querySelectorAll('.bundle-product-checkbox').forEach((cb) => { cb.checked = false; });
 }
 
 document.getElementById('bundle-image').addEventListener('change', (e) => {
@@ -1217,15 +1206,13 @@ function renderBundlesTable() {
     <tr data-id="${b.id}">
       <td>${b.image_url ? `<img src="${thumbSrc(b.image_url)}" ${thumbFallbackAttr(b.image_url)} alt="" style="width:48px; height:48px; object-fit:cover; border-radius:6px;">` : '&mdash;'}</td>
       <td>${b.name}</td>
-      <td>${b.discount_percent}%</td>
-      <td>${b.items.length}</td>
-      <td>Rs ${b.bundle_price}</td>
+      <td>${b.price != null ? `Rs ${b.price}` : '<span style="color:#c96b5a;">Not set</span>'}</td>
       <td class="text-end">
         <button type="button" class="btn btn-outline-plum btn-sm edit-bundle-btn">Edit</button>
         <button type="button" class="btn btn-sm text-danger delete-bundle-btn">Delete</button>
       </td>
     </tr>
-  `).join('') : '<tr><td colspan="6" style="color:#a89490;">No bundles yet.</td></tr>';
+  `).join('') : '<tr><td colspan="4" style="color:#a89490;">No bundles yet.</td></tr>';
 
   tbody.querySelectorAll('.edit-bundle-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -1238,16 +1225,12 @@ function renderBundlesTable() {
       document.getElementById('bundle-cancel-edit-btn').classList.remove('d-none');
       document.getElementById('bundle-id').value = id;
       document.getElementById('bundle-name').value = bundle.name;
-      document.getElementById('bundle-discount').value = bundle.discount_percent;
+      document.getElementById('bundle-price').value = bundle.price;
       document.getElementById('bundle-description').value = bundle.description || '';
       document.getElementById('bundle-image').value = '';
       document.getElementById('bundle-image-preview').innerHTML = bundle.image_url
         ? `<img src="${thumbSrc(bundle.image_url)}" ${thumbFallbackAttr(bundle.image_url)} alt="" style="max-width:140px; border-radius:8px; display:block; margin-top:0.5rem;">`
         : '';
-      const itemIds = new Set(bundle.items.map((p) => p.id));
-      document.querySelectorAll('.bundle-product-checkbox').forEach((cb) => {
-        cb.checked = itemIds.has(Number(cb.value));
-      });
       document.getElementById('bundle-name').scrollIntoView({ block: 'center', behavior: 'smooth' });
     });
   });
@@ -1257,9 +1240,12 @@ function renderBundlesTable() {
       const id = Number(btn.closest('tr').dataset.id);
       if (!confirm('Delete this bundle? This cannot be undone.')) return;
       const res = await fetch(`/api/bundles/${id}`, { method: 'DELETE' });
-      if (res.ok || res.status === 404) {
+      if (res.ok) {
         allBundles = allBundles.filter((b) => b.id !== id);
         renderBundlesTable();
+      } else {
+        const body = await safeJson(res);
+        alert(body.error || 'Could not delete bundle.');
       }
     });
   });
@@ -1271,7 +1257,7 @@ async function loadBundles() {
     allBundles = await apiGet('/bundles');
     renderBundlesTable();
   } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="6" class="text-danger">Could not load bundles: ${err.message}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="4" class="text-danger">Could not load bundles: ${err.message}</td></tr>`;
   }
 }
 
@@ -1282,18 +1268,10 @@ document.getElementById('add-bundle-form').addEventListener('submit', async (e) 
   const errorEl = document.getElementById('add-bundle-error');
   errorEl.classList.add('d-none');
 
-  const productIds = Array.from(document.querySelectorAll('.bundle-product-checkbox:checked')).map((cb) => Number(cb.value));
-  if (!productIds.length) {
-    errorEl.textContent = 'Select at least one product for this bundle.';
-    errorEl.classList.remove('d-none');
-    return;
-  }
-
   const formData = new FormData();
   formData.append('name', document.getElementById('bundle-name').value.trim());
-  formData.append('discountPercent', document.getElementById('bundle-discount').value || 10);
+  formData.append('price', document.getElementById('bundle-price').value);
   formData.append('description', document.getElementById('bundle-description').value.trim());
-  formData.append('productIds', JSON.stringify(productIds));
   const imageFile = document.getElementById('bundle-image').files[0];
   if (imageFile) formData.append('image', imageFile);
 
@@ -1329,7 +1307,6 @@ document.getElementById('add-bundle-form').addEventListener('submit', async (e) 
     document.getElementById('admin-whoami').textContent = user.email;
 
     await Promise.all([loadProducts(), loadUsers(), loadOrders()]);
-    renderBundleProductChecklist();
     await loadOverview();
     loadPromoCodes();
     loadBanners();

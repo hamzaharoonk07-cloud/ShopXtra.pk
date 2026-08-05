@@ -100,6 +100,27 @@ async function runMigrations() {
     -- rows keep their value, nothing reads it anymore) but is no longer
     -- required so new bundles can be created without it.
     ALTER TABLE bundles ALTER COLUMN ritual_time DROP NOT NULL;
+
+    -- Bundles are no longer built from specific products - admin sets a
+    -- price directly, and the customer notes their flavour/variant
+    -- preference at checkout instead. price is nullable here only so old
+    -- rows (created back when price was computed from items) don't fail
+    -- this migration; the API requires it for every new create/update.
+    ALTER TABLE bundles
+      ADD COLUMN IF NOT EXISTS price NUMERIC(10, 2);
+
+    -- Bundles still need to flow through the existing cart/checkout/stock
+    -- pipeline, which is built entirely around products - rather than
+    -- rework that pipeline, each bundle gets a mirrored row in products
+    -- (slug prefixed "bundle-" so it can never collide with a real
+    -- product's slug) that cart/checkout treat exactly like any other
+    -- product. is_bundle marks it so the storefront's own product
+    -- listings can filter it back out. category has to be nullable since
+    -- these mirror rows don't belong to a real category.
+    ALTER TABLE products
+      ADD COLUMN IF NOT EXISTS is_bundle BOOLEAN NOT NULL DEFAULT false;
+
+    ALTER TABLE products ALTER COLUMN category DROP NOT NULL;
   `);
 }
 

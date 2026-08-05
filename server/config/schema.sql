@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS products (
   id SERIAL PRIMARY KEY,
   name VARCHAR(200) NOT NULL,
   slug VARCHAR(220) UNIQUE NOT NULL,
-  category VARCHAR(50) NOT NULL CHECK (category IN ('electrolytes', 'shampoo', 'coffee', 'cosmetics')),
+  category VARCHAR(50) CHECK (category IN ('electrolytes', 'shampoo', 'coffee', 'cosmetics')),
   description TEXT,
   price NUMERIC(10, 2) NOT NULL,
   compare_at_price NUMERIC(10, 2),
@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS products (
   images TEXT[] DEFAULT '{}',
   video_url TEXT,
   is_bestseller BOOLEAN NOT NULL DEFAULT false,
+  is_bundle BOOLEAN NOT NULL DEFAULT false,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
@@ -113,14 +114,9 @@ CREATE TABLE IF NOT EXISTS bundles (
   description TEXT,
   ritual_time VARCHAR(20) CHECK (ritual_time IN ('morning', 'midday', 'evening')),
   discount_percent NUMERIC(5, 2) NOT NULL DEFAULT 10,
+  price NUMERIC(10, 2),
   image_url TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
-);
-
-CREATE TABLE IF NOT EXISTS bundle_items (
-  id SERIAL PRIMARY KEY,
-  bundle_id INTEGER NOT NULL REFERENCES bundles(id) ON DELETE CASCADE,
-  product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS site_banners (

@@ -9,7 +9,11 @@ const SORT_COLUMNS = {
 };
 
 async function findAll({ category, minPrice, maxPrice, sort, search, onSale } = {}) {
-  const clauses = [];
+  // Every bundle has a mirror row here so it can flow through cart/checkout
+  // like a normal product (see bundleModel.js) - it must never surface in
+  // the actual storefront catalog, which is the only thing this function
+  // powers.
+  const clauses = ['is_bundle = false'];
   const values = [];
 
   if (category) {

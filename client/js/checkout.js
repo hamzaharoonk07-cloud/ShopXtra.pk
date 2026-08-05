@@ -24,8 +24,9 @@ function renderCheckoutSummary() {
   const notesStep = document.getElementById('cosmetics-notes-step');
   const notesField = document.getElementById('ship-notes');
   const hasCosmetics = cart.some((item) => item.category === 'cosmetics');
-  notesStep.classList.toggle('d-none', !hasCosmetics);
-  notesField.required = hasCosmetics;
+  const hasBundle = cart.some((item) => item.category === 'bundle');
+  notesStep.classList.toggle('d-none', !hasCosmetics && !hasBundle);
+  notesField.required = hasCosmetics || hasBundle;
 
   updateTotals();
 }
