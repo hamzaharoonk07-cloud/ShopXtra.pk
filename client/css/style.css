@@ -2727,7 +2727,12 @@ select:focus-visible {
 
 .category-tile-electrolytes { background: var(--tint-electrolytes-bg); }
 .category-tile-electrolytes .category-tile-image { background: linear-gradient(150deg, var(--tint-electrolytes-bg), #EAF3DF); color: var(--tint-electrolytes-ink); }
-.category-tile-electrolytes .category-tile-image img { object-fit: cover; }
+/* This tile's source photo has "Your Everyday Fluid Upgrade" text baked
+   into its top ~25%; the shared 5/4 tile ratio crops a square image top
+   and bottom evenly by default, which cut straight through that text.
+   Anchoring to the top instead pushes all the cropping onto the (plain
+   background) bottom of the photo. */
+.category-tile-electrolytes .category-tile-image img { object-fit: cover; object-position: top; }
 .category-tile-coffee { background: var(--tint-coffee-bg); }
 .category-tile-coffee .category-tile-image { background: linear-gradient(150deg, var(--tint-coffee-bg), #F2EBE0); color: var(--tint-coffee-ink); }
 .category-tile-shampoo { background: #E4EEDB; }
