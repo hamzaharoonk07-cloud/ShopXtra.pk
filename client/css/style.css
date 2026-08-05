@@ -1,3 +1,16 @@
+/* Self-hosted in place of the Google Fonts <link> every page used to load
+   (fonts.googleapis.com CSS -> fonts.gstatic.com file = 2 extra round trips
+   before any text with this font could paint). One variable-weight woff2
+   file covers the full 400-900 range this site actually uses; latin-only
+   subset is enough since every page is English-only copy. */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('/assets/fonts/montserrat-latin-variable.woff2') format('woff2');
+}
+
 :root {
   /* Deepened back to a rich forest-green brand palette (nav/footer/
      buttons/hero) to match a bolder, ownkind.ae-style look — reverses
