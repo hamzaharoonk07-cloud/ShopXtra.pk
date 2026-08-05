@@ -36,9 +36,13 @@ async function compressThumbnail(buffer) {
 async function storeBuffer(buffer, filename, contentType) {
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     const { put } = require('@vercel/blob');
+    // addRandomSuffix: false so the "-thumb.webp" sibling can be derived
+    // deterministically from the full image's URL - Vercel Blob otherwise
+    // appends its own random suffix, breaking that naming convention.
     const blob = await put(filename, buffer, {
       access: 'public',
       contentType,
+      addRandomSuffix: false,
       token: process.env.BLOB_READ_WRITE_TOKEN,
     });
     return blob.url;

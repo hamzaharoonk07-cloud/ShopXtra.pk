@@ -7,6 +7,7 @@ async function uploadThumb(original, filename) {
   await put(filename.replace(/\.webp$/, '-thumb.webp'), thumb, {
     access: 'public',
     contentType: 'image/webp',
+    addRandomSuffix: false,
     token: process.env.BLOB_READ_WRITE_TOKEN,
   });
 }
@@ -33,6 +34,7 @@ async function reprocessUrl(url) {
   const blob = await put(filename, compressed, {
     access: 'public',
     contentType: 'image/webp',
+    addRandomSuffix: false,
     token: process.env.BLOB_READ_WRITE_TOKEN,
   });
   await uploadThumb(original, filename);
