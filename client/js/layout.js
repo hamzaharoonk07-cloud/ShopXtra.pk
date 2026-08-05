@@ -110,7 +110,7 @@ function renderNavbar(activePath = '') {
     <nav class="navbar-shopxtra">
       <div class="navbar-top container">
         <a class="navbar-brand" href="/index.html">
-          <img src="/assets/logo-full.png" alt="ShopXtra" class="logo-img">
+          <img src="/assets/logo-full.png" alt="ShopXtra" width="500" height="500" class="logo-img">
         </a>
 
         <button class="navbar-toggler-dm" type="button" data-bs-toggle="collapse" data-bs-target="#navLinksRow"
@@ -179,7 +179,7 @@ function renderFooter() {
       <div class="footer-main">
         <div class="footer-brand-col">
           <div class="footer-brand-row">
-            <img src="/assets/logo-full.png" alt="ShopXtra" class="logo-img logo-img-footer">
+            <img src="/assets/logo-full.png" alt="ShopXtra" width="500" height="500" class="logo-img logo-img-footer">
           </div>
           <p>Everyday essentials that are imported, authentic, and PKR-priced. Look after yourself, every single day.</p>
           <div class="footer-brand-stats">
