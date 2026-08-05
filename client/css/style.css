@@ -2102,29 +2102,17 @@ select:focus-visible {
     width: 38px;
     height: 38px;
   }
-  /* flex-wrap left the 4th stat ("Imported Products", much longer than the
-     other three short numbers) to wrap onto its own line trailing a
-     now-orphaned divider, and a 2-column grid still crowded neighbouring
-     rows in the same column together with barely any gap. A single stacked
-     column with a hairline between rows (instead of the vertical dividers,
-     which have nothing to sit between once there's only one per row) gives
-     every stat its own clear space regardless of text length. */
+  /* The 4th stat ("Imported Products") is far longer than the other three
+     short numbers, so it wraps onto its own line - with a tight gap that
+     second line sat right up against the row above it. A bigger row-gap
+     than column-gap keeps the two rows apart; the divider that used to
+     trail it (with nothing left to divide once it's alone on its line) is
+     hidden so it doesn't read as stray clutter. */
   .hero-trust-bar {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
+    row-gap: 1.5rem;
+    column-gap: 1.25rem;
   }
-  .hero-stat {
-    flex-direction: row;
-    align-items: baseline;
-    gap: 0.5rem;
-    padding: 0.85rem 0;
-    border-bottom: 1px solid var(--hairline-strong);
-  }
-  .hero-stat:last-child {
-    border-bottom: none;
-  }
-  .hero-stat-divider {
+  .hero-stat-divider:nth-last-child(2) {
     display: none;
   }
 }
