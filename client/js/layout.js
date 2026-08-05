@@ -190,6 +190,9 @@ function renderFooter() {
             <a href="https://www.instagram.com/shopxtraofficial/" target="_blank" rel="noopener" aria-label="ShopXtra on Instagram" class="footer-social-icon">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="2.5" width="19" height="19" rx="5"></rect><circle cx="12" cy="12" r="4.3"></circle><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"></circle></svg>
             </a>
+            <a href="https://www.facebook.com/share/17mwVCLAiM/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="ShopXtra on Facebook" class="footer-social-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M13.5 21v-7.6h2.55l.38-2.96h-2.93V8.55c0-.86.24-1.44 1.47-1.44h1.57V4.46c-.27-.04-1.2-.12-2.28-.12-2.26 0-3.8 1.38-3.8 3.9v2.18H7.99v2.96h2.47V21h3.04z"></path></svg>
+            </a>
           </div>
         </div>
         <div class="footer-col">
