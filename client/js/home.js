@@ -32,12 +32,12 @@ function applyCategoryImagesFromProducts(products) {
 async function showSaleBannerIfAny() {
   const toastEl = document.getElementById('saleBannerToast');
   const backdropEl = document.getElementById('saleBannerBackdrop');
-  if (!toastEl) return;
+  if (!toastEl) return false;
   try {
     const banner = await apiGet('/banner/active');
-    if (!banner) return;
+    if (!banner) return false;
     const dismissKey = `shopxtra_banner_dismissed_${banner.id}`;
-    if (sessionStorage.getItem(dismissKey)) return;
+    if (sessionStorage.getItem(dismissKey)) return false;
 
     document.getElementById('saleBannerToastLabel').textContent = banner.title;
     document.getElementById('sale-banner-message').textContent = banner.message || '';
@@ -73,9 +73,51 @@ async function showSaleBannerIfAny() {
       }
     };
     setTimeout(reveal, 900);
+    return true;
   } catch {
     // No active banner or request failed; fail silently.
+    return false;
   }
+}
+
+async function showNewsletterModalIfNeeded(bannerShown) {
+  const modal = document.getElementById('newsletterModalToast');
+  const backdrop = document.getElementById('newsletterModalBackdrop');
+  if (!modal || !backdrop) return;
+  if (localStorage.getItem('shopxtra_newsletter_modal_seen')) return;
+
+  let images = [];
+  try {
+    const products = await apiGet('/products');
+    const withImages = products.filter((p) => p.images && p.images[0]);
+    const picks = withImages.filter((p) => p.is_bestseller).slice(0, 4);
+    images = (picks.length ? picks : withImages.slice(0, 4)).map((p) => p.images[0]);
+  } catch {
+    return;
+  }
+  if (!images.length) return;
+
+  document.getElementById('newsletter-modal-images').innerHTML =
+    images.map((img) => `<img src="${img}" alt="" loading="lazy">`).join('');
+
+  const dismiss = () => {
+    modal.classList.remove('visible');
+    backdrop.classList.remove('visible');
+    modal.setAttribute('aria-hidden', 'true');
+    backdrop.setAttribute('aria-hidden', 'true');
+  };
+  document.getElementById('newsletter-modal-close').addEventListener('click', dismiss, { once: true });
+  backdrop.addEventListener('click', dismiss, { once: true });
+  window.closeNewsletterModal = dismiss;
+
+  const reveal = () => {
+    modal.classList.add('visible');
+    modal.setAttribute('aria-hidden', 'false');
+    backdrop.classList.add('visible');
+    backdrop.setAttribute('aria-hidden', 'false');
+    localStorage.setItem('shopxtra_newsletter_modal_seen', '1');
+  };
+  setTimeout(reveal, bannerShown ? 8000 : 1600);
 }
 
 function renderCategoryGrid() {
@@ -202,4 +244,4 @@ function initHeroCarousel() {
 initHeroCarousel();
 renderCategoryGrid();
 loadCategoryImages();
-showSaleBannerIfAny();
+showSaleBannerIfAny().then((bannerShown) => showNewsletterModalIfNeeded(bannerShown));

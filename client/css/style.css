@@ -4468,7 +4468,8 @@ select:focus-visible {
     display: flex;
     align-items: stretch;
   }
-  #sale-banner-image-wrap {
+  #sale-banner-image-wrap,
+  .newsletter-modal-images {
     flex: 1 1 45%;
   }
   .promo-toast-body {
@@ -4543,6 +4544,44 @@ select:focus-visible {
   }
   .promo-toast.visible {
     transform: translate(-50%, -50%);
+  }
+}
+
+.newsletter-modal-images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 2px;
+  min-height: 200px;
+  max-height: 340px;
+}
+
+.newsletter-modal-images img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.newsletter-modal-form {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.2rem;
+}
+
+.newsletter-modal-form input {
+  flex: 1 1 200px;
+  padding: 0.7rem 1rem;
+  border: 1px solid #ddd4c4;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 575.98px) {
+  .newsletter-modal-images {
+    max-height: 200px;
   }
 }
 
