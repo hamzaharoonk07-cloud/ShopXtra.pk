@@ -116,7 +116,10 @@ function productMediaHtml(product, { fullSize = false } = {}) {
     const full = product.images[0];
     const src = fullSize ? full : thumbSrc(full);
     const fallback = fullSize ? '' : thumbFallbackAttr(full);
-    return `<img src="${src}" ${fallback} alt="${product.name}" loading="lazy" decoding="async" width="600" height="600">`;
+    // Bundle photos are admin-uploaded marketing images that often have a
+    // title baked into the top - anchor the crop there instead of center.
+    const style = product.is_bundle ? ' style="object-position:top;"' : '';
+    return `<img src="${src}" ${fallback} alt="${product.name}" loading="lazy" decoding="async" width="600" height="600"${style}>`;
   }
   return productIllustration(product.category);
 }

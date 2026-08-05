@@ -699,6 +699,15 @@ a {
   display: block;
 }
 
+/* Bundle photos are admin-uploaded marketing images that often have a
+   title baked into the top (same issue the Electrolytes category tile
+   had) - anchor the crop there instead of center so it isn't cut off.
+   Scoped to the bundles grid only; regular product photos are unaffected. */
+#bundles-grid .product-image img,
+#bundles-grid .product-image-hover {
+  object-position: top;
+}
+
 .product-image-hover {
   position: absolute;
   inset: 0;

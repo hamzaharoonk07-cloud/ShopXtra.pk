@@ -12,6 +12,7 @@ function bundleAsProduct(bundle) {
     stock: 1,
     images: bundle.image_url ? [bundle.image_url] : [],
     category: 'bundle',
+    is_bundle: true,
     is_bestseller: false,
     review_count: 0,
     avg_rating: null,
