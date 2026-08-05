@@ -2047,7 +2047,11 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  padding: 1.35rem 0 0;
+  /* padding-top only - this element carries Bootstrap's .container class
+     for its left/right gutter, and the old `padding: 1.35rem 0 0` shorthand
+     was zeroing that gutter out, leaving every stat flush against the
+     screen edge instead of aligned with the rest of the page's content. */
+  padding-top: 1.35rem;
   flex-wrap: wrap;
 }
 
