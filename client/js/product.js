@@ -52,7 +52,7 @@ async function loadProduct() {
       <div class="pdp-thumb-rail">
         ${images.map((img, i) => `
           <button type="button" class="pdp-thumb ${i === 0 ? 'active' : ''}" data-img="${img}" aria-label="View image ${i + 1}">
-            <img src="${img}" alt="${product.name} ${i + 1}" loading="lazy">
+            <img src="${thumbSrc(img)}" ${thumbFallbackAttr(img)} alt="${product.name} ${i + 1}" loading="lazy" decoding="async">
           </button>
         `).join('')}
         ${product.video_url ? `
@@ -75,7 +75,7 @@ async function loadProduct() {
       <div class="pdp-grid">
         <div class="pdp-gallery">
           <div class="pdp-main-image" id="pdp-main-image">
-            ${productMediaHtml(product)}
+            ${productMediaHtml(product, { fullSize: true })}
           </div>
           ${thumbRail}
         </div>

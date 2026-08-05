@@ -61,13 +61,22 @@ function initPageLoader() {
 
 initPageLoader();
 
+const ANNOUNCEMENT_ICONS = {
+  truck: `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 4h13v11H1z"/><path d="M14 8h4l4 4v3h-8z"/><circle cx="6" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/></svg>`,
+  gift: `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="13" rx="1"/><path d="M3 12h18"/><path d="M12 8v13"/><path d="M12 8C9 8 7.5 6.5 7.5 5A2.5 2.5 0 0 1 12 3.5 2.5 2.5 0 0 1 16.5 5C16.5 6.5 15 8 12 8z"/></svg>`,
+  globe: `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.5 4 5.7 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.7-4-9s1.5-6.5 4-9z"/></svg>`,
+  badge: `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>`,
+};
+
 function renderAnnouncementBar() {
   const items = `
-    <span>Cash on Delivery nationwide</span>
+    <span class="announcement-item">${ANNOUNCEMENT_ICONS.truck}<span>Cash on Delivery nationwide</span></span>
     <span class="dot" aria-hidden="true">&#8226;</span>
-    <span class="announcement-highlight">Free delivery over Rs 3,000</span>
+    <span class="announcement-item announcement-highlight">${ANNOUNCEMENT_ICONS.gift}<span>Free delivery over Rs 3,000</span></span>
     <span class="dot" aria-hidden="true">&#8226;</span>
-    <span>Imported &amp; authentic products</span>
+    <span class="announcement-item">${ANNOUNCEMENT_ICONS.globe}<span>Imported &amp; authentic products</span></span>
+    <span class="dot" aria-hidden="true">&#8226;</span>
+    <span class="announcement-item">${ANNOUNCEMENT_ICONS.badge}<span>USDA Organic &amp; HACCP certified</span></span>
     <span class="dot" aria-hidden="true">&#8226;</span>
   `;
   return `

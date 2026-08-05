@@ -97,9 +97,26 @@ function productIllustration(category) {
   return PRODUCT_ILLUSTRATIONS[category] || `<span aria-hidden="true">&#10022;</span>`;
 }
 
-function productMediaHtml(product) {
+// Grid/listing cards only ever render a few hundred CSS px per image, so we
+// request the small sibling generated alongside every compressed upload
+// (see server/utils/imageStorage.js) instead of the full 1600px master.
+// Legacy images uploaded before the thumbnail existed 404 on the sibling
+// until "Compress product images" is re-run in admin, hence the fallback.
+function thumbSrc(url) {
+  if (!url || url.startsWith('/assets/') || !/\.webp$/i.test(url)) return url;
+  return url.replace(/\.webp$/i, '-thumb.webp');
+}
+
+function thumbFallbackAttr(fullUrl) {
+  return `onerror="this.onerror=null;this.src='${fullUrl.replace(/'/g, '%27')}'"`;
+}
+
+function productMediaHtml(product, { fullSize = false } = {}) {
   if (product.images && product.images.length && product.images[0]) {
-    return `<img src="${product.images[0]}" alt="${product.name}" loading="lazy" width="600" height="600">`;
+    const full = product.images[0];
+    const src = fullSize ? full : thumbSrc(full);
+    const fallback = fullSize ? '' : thumbFallbackAttr(full);
+    return `<img src="${src}" ${fallback} alt="${product.name}" loading="lazy" decoding="async" width="600" height="600">`;
   }
   return productIllustration(product.category);
 }
@@ -163,7 +180,7 @@ function productCardHtml(product) {
         <a href="/pages/product.html?slug=${encodeURIComponent(product.slug)}" class="product-card-media-link">
           <div class="product-image">
             ${productMediaHtml(product)}
-            ${product.images && product.images[1] ? `<img src="${product.images[1]}" alt="" loading="lazy" width="600" height="600" class="product-image-hover">` : ''}
+            ${product.images && product.images[1] ? `<img src="${thumbSrc(product.images[1])}" ${thumbFallbackAttr(product.images[1])} alt="" loading="lazy" decoding="async" width="600" height="600" class="product-image-hover">` : ''}
             ${outOfStock
               ? '<span class="product-card-badge product-card-badge-muted">Out of stock</span>'
               : discount ? `<span class="product-card-badge">Save ${discount}%</span>` : product.is_bestseller ? '<span class="product-card-badge">Bestseller</span>' : ''}

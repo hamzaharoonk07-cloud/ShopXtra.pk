@@ -253,7 +253,7 @@ function renderProductsTable() {
     <tr data-id="${p.id}" class="${p.stock > 0 && p.stock <= 5 ? 'admin-row-warn' : ''}">
       <td>
         <div class="admin-thumb" data-thumb>
-          ${p.images && p.images[0] ? `<img src="${p.images[0]}" alt="">` : productIllustration(p.category)}
+          ${p.images && p.images[0] ? `<img src="${thumbSrc(p.images[0])}" ${thumbFallbackAttr(p.images[0])} alt="" loading="lazy" decoding="async">` : productIllustration(p.category)}
         </div>
       </td>
       <td>${p.name}${p.compare_at_price ? `<span class="admin-low-stock-tag" style="background:var(--tea-pink); color:var(--plum);">Sale</span>` : ''}</td>

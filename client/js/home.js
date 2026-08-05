@@ -98,7 +98,7 @@ async function showNewsletterModalIfNeeded(bannerShown) {
   if (!images.length) return;
 
   document.getElementById('newsletter-modal-images').innerHTML =
-    images.map((img) => `<img src="${img}" alt="" loading="lazy">`).join('');
+    images.map((img) => `<img src="${thumbSrc(img)}" ${thumbFallbackAttr(img)} alt="" loading="lazy" decoding="async">`).join('');
 
   const dismiss = () => {
     modal.classList.remove('visible');
@@ -126,8 +126,8 @@ function renderCategoryGrid() {
   grid.innerHTML = HOME_CATEGORIES.map((c) => `
     <a href="/pages/shop.html?category=${c.slug}" class="category-tile category-tile-${c.slug}" data-reveal="item">
       <div class="category-tile-image">
-        ${c.image ? `<img src="${c.image}" alt="" loading="lazy">` : categoryIcon(c.slug)}
-        ${c.hoverImage ? `<img src="${c.hoverImage}" alt="" loading="lazy" class="category-tile-image-hover">` : ''}
+        ${c.image ? `<img src="${thumbSrc(c.image)}" ${thumbFallbackAttr(c.image)} alt="" loading="lazy" decoding="async">` : categoryIcon(c.slug)}
+        ${c.hoverImage ? `<img src="${thumbSrc(c.hoverImage)}" ${thumbFallbackAttr(c.hoverImage)} alt="" loading="lazy" decoding="async" class="category-tile-image-hover">` : ''}
       </div>
       <div class="category-tile-foot">
         <span class="category-tile-name">${c.name}</span>

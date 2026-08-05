@@ -340,7 +340,7 @@ function showCartToast(product) {
   }
   const image = product.images && product.images[0];
   toast.innerHTML = `
-    ${image ? `<img src="${image}" alt="" class="cart-added-toast-img">` : '<span class="cart-added-toast-check">&#10003;</span>'}
+    ${image ? `<img src="${thumbSrc(image)}" ${thumbFallbackAttr(image)} alt="" decoding="async" class="cart-added-toast-img">` : '<span class="cart-added-toast-check">&#10003;</span>'}
     <span class="cart-added-toast-text"><strong>${product.name}</strong> added to cart</span>
   `;
   clearTimeout(cartToastTimer);

@@ -1,5 +1,15 @@
 const pool = require('../config/db');
-const { compressImage, COMPRESSIBLE_TYPES } = require('./imageStorage');
+const { compressImage, compressThumbnail, COMPRESSIBLE_TYPES } = require('./imageStorage');
+
+async function uploadThumb(original, filename) {
+  const thumb = await compressThumbnail(original);
+  const { put } = require('@vercel/blob');
+  await put(filename.replace(/\.webp$/, '-thumb.webp'), thumb, {
+    access: 'public',
+    contentType: 'image/webp',
+    token: process.env.BLOB_READ_WRITE_TOKEN,
+  });
+}
 
 async function reprocessUrl(url) {
   const res = await fetch(url);
@@ -11,6 +21,10 @@ async function reprocessUrl(url) {
   const original = Buffer.from(await res.arrayBuffer());
   const compressed = await compressImage(original);
   if (compressed.length >= original.length) {
+    // Already compressed by a prior pass - still worth generating the
+    // thumbnail sibling if this run predates the thumbnail feature.
+    const filename = url.split('/').pop().split('?')[0];
+    await uploadThumb(original, filename);
     return { skipped: true, reason: 'already smaller', originalBytes: original.length };
   }
 
@@ -21,6 +35,7 @@ async function reprocessUrl(url) {
     contentType: 'image/webp',
     token: process.env.BLOB_READ_WRITE_TOKEN,
   });
+  await uploadThumb(original, filename);
 
   return { newUrl: blob.url, originalBytes: original.length, compressedBytes: compressed.length };
 }

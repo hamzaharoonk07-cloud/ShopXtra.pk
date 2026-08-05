@@ -5,6 +5,8 @@ const sharp = require('sharp');
 
 const MAX_DIMENSION = 1600;
 const WEBP_QUALITY = 80;
+const THUMB_MAX_DIMENSION = 480;
+const THUMB_WEBP_QUALITY = 72;
 const COMPRESSIBLE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
 function randomFilename(ext) {
@@ -19,19 +21,19 @@ async function compressImage(buffer) {
     .toBuffer();
 }
 
-async function saveImage(file) {
-  let buffer = file.buffer;
-  let contentType = file.mimetype;
-  let ext = path.extname(file.originalname).toLowerCase();
+// Grid/listing views only ever display a few hundred CSS px per image, so
+// shipping the full 1600px master there wastes most of the download - this
+// smaller sibling is what productCardHtml() etc. actually render, with the
+// full-size master reserved for the product detail page's zoomed view.
+async function compressThumbnail(buffer) {
+  return sharp(buffer)
+    .rotate()
+    .resize({ width: THUMB_MAX_DIMENSION, height: THUMB_MAX_DIMENSION, fit: 'inside', withoutEnlargement: true })
+    .webp({ quality: THUMB_WEBP_QUALITY })
+    .toBuffer();
+}
 
-  if (COMPRESSIBLE_TYPES.includes(file.mimetype)) {
-    buffer = await compressImage(file.buffer);
-    contentType = 'image/webp';
-    ext = '.webp';
-  }
-
-  const filename = randomFilename(ext);
-
+async function storeBuffer(buffer, filename, contentType) {
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     const { put } = require('@vercel/blob');
     const blob = await put(filename, buffer, {
@@ -48,4 +50,27 @@ async function saveImage(file) {
   return `/uploads/${filename}`;
 }
 
-module.exports = { saveImage, compressImage, COMPRESSIBLE_TYPES };
+async function saveImage(file) {
+  let buffer = file.buffer;
+  let contentType = file.mimetype;
+  let ext = path.extname(file.originalname).toLowerCase();
+  const isCompressible = COMPRESSIBLE_TYPES.includes(file.mimetype);
+
+  if (isCompressible) {
+    buffer = await compressImage(file.buffer);
+    contentType = 'image/webp';
+    ext = '.webp';
+  }
+
+  const filename = randomFilename(ext);
+  const url = await storeBuffer(buffer, filename, contentType);
+
+  if (isCompressible) {
+    const thumbBuffer = await compressThumbnail(file.buffer);
+    await storeBuffer(thumbBuffer, filename.replace(/\.webp$/, '-thumb.webp'), 'image/webp');
+  }
+
+  return url;
+}
+
+module.exports = { saveImage, compressImage, compressThumbnail, COMPRESSIBLE_TYPES };
