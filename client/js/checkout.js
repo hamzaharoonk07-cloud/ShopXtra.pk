@@ -26,10 +26,21 @@ function renderCheckoutSummary() {
 
   const notesStep = document.getElementById('cosmetics-notes-step');
   const notesField = document.getElementById('ship-notes');
+  const notesLabel = document.getElementById('ship-notes-label');
   const hasCosmetics = cart.some((item) => item.category === 'cosmetics');
+  const hasElectrolytes = cart.some((item) => item.category === 'electrolytes');
   const hasBundle = cart.some((item) => item.category === 'bundle');
-  notesStep.classList.toggle('d-none', !hasCosmetics && !hasBundle);
-  notesField.required = hasCosmetics || hasBundle;
+  const needsNotes = hasCosmetics || hasElectrolytes || hasBundle;
+  notesStep.classList.toggle('d-none', !needsNotes);
+  notesField.required = needsNotes;
+
+  if (needsNotes) {
+    const asks = [];
+    if (hasElectrolytes) asks.push('flavour');
+    if (hasCosmetics) asks.push('shade or colour');
+    if (hasBundle) asks.push('flavour/shade preference for your bundle');
+    notesLabel.textContent = `Tell us your ${asks.join(' and ')} for your order`;
+  }
 
   updateTotals();
 }

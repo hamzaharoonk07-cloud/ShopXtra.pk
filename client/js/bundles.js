@@ -9,7 +9,7 @@ function bundleAsProduct(bundle) {
     name: bundle.name,
     price: bundle.price,
     compare_at_price: null,
-    stock: 1,
+    stock: 999999,
     images: bundle.image_url ? [bundle.image_url] : [],
     category: 'bundle',
     is_bundle: true,

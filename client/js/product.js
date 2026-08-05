@@ -92,6 +92,14 @@ async function loadProduct() {
           </div>
           <p class="pdp-desc">${product.description || ''}</p>
 
+          ${product.category === 'electrolytes' ? `
+            <p class="pdp-note-hint">Have a flavour preference? Let us know in the notes at checkout.</p>
+          ` : product.category === 'cosmetics' ? `
+            <p class="pdp-note-hint">Have a shade or colour preference? Let us know in the notes at checkout.</p>
+          ` : product.is_bundle ? `
+            <p class="pdp-note-hint">Have a flavour or shade preference for this kit? Let us know in the notes at checkout.</p>
+          ` : ''}
+
           ${colorSwatchesHtml}
 
           ${plainVariants.length ? `

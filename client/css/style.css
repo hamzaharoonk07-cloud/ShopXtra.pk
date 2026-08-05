@@ -3625,6 +3625,15 @@ select:focus-visible {
   text-decoration: underline;
 }
 
+.pdp-note-hint {
+  font-size: 0.82rem;
+  color: var(--muted-body);
+  background: var(--sand);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.75rem;
+  margin: 0 0 1rem;
+}
+
 .pdp-cod-chip {
   display: flex;
   align-items: center;
