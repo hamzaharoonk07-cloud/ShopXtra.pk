@@ -3021,7 +3021,13 @@ select:focus-visible {
 @media (max-width: 575.98px) {
   .reviews-overview {
     grid-template-columns: 1fr;
-    justify-items: center;
+  }
+  /* justify-items: center (the grid default is stretch) let this shrink to
+     its min-content width instead of filling the row - since its rows are
+     grids with a fixed-width first/last column, that starved the middle
+     1fr bar track of space and squeezed the whole row toward one edge. */
+  .reviews-overview-bars {
+    width: 100%;
   }
 }
 
