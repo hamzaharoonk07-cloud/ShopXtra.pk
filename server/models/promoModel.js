@@ -14,9 +14,12 @@ async function findByCode(code) {
 function computeDiscount(promo, subtotal) {
   if (!promo) return 0;
   if (promo.discount_type === 'free_gift') return 0;
-  const raw = promo.discount_type === 'percent'
+  let raw = promo.discount_type === 'percent'
     ? (subtotal * Number(promo.discount_value)) / 100
     : Number(promo.discount_value);
+  if (promo.discount_type === 'percent' && promo.max_discount_amount != null) {
+    raw = Math.min(raw, Number(promo.max_discount_amount));
+  }
   return Math.min(raw, subtotal);
 }
 
@@ -37,11 +40,11 @@ async function findPublicOffers() {
   return rows;
 }
 
-async function create({ code, discountType, discountValue, isPublicOffer, giftProductId }) {
+async function create({ code, discountType, discountValue, isPublicOffer, giftProductId, maxDiscountAmount }) {
   const { rows } = await pool.query(
-    `INSERT INTO promo_codes (code, discount_type, discount_value, is_public_offer, gift_product_id)
-     VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-    [code.toUpperCase(), discountType, discountValue, !!isPublicOffer, giftProductId || null]
+    `INSERT INTO promo_codes (code, discount_type, discount_value, is_public_offer, gift_product_id, max_discount_amount)
+     VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+    [code.toUpperCase(), discountType, discountValue, !!isPublicOffer, giftProductId || null, maxDiscountAmount || null]
   );
   return rows[0];
 }

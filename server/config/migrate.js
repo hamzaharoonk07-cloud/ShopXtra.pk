@@ -39,6 +39,9 @@ async function runMigrations() {
       ADD COLUMN IF NOT EXISTS verified_purchase BOOLEAN NOT NULL DEFAULT false;
 
     ALTER TABLE promo_codes
+      ADD COLUMN IF NOT EXISTS max_discount_amount NUMERIC(10, 2);
+
+    ALTER TABLE promo_codes
       ADD COLUMN IF NOT EXISTS gift_product_id INTEGER REFERENCES products(id);
 
     ALTER TABLE promo_codes DROP CONSTRAINT IF EXISTS promo_codes_discount_type_check;

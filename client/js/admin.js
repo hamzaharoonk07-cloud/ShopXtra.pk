@@ -897,7 +897,10 @@ function promoTypeLabel(type) {
 }
 
 function promoValueLabel(c) {
-  if (c.discount_type === 'percent') return `${Number(c.discount_value)}%`;
+  if (c.discount_type === 'percent') {
+    const pct = `${Number(c.discount_value)}%`;
+    return c.max_discount_amount != null ? `${pct} (up to ${formatPrice(c.max_discount_amount)})` : pct;
+  }
   if (c.discount_type === 'free_gift') return c.gift_product_name || 'Gift product';
   return formatPrice(c.discount_value);
 }
@@ -951,10 +954,12 @@ function populateGiftProductOptions() {
 
 document.getElementById('promo-type-input').addEventListener('change', (e) => {
   const isGift = e.target.value === 'free_gift';
+  const isPercent = e.target.value === 'percent';
   document.getElementById('promo-value-field').classList.toggle('d-none', isGift);
   document.getElementById('promo-value-input').required = !isGift;
   document.getElementById('promo-gift-field').classList.toggle('d-none', !isGift);
   document.getElementById('promo-gift-product-input').required = isGift;
+  document.getElementById('promo-max-discount-field').classList.toggle('d-none', !isPercent);
   if (isGift) populateGiftProductOptions();
 });
 
@@ -993,6 +998,7 @@ document.getElementById('add-promo-form').addEventListener('submit', async (e) =
   errorEl.classList.add('d-none');
   const discountType = document.getElementById('promo-type-input').value;
   try {
+    const maxDiscountRaw = document.getElementById('promo-max-discount-input').value;
     const res = await fetch('/api/promo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1001,6 +1007,7 @@ document.getElementById('add-promo-form').addEventListener('submit', async (e) =
         discountType,
         discountValue: discountType === 'free_gift' ? 0 : Number(document.getElementById('promo-value-input').value),
         giftProductId: discountType === 'free_gift' ? Number(document.getElementById('promo-gift-product-input').value) : undefined,
+        maxDiscountAmount: discountType === 'percent' && maxDiscountRaw ? Number(maxDiscountRaw) : undefined,
       }),
     });
     const body = await res.json();
@@ -1008,6 +1015,7 @@ document.getElementById('add-promo-form').addEventListener('submit', async (e) =
     document.getElementById('add-promo-form').reset();
     document.getElementById('promo-value-field').classList.remove('d-none');
     document.getElementById('promo-gift-field').classList.add('d-none');
+    document.getElementById('promo-max-discount-field').classList.add('d-none');
     loadPromoCodes();
   } catch (err) {
     errorEl.textContent = err.message;
