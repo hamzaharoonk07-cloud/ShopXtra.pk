@@ -5733,7 +5733,7 @@ select:focus-visible {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(1.25) saturate(1.08);
+  filter: brightness(1.1) saturate(1.03);
 }
 
 /* The poster <img> is a real, always-rendered image - it's what's visible
