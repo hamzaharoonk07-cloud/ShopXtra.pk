@@ -5530,24 +5530,9 @@ select:focus-visible {
   align-items: center;
 }
 
-.page-loader-text {
-  margin-top: 1.1rem;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--muted-body);
-  letter-spacing: 0.02em;
-  opacity: 1;
-  transition: opacity 0.2s ease;
-}
-
-.page-loader-text.is-swapping {
-  opacity: 0;
-}
-
 .page-loader-logo-wrap {
   position: relative;
-  width: 160px;
+  width: 120px;
 }
 
 .page-loader-logo {
@@ -5556,34 +5541,29 @@ select:focus-visible {
   height: auto;
 }
 
-.page-loader-logo-base {
-  opacity: 0.3;
-  filter: grayscale(1);
+.page-loader-spinner {
+  margin-top: 1.4rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 3px solid var(--hairline-strong);
+  border-top-color: var(--tea-pink);
+  animation: pageLoaderSpin 0.7s linear infinite;
 }
 
-.page-loader-logo-fill {
-  position: absolute;
-  inset: 0;
-  clip-path: inset(100% 0 0 0);
-  animation: loaderLogoFill 2.4s ease-in-out infinite;
-}
-
-@keyframes loaderLogoFill {
-  0% { clip-path: inset(100% 0 0 0); }
-  50% { clip-path: inset(12% 0 0 0); }
-  100% { clip-path: inset(100% 0 0 0); }
+@keyframes pageLoaderSpin {
+  to { transform: rotate(360deg); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .page-loader-logo-fill {
+  .page-loader-spinner {
     animation: none;
-    clip-path: inset(12% 0 0 0);
   }
 }
 
 @media (max-width: 480px) {
   .page-loader-logo-wrap {
-    width: 120px;
+    width: 96px;
   }
 }
 
