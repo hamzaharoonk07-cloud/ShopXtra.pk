@@ -1932,19 +1932,7 @@ select:focus-visible {
   text-transform: uppercase;
 }
 
-.hero-organic-seal-icon {
-  position: absolute;
-  top: 16px;
-  color: #fff;
-}
-
-.hero-organic-seal-icon svg {
-  width: 14px;
-  height: 14px;
-}
-
 .hero-organic-seal-text {
-  margin-top: 11px;
   color: #fff;
   font-family: 'Montserrat', sans-serif;
   font-weight: 800;
@@ -1961,26 +1949,14 @@ select:focus-visible {
      back in normal document flow, centered above the headline, so
      there's no overlap regardless of how the text wraps. */
   .hero-organic-seal {
-    /* relative, not static: the ring text and leaf icon inside are
-       position:absolute and need this element to stay their containing
-       block, or they detach and pin to a distant ancestor instead of
-       sitting inside this small circle - reading as the badge "collapsing". */
-    position: relative;
+    position: static;
     margin: 1rem auto 0.5rem;
     right: auto;
     top: auto;
     width: 64px;
     height: 64px;
   }
-  .hero-organic-seal-icon {
-    top: 12px;
-  }
-  .hero-organic-seal-icon svg {
-    width: 11px;
-    height: 11px;
-  }
   .hero-organic-seal-text {
-    margin-top: 8px;
     font-size: 0.52rem;
   }
 }
