@@ -1877,6 +1877,24 @@ select:focus-visible {
   padding: 0 0 2.5rem;
 }
 
+/* The scroll background video has no per-slide dark overlay like the old
+   carousel did, so the hero's own white text needs its own scrim behind
+   it - otherwise it goes unreadable against lighter frames of whatever
+   clip happens to be playing. Covers just the hero, not the whole page. */
+.home-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 7, 5, 0.35) 0%, rgba(10, 7, 5, 0.55) 55%, rgba(10, 7, 5, 0.4) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.home-hero > * {
+  position: relative;
+  z-index: 2;
+}
+
 /* A real USDA Organic seal is a circular badge, not a banner strip - this
    mirrors that convention instead of the flat full-width bar tried before. */
 .hero-organic-seal-wrap {
