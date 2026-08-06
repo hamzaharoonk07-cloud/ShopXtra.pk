@@ -1961,7 +1961,11 @@ select:focus-visible {
      back in normal document flow, centered above the headline, so
      there's no overlap regardless of how the text wraps. */
   .hero-organic-seal {
-    position: static;
+    /* relative, not static: the ring text and leaf icon inside are
+       position:absolute and need this element to stay their containing
+       block, or they detach and pin to a distant ancestor instead of
+       sitting inside this small circle - reading as the badge "collapsing". */
+    position: relative;
     margin: 1rem auto 0.5rem;
     right: auto;
     top: auto;
