@@ -68,6 +68,71 @@ function renderImagePreview(inputId, previewId) {
   }
 }
 
+// Shows each picked image in a Cropper.js modal before it's added to the
+// preview list, so admins can frame the photo instead of whatever crop
+// object-fit:cover happens to land on later. Resolves with a cropped File,
+// or the original file untouched if the admin skips/closes the modal.
+function openCropModal(file) {
+  return new Promise((resolve) => {
+    if (typeof Cropper === 'undefined' || !file.type.startsWith('image/') || file.type === 'image/gif') {
+      resolve(file);
+      return;
+    }
+
+    const modalEl = document.getElementById('cropModal');
+    const img = document.getElementById('crop-modal-image');
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    const objectUrl = URL.createObjectURL(file);
+    let cropper = null;
+    let settled = false;
+
+    function cleanup() {
+      modalEl.removeEventListener('hidden.bs.modal', onHidden);
+      if (cropper) { cropper.destroy(); cropper = null; }
+      URL.revokeObjectURL(objectUrl);
+    }
+
+    function finish(resultFile) {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      resolve(resultFile);
+    }
+
+    function onHidden() {
+      finish(file);
+    }
+
+    modalEl.addEventListener('hidden.bs.modal', onHidden);
+    document.getElementById('cropModalLabel').textContent = `Crop image — ${file.name}`;
+
+    img.onerror = () => { finish(file); modal.hide(); };
+    img.onload = () => {
+      cropper = new Cropper(img, { viewMode: 1, autoCropArea: 1, background: false, responsive: true });
+    };
+    img.src = objectUrl;
+
+    document.getElementById('crop-modal-square-btn').onclick = () => cropper?.setAspectRatio(1);
+    document.getElementById('crop-modal-free-btn').onclick = () => cropper?.setAspectRatio(NaN);
+    document.getElementById('crop-modal-skip-btn').onclick = () => modal.hide();
+    document.getElementById('crop-modal-confirm-btn').onclick = () => {
+      if (!cropper) { modal.hide(); return; }
+      const outputType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+      cropper.getCroppedCanvas({ imageSmoothingQuality: 'high' }).toBlob((blob) => {
+        if (blob) {
+          const ext = outputType === 'image/png' ? '.png' : '.jpg';
+          finish(new File([blob], file.name.replace(/\.[^.]+$/, '') + ext, { type: outputType }));
+        } else {
+          finish(file);
+        }
+        modal.hide();
+      }, outputType, 0.92);
+    };
+
+    modal.show();
+  });
+}
+
 // Native <input type="file" multiple> replaces the whole selection every time
 // the picker reopens, so re-selecting to add more images silently drops the
 // ones already chosen. This accumulates across picker sessions (up to the
@@ -80,15 +145,17 @@ function initImagePreview(inputId, previewId) {
   if (!input || !preview) return;
   imagePreviewFiles[inputId] = [];
 
-  input.addEventListener('change', () => {
+  input.addEventListener('change', async () => {
     const picked = [...input.files];
     if (!picked.length) return;
 
     const existing = imagePreviewFiles[inputId];
-    picked.forEach((file) => {
+    for (const file of picked) {
       const isDupe = existing.some((f) => f.name === file.name && f.size === file.size && f.lastModified === file.lastModified);
-      if (!isDupe && existing.length < IMAGE_PREVIEW_MAX) existing.push(file);
-    });
+      if (isDupe || existing.length >= IMAGE_PREVIEW_MAX) continue;
+      const result = await openCropModal(file);
+      if (existing.length < IMAGE_PREVIEW_MAX) existing.push(result);
+    }
 
     syncInputFiles(input, existing);
     renderImagePreview(inputId, previewId);

@@ -12,6 +12,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="/assets/favicon.png">
 <link href="/css/vendor/bootstrap.min.css" rel="stylesheet">
+<link href="/css/vendor/cropper.min.css" rel="stylesheet">
 <link href="/css/style.css?v=20260806n" rel="stylesheet">
 
 <div id="admin-loading" class="text-center py-5">Loading…</div>
@@ -458,6 +459,30 @@
   </div>
 </div>
 
+<div class="modal fade" id="cropModal" tabindex="-1" aria-labelledby="cropModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title h5" id="cropModalLabel">Crop image</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Skip cropping"></button>
+      </div>
+      <div class="modal-body">
+        <div style="max-height: 60vh; overflow: hidden;">
+          <img id="crop-modal-image" style="max-width: 100%;" alt="">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-plum btn-sm" id="crop-modal-square-btn">Square</button>
+        <button type="button" class="btn btn-outline-plum btn-sm" id="crop-modal-free-btn">Free</button>
+        <div class="flex-grow-1"></div>
+        <button type="button" class="btn btn-outline-plum" id="crop-modal-skip-btn">Use original</button>
+        <button type="button" class="btn btn-plum" id="crop-modal-confirm-btn">Crop &amp; add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="/js/vendor/bootstrap.bundle.min.js"></script>
+<script src="/js/vendor/cropper.min.js"></script>
 <script src="/js/api.js"></script>
-<script src="/js/admin.js?v=20260722a"></script>
+<script src="/js/admin.js?v=20260722b"></script>
