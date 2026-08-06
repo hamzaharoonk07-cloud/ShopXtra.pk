@@ -66,7 +66,7 @@ function updateTotals() {
   if (appliedPromo && appliedPromo.discountType === 'free_gift') {
     discountRow.classList.remove('d-none');
     document.getElementById('checkout-discount-label').textContent = 'Free gift';
-    document.getElementById('checkout-discount').textContent = appliedPromo.giftProduct?.name || 'Included';
+    document.getElementById('checkout-discount').textContent = 'Included';
   } else if (appliedPromo) {
     discountRow.classList.remove('d-none');
     document.getElementById('checkout-discount-label').textContent = 'Discount';
