@@ -1910,8 +1910,8 @@ select:focus-visible {
   height: 84px;
   border-radius: 50%;
   background: radial-gradient(circle at 32% 28%, #1f6b46, var(--plum) 78%);
-  border: 2px solid var(--gold);
-  box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.55), inset 0 0 0 4px rgba(230, 169, 53, 0.18);
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.55), inset 0 0 0 4px rgba(255, 255, 255, 0.14);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1935,7 +1935,7 @@ select:focus-visible {
 .hero-organic-seal-icon {
   position: absolute;
   top: 16px;
-  color: var(--gold);
+  color: #fff;
 }
 
 .hero-organic-seal-icon svg {
