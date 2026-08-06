@@ -24,6 +24,22 @@ const { runMigrations } = require('./config/migrate');
 
 const app = express();
 
+// The site is fully live and indexable at both the custom domain and
+// Vercel's default *.vercel.app one, which duplicates every page under two
+// hosts (bad for SEO, confusing for anyone who lands on the raw vercel.app
+// link). Only the VERCEL env var (set automatically by Vercel's runtime,
+// never in local dev) gates this, so `npm run dev` / `vercel dev` keep
+// working against localhost untouched.
+const CANONICAL_HOST = 'www.shopxtra.store';
+if (process.env.VERCEL) {
+  app.use((req, res, next) => {
+    if (req.headers.host && req.headers.host !== CANONICAL_HOST) {
+      return res.redirect(301, `https://${CANONICAL_HOST}${req.originalUrl}`);
+    }
+    next();
+  });
+}
+
 // Fire-and-forget from the process's perspective, but every request below
 // waits on this same promise before reaching any route - otherwise a cold
 // start can serve a request (e.g. hitting a brand-new table) before the
