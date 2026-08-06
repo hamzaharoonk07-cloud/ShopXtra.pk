@@ -216,9 +216,25 @@ function initSiteBgVideo() {
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   window.scrollTo(0, 0);
 
+  const segments = Array.from(wrap.querySelectorAll('.site-bg-segment'));
   const videos = Array.from(wrap.querySelectorAll('.site-bg-video'));
-  if (!videos.length) return;
+  if (!segments.length) return;
   videos.forEach((v) => { v.loop = true; });
+
+  // The poster <img> underneath each video is what's actually visible by
+  // default (see the CSS comment on .site-bg-video) - the video only fades
+  // in once one of these events confirms a real frame exists, which is a
+  // stronger signal than "load() was called" or "the poster attribute is
+  // set" (browsers are inconsistent about honoring poster mid-reload).
+  function markReadyWhenPlayable(video) {
+    if (video.readyState >= 2) {
+      video.classList.add('is-ready');
+      return;
+    }
+    const onReady = () => { video.classList.add('is-ready'); };
+    video.addEventListener('loadeddata', onReady, { once: true });
+    video.addEventListener('canplay', onReady, { once: true });
+  }
 
   function ensureLoaded(video) {
     if (!video.dataset.src) return;
@@ -226,25 +242,26 @@ function initSiteBgVideo() {
     source.src = video.dataset.src;
     source.type = 'video/mp4';
     video.appendChild(source);
+    markReadyWhenPlayable(video);
     video.load();
     delete video.dataset.src;
   }
 
   let activeIndex = 0;
+  markReadyWhenPlayable(videos[0]);
   videos[0].play().catch(() => {});
   // Preloading only one segment ahead gave a thin margin - fast scrolling
-  // could reach a segment before its load() (triggered synchronously in
-  // setActive below) had actually produced a frame, showing black for a
-  // moment mid-transition. Two segments ahead gives more lead time.
+  // could reach a segment before its video was ready. Two ahead gives more
+  // lead time (the poster underneath covers any remaining gap regardless).
   if (videos[1]) ensureLoaded(videos[1]);
   if (videos[2]) ensureLoaded(videos[2]);
 
   function setActive(i) {
     if (i === activeIndex) return;
-    videos[activeIndex].classList.remove('active');
+    segments[activeIndex].classList.remove('active');
     videos[activeIndex].pause();
     ensureLoaded(videos[i]);
-    videos[i].classList.add('active');
+    segments[i].classList.add('active');
     videos[i].play().catch(() => {});
     activeIndex = i;
     if (videos[i + 1]) ensureLoaded(videos[i + 1]);
