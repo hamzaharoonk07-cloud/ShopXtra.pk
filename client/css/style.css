@@ -2489,6 +2489,29 @@ select:focus-visible {
   margin: 0.25rem 0 0.6rem;
 }
 
+/* On the homepage this heading sits directly on the scroll video - a
+   busy frame (e.g. a product tube's own printed brand text) can land
+   right behind "100%" and turn into clutter/read as a stray logo.
+   fit-content + a blurred backdrop (no hard edges) fixes it regardless
+   of which video frame is showing, same approach as the hero trust-bar -
+   scoped to just the heading text, not the full-width block, so it
+   doesn't turn into a wide bar with empty space on the right. */
+.home-main .certifications-section h2 {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.home-main .certifications-section h2::before {
+  content: '';
+  position: absolute;
+  inset: -0.5rem -0.85rem;
+  background: rgba(8, 6, 4, 0.42);
+  filter: blur(18px);
+  z-index: -1;
+  pointer-events: none;
+}
+
 .certifications-intro {
   color: var(--muted-body);
   font-size: 0.9rem;
