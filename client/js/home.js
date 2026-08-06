@@ -208,7 +208,73 @@ function initHeroCarousel() {
   startAutoplay();
 }
 
-initHeroCarousel();
+function initSiteBgVideo() {
+  const wrap = document.getElementById('site-bg-video-wrap');
+  if (!wrap) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+
+  const videos = Array.from(wrap.querySelectorAll('.site-bg-video'));
+  if (!videos.length) return;
+  videos.forEach((v) => { v.loop = true; });
+
+  function ensureLoaded(video) {
+    if (!video.dataset.src) return;
+    const source = document.createElement('source');
+    source.src = video.dataset.src;
+    source.type = 'video/mp4';
+    video.appendChild(source);
+    video.load();
+    delete video.dataset.src;
+  }
+
+  let activeIndex = 0;
+  videos[0].play().catch(() => {});
+  if (videos[1]) ensureLoaded(videos[1]);
+
+  function setActive(i) {
+    if (i === activeIndex) return;
+    videos[activeIndex].classList.remove('active');
+    videos[activeIndex].pause();
+    ensureLoaded(videos[i]);
+    videos[i].classList.add('active');
+    videos[i].play().catch(() => {});
+    activeIndex = i;
+    if (videos[i + 1]) ensureLoaded(videos[i + 1]);
+  }
+
+  // Reading scrollHeight forces a layout reflow, so it's cached here and
+  // only recomputed on resize/content-load - not on every scroll tick,
+  // which was causing layout thrashing (and visible video jank) on scroll.
+  let maxScroll = 0;
+  function recalcMaxScroll() {
+    maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+  }
+  recalcMaxScroll();
+  window.addEventListener('resize', recalcMaxScroll, { passive: true });
+  window.addEventListener('load', recalcMaxScroll);
+  document.addEventListener('shopxtra:products-rendered', recalcMaxScroll);
+
+  function updateFromScroll() {
+    const progress = maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0;
+    const segment = Math.min(videos.length - 1, Math.floor(progress * videos.length));
+    setActive(segment);
+    if (videos[segment].paused) videos[segment].play().catch(() => {});
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { updateFromScroll(); ticking = false; });
+  }, { passive: true });
+
+  updateFromScroll();
+}
+
+initSiteBgVideo();
 renderCategoryGrid();
 loadCategoryImages();
 showSaleBannerIfAny();

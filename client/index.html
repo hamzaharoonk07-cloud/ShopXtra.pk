@@ -16,7 +16,7 @@
 <meta name="description" content="Organic electrolytes, coffee, hair & body care and cosmetics, authentic, PKR-priced, and delivered to your door with Cash on Delivery.">
 <link rel="preload" as="image" href="/assets/hero/electrolytes-flavors.jpg" fetchpriority="high">
 <link href="/css/vendor/bootstrap.min.css" rel="stylesheet">
-<link href="/css/style.css?v=20260806s" rel="stylesheet">
+<link href="/css/style.css?v=20260806t" rel="stylesheet">
 
 <!-- Meta Pixel Code -->
 <script>
@@ -55,6 +55,13 @@ src="https://www.facebook.com/tr?id=1016557214346693&ev=PageView&noscript=1"
 </script>
 </head>
 
+<div class="site-bg-video-wrap" id="site-bg-video-wrap" aria-hidden="true">
+  <video class="site-bg-video active" playsinline muted preload="auto"><source src="/assets/bg/bg-electrolytes.mp4" type="video/mp4"></video>
+  <video class="site-bg-video" playsinline muted preload="none" data-src="/assets/bg/bg-coffee.mp4"></video>
+  <video class="site-bg-video" playsinline muted preload="none" data-src="/assets/bg/bg-cosmetics.mp4"></video>
+  <video class="site-bg-video" playsinline muted preload="none" data-src="/assets/bg/bg-shampoo.mp4"></video>
+</div>
+
 <div id="page-loader-slot"></div>
 <div id="navbar-slot"></div>
 
@@ -72,112 +79,32 @@ src="https://www.facebook.com/tr?id=1016557214346693&ev=PageView&noscript=1"
 </div>
 
 
-<main>
+<main class="home-main">
   <section class="home-hero">
-    <div class="hero-carousel" id="hero-carousel" role="region" aria-roledescription="carousel" aria-label="Featured categories">
-      <div class="container hero-organic-seal-wrap">
-        <div class="hero-organic-seal" data-reveal="up">
-          <svg class="hero-organic-seal-ring" viewBox="0 0 100 100" aria-hidden="true">
-            <path id="hero-organic-seal-arc" d="M 50,50 m -38,0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0" fill="none"></path>
-            <text font-size="8.6" font-weight="700" letter-spacing="1.5">
-              <textPath href="#hero-organic-seal-arc" startOffset="2%">USDA CERTIFIED &#8226; VERIFIED QUALITY &#8226;</textPath>
-            </text>
-          </svg>
-          <span class="hero-organic-seal-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-7-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 4.5-6 8.5-7 11z" stroke-linejoin="round"/><path d="M12 21V10"/><path d="M12 10c0-3 2-5 5-6"/></svg>
-          </span>
-          <span class="hero-organic-seal-text">100%<br>Organic</span>
-        </div>
+    <div class="container hero-organic-seal-wrap">
+      <div class="hero-organic-seal" data-reveal="up">
+        <svg class="hero-organic-seal-ring" viewBox="0 0 100 100" aria-hidden="true">
+          <path id="hero-organic-seal-arc" d="M 50,50 m -38,0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0" fill="none"></path>
+          <text font-size="8.6" font-weight="700" letter-spacing="1.5">
+            <textPath href="#hero-organic-seal-arc" startOffset="2%">USDA CERTIFIED &#8226; VERIFIED QUALITY &#8226;</textPath>
+          </text>
+        </svg>
+        <span class="hero-organic-seal-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-7-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 4.5-6 8.5-7 11z" stroke-linejoin="round"/><path d="M12 21V10"/><path d="M12 10c0-3 2-5 5-6"/></svg>
+        </span>
+        <span class="hero-organic-seal-text">100%<br>Organic</span>
       </div>
-      <div class="hero-carousel-track" id="hero-carousel-track">
+    </div>
 
-        <div class="hero-slide hero-slide-morning" data-slide="0">
-          <div class="hero-slide-photo">
-            <video autoplay muted loop playsinline poster="/assets/hero/electrolytes-flavors.jpg" aria-label="Electrolyte drink animation on a sunny beach">
-              <source src="/assets/hero/electrolytes-beach.mp4" type="video/mp4">
-            </video>
-          </div>
-          <div class="container hero-slide-inner">
-            <div class="hero-slide-copy">
-              <span class="hero-slide-eyebrow" data-reveal="hero">100% Organic &middot; 4 flavors, 1 goal</span>
-              <p class="lead" data-reveal="hero">Green apple, peach, pineapple &amp; strawberry. Imported electrolytes.</p>
-              <div class="d-flex gap-3 flex-wrap" data-reveal="hero">
-                <a href="/pages/shop.html?category=electrolytes" class="btn btn-hero-light">Shop electrolytes</a>
-              </div>
-            </div>
-          </div>
+    <div class="container hero-slide-inner" style="min-height: clamp(460px, 54vw, 620px);">
+      <div class="hero-slide-copy">
+        <span class="hero-slide-eyebrow" data-reveal="hero">100% Organic &middot; Electrolytes, coffee, shampoo &amp; cosmetics</span>
+        <h1 data-reveal="hero">Look after yourself,<br>every single day.</h1>
+        <p class="lead" data-reveal="hero">Authentic, imported essentials with Cash on Delivery nationwide.</p>
+        <div class="d-flex gap-3 flex-wrap" data-reveal="hero">
+          <a href="/pages/shop.html" class="btn btn-hero-light">Shop all</a>
+          <a href="/pages/bundles.html" class="btn btn-hero-outline">Explore kits &rarr;</a>
         </div>
-
-        <div class="hero-slide hero-slide-coffee" data-slide="1">
-          <div class="hero-slide-photo">
-            <video muted loop playsinline preload="none" poster="/assets/hero/coffee-pour.jpg" aria-label="Iced coffee beverage and coffee grounds video">
-              <source data-src="/assets/hero/coffee-pour.mp4" type="video/mp4">
-            </video>
-          </div>
-          <div class="container hero-slide-inner">
-            <div class="hero-slide-copy">
-              <span class="hero-slide-eyebrow" data-reveal="hero">Made for iced coffee</span>
-              <h1 data-reveal="hero">Rich roast.<br>One scoop away.</h1>
-              <p class="lead" data-reveal="hero">Instant coffee that actually tastes brewed, over ice, over milk, over everything.</p>
-              <div class="d-flex gap-3 flex-wrap" data-reveal="hero">
-                <a href="/pages/shop.html?category=coffee" class="btn btn-hero-light">Shop coffee</a>
-                <a href="/pages/bundles.html" class="btn btn-hero-outline">Explore kits &rarr;</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="hero-slide hero-slide-midday" data-slide="2">
-          <div class="hero-slide-photo">
-            <video muted loop playsinline preload="none" poster="/assets/hero/shampoo-rosemary.jpg" aria-label="Handmade soap bar with fresh oranges and strawberries">
-              <source data-src="/assets/hero/shampoo-rosemary.mp4" type="video/mp4">
-            </video>
-          </div>
-          <div class="container hero-slide-inner">
-            <div class="hero-slide-copy">
-              <span class="hero-slide-eyebrow" data-reveal="hero">Midday care</span>
-              <h1 data-reveal="hero">Clean that doesn't<br>dry you out.</h1>
-              <p class="lead" data-reveal="hero">Shampoo bars for an everyday routine that actually works.</p>
-              <div class="d-flex gap-3 flex-wrap" data-reveal="hero">
-                <a href="/pages/shop.html?category=shampoo" class="btn btn-hero-light">Shop shampoo &rarr;</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="hero-slide hero-slide-evening" data-slide="3">
-          <div class="hero-slide-photo">
-            <video muted loop playsinline preload="none" poster="/assets/hero/cosmetics-flatlay.jpg" aria-label="Cosmetic products display video">
-              <source data-src="/assets/hero/cosmetics-display.mp4" type="video/mp4">
-            </video>
-          </div>
-          <div class="container hero-slide-inner">
-            <div class="hero-slide-copy">
-              <span class="hero-slide-eyebrow" data-reveal="hero">Evening glow</span>
-              <h1 data-reveal="hero">Shades that match<br>what you expect.</h1>
-              <p class="lead" data-reveal="hero">Authentic cosmetics, delivered nationwide with Cash on Delivery.</p>
-              <div class="d-flex gap-3 flex-wrap" data-reveal="hero">
-                <a href="/pages/shop.html?category=cosmetics" class="btn btn-hero-light">Shop cosmetics</a>
-                <a href="/pages/bundles.html" class="btn btn-hero-outline">Explore kits &rarr;</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <button type="button" class="hero-carousel-arrow prev" id="hero-prev" aria-label="Previous slide">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-      </button>
-      <button type="button" class="hero-carousel-arrow next" id="hero-next" aria-label="Next slide">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-      </button>
-
-      <div class="hero-carousel-dots" id="hero-carousel-dots" role="tablist" aria-label="Choose category">
-        <button type="button" class="active" data-slide-to="0" role="tab" aria-selected="true" aria-label="Electrolytes"></button>
-        <button type="button" data-slide-to="1" role="tab" aria-selected="false" aria-label="Coffee"></button>
-        <button type="button" data-slide-to="2" role="tab" aria-selected="false" aria-label="Midday care"></button>
-        <button type="button" data-slide-to="3" role="tab" aria-selected="false" aria-label="Evening glow"></button>
       </div>
     </div>
 
