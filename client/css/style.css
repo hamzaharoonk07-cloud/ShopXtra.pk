@@ -1896,18 +1896,16 @@ select:focus-visible {
 }
 
 /* A real USDA Organic seal is a circular badge, not a banner strip - this
-   mirrors that convention instead of the flat full-width bar tried before. */
-.hero-organic-seal-wrap {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  pointer-events: none;
-}
-
+   mirrors that convention instead of the flat full-width bar tried before.
+   Positioned with a plain right offset (not nested in a Bootstrap
+   .container with inset:0 like an earlier version) - mixing .container's
+   margin-auto centering with position:absolute; inset:0 was fragile and
+   collapsed on some mobile widths. */
 .hero-organic-seal {
   position: absolute;
   top: 1.5rem;
-  right: 0;
+  right: 1.25rem;
+  z-index: 4;
   width: 84px;
   height: 84px;
   border-radius: 50%;
@@ -1959,7 +1957,7 @@ select:focus-visible {
 @media (max-width: 640px) {
   .hero-organic-seal {
     top: 1rem;
-    right: 0;
+    right: 1rem;
     width: 64px;
     height: 64px;
   }
