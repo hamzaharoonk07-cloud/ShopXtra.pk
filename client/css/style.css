@@ -2223,6 +2223,21 @@ select:focus-visible {
      screen edge instead of aligned with the rest of the page's content. */
   padding-top: 1.35rem;
   flex-wrap: wrap;
+  position: relative;
+}
+
+/* Text-shadow alone isn't enough contrast once this row sits over a light
+   frame of the background video (pale green/yellow) - "Rated by buyers"
+   etc. washed out. A blurred (not hard-edged) backdrop behind the whole
+   row fixes it without reading as a visible box. */
+.hero-trust-bar::before {
+  content: '';
+  position: absolute;
+  inset: -0.85rem -1.25rem -0.6rem;
+  background: rgba(8, 6, 4, 0.48);
+  filter: blur(20px);
+  z-index: -1;
+  pointer-events: none;
 }
 
 .hero-stat {
