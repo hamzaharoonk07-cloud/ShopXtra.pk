@@ -5750,7 +5750,9 @@ select:focus-visible {
 .home-main section:has(.faq-accordion) h2,
 .home-main .section-head-link,
 .home-main .certifications-section h2,
-.home-main .certifications-intro {
+.home-main .certifications-intro,
+.home-main .trust-band-label,
+.home-main .home-section-intro {
   color: #fff;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
 }
