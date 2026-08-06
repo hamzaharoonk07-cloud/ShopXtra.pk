@@ -72,6 +72,16 @@ function initPageTransitions() {
   gsap.set(document.body, { opacity: 0 });
   gsap.to(document.body, { opacity: 1, duration: 0.45, ease: 'power1.out' });
 
+  // Clicking a link fades the body to opacity 0 before navigating away (see
+  // below). If the browser restores THIS page from its back-forward cache
+  // (hitting Back/Forward instead of a fresh load), it restores the DOM
+  // exactly as it was left - mid-fade, stuck at opacity 0 - which looks like
+  // the page is frozen/blank. pageshow with persisted=true fires on every
+  // bfcache restore, so force it visible again there.
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) gsap.set(document.body, { opacity: 1 });
+  });
+
   document.addEventListener('click', (e) => {
     const link = e.target.closest('a[href]');
     if (!link || link.target === '_blank' || link.hasAttribute('download')) return;
