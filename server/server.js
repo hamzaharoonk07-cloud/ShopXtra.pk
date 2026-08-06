@@ -20,6 +20,7 @@ const addressRoutes = require('./routes/addresses');
 const userRoutes = require('./routes/users');
 const bannerRoutes = require('./routes/banner');
 const sitemapRoutes = require('./routes/sitemap');
+const storeResetRoutes = require('./routes/storeReset');
 const { runMigrations } = require('./config/migrate');
 
 const app = express();
@@ -109,6 +110,7 @@ app.use('/api/bundles', bundleRoutes);
 app.use('/api/addresses', addressRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/banner', bannerRoutes);
+app.use('/api/store-reset', storeResetRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
