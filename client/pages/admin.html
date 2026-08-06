@@ -229,6 +229,7 @@
             </select>
           </div>
           <div class="col-md-3 d-none" id="promo-max-discount-field"><input type="number" class="form-control" id="promo-max-discount-input" placeholder="Max discount (optional)" min="0"></div>
+          <div class="col-md-3"><input type="number" class="form-control" id="promo-max-uses-input" placeholder="Max uses (optional)" min="1"></div>
           <div class="col-md-3"><button type="submit" class="btn btn-plum w-100">Create</button></div>
         </form>
         <p class="text-danger d-none mt-2" id="add-promo-error"></p>
@@ -237,7 +238,7 @@
         <div class="table-responsive">
           <table class="table align-middle admin-table">
             <thead>
-              <tr><th>Code</th><th>Type</th><th>Value</th><th>Status</th><th></th></tr>
+              <tr><th>Code</th><th>Type</th><th>Value</th><th>Uses</th><th>Status</th><th></th></tr>
             </thead>
             <tbody id="promo-table-body"></tbody>
           </table>

@@ -2,13 +2,17 @@ const pool = require('../config/db');
 
 async function findByCode(code) {
   const { rows } = await pool.query(
-    `SELECT pc.*, p.name AS gift_product_name, p.slug AS gift_product_slug, p.images AS gift_product_images
+    `SELECT pc.*, p.name AS gift_product_name, p.slug AS gift_product_slug, p.images AS gift_product_images,
+       (SELECT COUNT(*)::int FROM orders o WHERE o.promo_code = pc.code AND o.status != 'cancelled') AS uses_so_far
      FROM promo_codes pc
      LEFT JOIN products p ON p.id = pc.gift_product_id
      WHERE pc.code = $1 AND pc.active = true`,
     [code.toUpperCase()]
   );
-  return rows[0] || null;
+  const promo = rows[0];
+  if (!promo) return null;
+  if (promo.max_uses != null && promo.uses_so_far >= promo.max_uses) return null;
+  return promo;
 }
 
 function computeDiscount(promo, subtotal) {
@@ -25,7 +29,8 @@ function computeDiscount(promo, subtotal) {
 
 async function findAll() {
   const { rows } = await pool.query(
-    `SELECT pc.*, p.name AS gift_product_name
+    `SELECT pc.*, p.name AS gift_product_name,
+       (SELECT COUNT(*)::int FROM orders o WHERE o.promo_code = pc.code AND o.status != 'cancelled') AS uses_so_far
      FROM promo_codes pc
      LEFT JOIN products p ON p.id = pc.gift_product_id
      ORDER BY pc.created_at DESC`
@@ -40,11 +45,11 @@ async function findPublicOffers() {
   return rows;
 }
 
-async function create({ code, discountType, discountValue, isPublicOffer, giftProductId, maxDiscountAmount }) {
+async function create({ code, discountType, discountValue, isPublicOffer, giftProductId, maxDiscountAmount, maxUses }) {
   const { rows } = await pool.query(
-    `INSERT INTO promo_codes (code, discount_type, discount_value, is_public_offer, gift_product_id, max_discount_amount)
-     VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-    [code.toUpperCase(), discountType, discountValue, !!isPublicOffer, giftProductId || null, maxDiscountAmount || null]
+    `INSERT INTO promo_codes (code, discount_type, discount_value, is_public_offer, gift_product_id, max_discount_amount, max_uses)
+     VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+    [code.toUpperCase(), discountType, discountValue, !!isPublicOffer, giftProductId || null, maxDiscountAmount || null, maxUses || null]
   );
   return rows[0];
 }

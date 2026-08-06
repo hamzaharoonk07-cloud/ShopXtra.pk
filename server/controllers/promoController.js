@@ -46,7 +46,7 @@ async function publicOffers(req, res, next) {
 
 async function create(req, res, next) {
   try {
-    const { code, discountType, discountValue, isPublicOffer, giftProductId, maxDiscountAmount } = req.body;
+    const { code, discountType, discountValue, isPublicOffer, giftProductId, maxDiscountAmount, maxUses } = req.body;
     if (!code || !['percent', 'flat', 'free_gift'].includes(discountType)) {
       return res.status(400).json({ error: 'code and discountType (percent|flat|free_gift) are required' });
     }
@@ -64,6 +64,7 @@ async function create(req, res, next) {
       isPublicOffer,
       giftProductId: discountType === 'free_gift' ? giftProductId : null,
       maxDiscountAmount: discountType === 'percent' ? maxDiscountAmount : null,
+      maxUses: maxUses ? Number(maxUses) : null,
     });
     res.status(201).json(promo);
   } catch (err) {

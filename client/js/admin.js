@@ -996,11 +996,12 @@ async function loadPromoCodes() {
             <td class="mono">${c.code}</td>
             <td>${promoTypeLabel(c.discount_type)}</td>
             <td>${promoValueLabel(c)}</td>
+            <td>${c.max_uses != null ? `${c.uses_so_far} / ${c.max_uses}` : `${c.uses_so_far}`}</td>
             <td>${c.active ? 'Active' : 'Inactive'}</td>
             <td><button type="button" class="btn btn-outline-plum btn-sm promo-toggle-btn" data-active="${c.active}">${c.active ? 'Deactivate' : 'Activate'}</button></td>
           </tr>
         `).join('')
-      : '<tr><td colspan="5" style="color:#6b5a58;">No promo codes yet.</td></tr>';
+      : '<tr><td colspan="6" style="color:#6b5a58;">No promo codes yet.</td></tr>';
 
     tbody.querySelectorAll('.promo-toggle-btn').forEach((btn) => {
       btn.addEventListener('click', async () => {
@@ -1022,7 +1023,7 @@ async function loadPromoCodes() {
       });
     });
   } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="5" class="text-danger">Could not load promo codes: ${err.message}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" class="text-danger">Could not load promo codes: ${err.message}</td></tr>`;
   }
 }
 
@@ -1136,6 +1137,7 @@ document.getElementById('add-promo-form').addEventListener('submit', async (e) =
   const discountType = document.getElementById('promo-type-input').value;
   try {
     const maxDiscountRaw = document.getElementById('promo-max-discount-input').value;
+    const maxUsesRaw = document.getElementById('promo-max-uses-input').value;
     const res = await fetch('/api/promo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1145,6 +1147,7 @@ document.getElementById('add-promo-form').addEventListener('submit', async (e) =
         discountValue: discountType === 'free_gift' ? 0 : Number(document.getElementById('promo-value-input').value),
         giftProductId: discountType === 'free_gift' ? Number(document.getElementById('promo-gift-product-input').value) : undefined,
         maxDiscountAmount: discountType === 'percent' && maxDiscountRaw ? Number(maxDiscountRaw) : undefined,
+        maxUses: maxUsesRaw ? Number(maxUsesRaw) : undefined,
       }),
     });
     const body = await res.json();

@@ -140,6 +140,12 @@ async function runMigrations() {
       WHERE image_url IS NOT NULL AND (images IS NULL OR array_length(images, 1) IS NULL);
 
     ALTER TABLE reviews ADD COLUMN IF NOT EXISTS image_url TEXT;
+
+    -- Caps how many orders a code can be redeemed on (e.g. "first 100
+    -- orders") - null means unlimited. Usage is counted live from
+    -- orders.promo_code rather than a separate counter column, so it
+    -- can never drift out of sync with what actually got redeemed.
+    ALTER TABLE promo_codes ADD COLUMN IF NOT EXISTS max_uses INTEGER;
   `);
 }
 

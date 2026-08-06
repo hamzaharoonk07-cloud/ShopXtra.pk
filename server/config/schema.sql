@@ -75,6 +75,7 @@ CREATE TABLE IF NOT EXISTS promo_codes (
   gift_product_id INTEGER REFERENCES products(id),
   active BOOLEAN NOT NULL DEFAULT true,
   is_public_offer BOOLEAN NOT NULL DEFAULT false,
+  max_uses INTEGER,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
