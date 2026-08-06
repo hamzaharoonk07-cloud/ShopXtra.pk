@@ -69,8 +69,14 @@ function initMagneticButtons() {
 
 function initPageTransitions() {
   if (typeof gsap === 'undefined') return;
-  gsap.set(document.body, { opacity: 0 });
-  gsap.to(document.body, { opacity: 1, duration: 0.45, ease: 'power1.out' });
+
+  // No entry fade here: the full-page loader (#page-loader, a child of body)
+  // already covers the page while assets load and reveals it via its own
+  // fade-out. Fading body from opacity 0 as well made the loader itself
+  // invisible for that same stretch (opacity on an ancestor composites the
+  // whole subtree) - page flashed unstyled, then the loader popped in, then
+  // out. The page underneath just renders normally; only the click-driven
+  // exit transition below needs body opacity.
 
   // Clicking a link fades the body to opacity 0 before navigating away (see
   // below). If the browser restores THIS page from its back-forward cache
