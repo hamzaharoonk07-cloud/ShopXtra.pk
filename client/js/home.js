@@ -232,7 +232,12 @@ function initSiteBgVideo() {
 
   let activeIndex = 0;
   videos[0].play().catch(() => {});
+  // Preloading only one segment ahead gave a thin margin - fast scrolling
+  // could reach a segment before its load() (triggered synchronously in
+  // setActive below) had actually produced a frame, showing black for a
+  // moment mid-transition. Two segments ahead gives more lead time.
   if (videos[1]) ensureLoaded(videos[1]);
+  if (videos[2]) ensureLoaded(videos[2]);
 
   function setActive(i) {
     if (i === activeIndex) return;
@@ -243,6 +248,7 @@ function initSiteBgVideo() {
     videos[i].play().catch(() => {});
     activeIndex = i;
     if (videos[i + 1]) ensureLoaded(videos[i + 1]);
+    if (videos[i + 2]) ensureLoaded(videos[i + 2]);
   }
 
   // Reading scrollHeight forces a layout reflow, so it's cached here and
