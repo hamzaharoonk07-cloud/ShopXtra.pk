@@ -12,6 +12,15 @@ async function loadProduct() {
     document.title = `${product.name} | ShopXtra`;
     updateProductSeo(product, slug);
     fetch(`/api/products/${encodeURIComponent(slug)}/view`, { method: 'POST' }).catch(() => {});
+    if (typeof fbq === 'function') {
+      fbq('track', 'ViewContent', {
+        content_ids: [slug],
+        content_name: product.name,
+        content_type: 'product',
+        value: Number(product.price),
+        currency: 'PKR',
+      });
+    }
 
     const variants = product.category === 'cosmetics' ? [] : (product.variants || []);
     const swatchVariants = variants.filter((v) => v.color_hex || v.image_url);

@@ -61,6 +61,20 @@ async function loadConfirmation() {
     if (typeof gsap !== 'undefined' && !prefersReducedMotion) {
       gsap.from(main.children, { opacity: 0, y: 24, duration: 0.6, stagger: 0.15, ease: 'power2.out' });
     }
+
+    // Guard against inflating the conversion count if this page gets
+    // refreshed/revisited (e.g. via "Track this order") - fire once per order.
+    const purchaseTrackedKey = `shopxtra_purchase_tracked_${order.id}`;
+    if (typeof fbq === 'function' && !localStorage.getItem(purchaseTrackedKey)) {
+      fbq('track', 'Purchase', {
+        content_ids: order.items.map((item) => item.slug).filter(Boolean),
+        content_type: 'product',
+        num_items: order.items.reduce((sum, item) => sum + item.qty, 0),
+        value: Number(order.total),
+        currency: 'PKR',
+      }, { eventID: `order-${order.id}` });
+      localStorage.setItem(purchaseTrackedKey, '1');
+    }
   } catch (err) {
     main.innerHTML = `<p class="text-center py-5 text-danger">Could not load order: ${err.message}</p>`;
   }

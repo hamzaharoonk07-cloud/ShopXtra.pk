@@ -31,6 +31,15 @@ function addToCart(product, qty = 1) {
   saveCart(cart);
   openCartDrawer();
   if (typeof showCartToast === 'function') showCartToast(product);
+  if (typeof fbq === 'function') {
+    fbq('track', 'AddToCart', {
+      content_ids: [product.slug],
+      content_name: product.name,
+      content_type: 'product',
+      value: Number(product.price) * qty,
+      currency: 'PKR',
+    });
+  }
   if (product.slug) {
     fetch(`/api/products/${product.slug}/cart-add`, {
       method: 'POST',

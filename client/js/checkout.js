@@ -172,6 +172,19 @@ document.getElementById('ship-city').addEventListener('change', updateTotals);
 
 renderCheckoutSummary();
 
+if (typeof fbq === 'function') {
+  const cartForPixel = getCart();
+  if (cartForPixel.length) {
+    fbq('track', 'InitiateCheckout', {
+      content_ids: cartForPixel.map((item) => String(item.slug).split('::')[0]),
+      content_type: 'product',
+      num_items: cartForPixel.reduce((sum, item) => sum + item.qty, 0),
+      value: cartForPixel.reduce((sum, item) => sum + item.price * item.qty, 0),
+      currency: 'PKR',
+    });
+  }
+}
+
 (async () => {
   try {
     const meRes = await fetch('/api/auth/me');
