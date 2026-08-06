@@ -5800,6 +5800,29 @@ select:focus-visible {
   color: #fff;
 }
 
+/* The category dropdown panel (Electrolytes/Coffee/Shampoo/Cosmetics) is
+   its own opaque white card, not the transparent video navbar - the
+   white-text override above was bleeding into it and making every item
+   white-on-white. Reset it back to the normal dropdown colors. */
+:root:has(.home-main) .nav-dropdown-menu .nav-dropdown-item,
+:root:has(.home-main) .nav-dropdown-viewall {
+  color: var(--tea-pink);
+  text-shadow: none;
+}
+
+:root:has(.home-main) .nav-dropdown-item:hover,
+:root:has(.home-main) .nav-dropdown-item:focus-visible {
+  background-color: var(--sand);
+  color: var(--plum);
+}
+
+:root:has(.home-main) .nav-dropdown-subhead,
+:root:has(.home-main) .nav-dropdown-loading,
+:root:has(.home-main) .nav-dropdown-empty {
+  color: var(--muted);
+  text-shadow: none;
+}
+
 /* On mobile the transparent navbar's collapsed menu has no panel of its
    own, so it would otherwise show the busy scroll video directly behind
    the nav links with nothing separating them. display:contents on this
