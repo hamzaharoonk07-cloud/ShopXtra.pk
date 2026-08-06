@@ -2276,7 +2276,7 @@ select:focus-visible {
 
 .trust-band {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   text-align: center;
 }
@@ -2340,10 +2340,14 @@ select:focus-visible {
   padding: 1rem 0 2.5rem;
 }
 
+.certifications-section h2 {
+  margin: 0.25rem 0 0.6rem;
+}
+
 .certifications-intro {
   color: var(--muted-body);
   font-size: 0.9rem;
-  margin: -1rem 0 1.75rem;
+  margin: 0 0 1.75rem;
 }
 
 .certifications-grid {
