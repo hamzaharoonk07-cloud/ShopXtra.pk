@@ -124,8 +124,8 @@ function renderNavbar(activePath = '') {
           <ul class="navbar-links-row">
             <li><a href="/pages/shop.html">Shop all</a></li>
             ${renderCategoryDropdownItem('electrolytes', 'Electrolytes')}
-            ${renderCategoryDropdownItem('coffee', 'Coffee')}
             ${renderCategoryDropdownItem('shampoo', 'Shampoo')}
+            ${renderCategoryDropdownItem('coffee', 'Coffee')}
             ${renderCategoryDropdownItem('cosmetics', 'Cosmetics')}
             <li><a href="/pages/bundles.html">Bundles</a></li>
             <li><a href="/pages/why-shopxtra.html">Why Us</a></li>
@@ -198,8 +198,8 @@ function renderFooter() {
         <div class="footer-col">
           <h4>Shop</h4>
           <a href="/pages/shop.html?category=electrolytes">Electrolytes</a>
-          <a href="/pages/shop.html?category=coffee">Coffee</a>
           <a href="/pages/shop.html?category=shampoo">Shampoo</a>
+          <a href="/pages/shop.html?category=coffee">Coffee</a>
           <a href="/pages/shop.html?category=cosmetics">Cosmetics</a>
         </div>
         <div class="footer-col">
