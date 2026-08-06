@@ -1,3 +1,10 @@
+const PAGE_LOADER_MESSAGES = [
+  'Getting your essentials ready...',
+  'Hydration, coffee, care & glow...',
+  'Packing in authentic quality...',
+  'Almost there...',
+];
+
 function renderPageLoader() {
   return `
     <div class="page-loader" id="page-loader">
@@ -6,14 +13,35 @@ function renderPageLoader() {
           <img src="/assets/logo-full.png" alt="ShopXtra" class="page-loader-logo">
         </div>
         <div class="page-loader-spinner" aria-hidden="true"></div>
+        <p class="page-loader-text" id="page-loader-text">${PAGE_LOADER_MESSAGES[0]}</p>
       </div>
     </div>
   `;
 }
 
+let pageLoaderTextTimer = null;
+
+function startPageLoaderText() {
+  const el = document.getElementById('page-loader-text');
+  if (!el) return;
+  let i = 0;
+  pageLoaderTextTimer = setInterval(() => {
+    i = (i + 1) % PAGE_LOADER_MESSAGES.length;
+    el.classList.add('is-swapping');
+    setTimeout(() => {
+      el.textContent = PAGE_LOADER_MESSAGES[i];
+      el.classList.remove('is-swapping');
+    }, 200);
+  }, 1600);
+}
+
 function hidePageLoader() {
   const loader = document.getElementById('page-loader');
   if (!loader) return;
+  if (pageLoaderTextTimer) {
+    clearInterval(pageLoaderTextTimer);
+    pageLoaderTextTimer = null;
+  }
   loader.classList.add('is-hidden');
   setTimeout(() => loader.remove(), 500);
 }
@@ -22,6 +50,7 @@ function initPageLoader() {
   const slot = document.getElementById('page-loader-slot');
   if (!slot) return;
   slot.innerHTML = renderPageLoader();
+  startPageLoaderText();
   if (document.readyState === 'complete') {
     hidePageLoader();
     return;

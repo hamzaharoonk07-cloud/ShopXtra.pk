@@ -5555,6 +5555,21 @@ select:focus-visible {
   to { transform: rotate(360deg); }
 }
 
+.page-loader-text {
+  margin-top: 1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--muted-body);
+  letter-spacing: 0.02em;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.page-loader-text.is-swapping {
+  opacity: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .page-loader-spinner {
     animation: none;
