@@ -2202,7 +2202,7 @@ select:focus-visible {
      gradient assumes is there). A near-uniform dark scrim keeps text
      legible regardless of exactly what crop lands under it. */
   .hero-slide-photo::after {
-    background: linear-gradient(180deg, rgba(10, 7, 5, 0.82) 0%, rgba(10, 7, 5, 0.72) 55%, rgba(10, 7, 5, 0.85) 100%);
+    background: linear-gradient(180deg, rgba(10, 7, 5, 0.55) 0%, rgba(10, 7, 5, 0.3) 45%, rgba(10, 7, 5, 0.6) 100%);
   }
   .hero-slide-copy {
     max-width: none;
