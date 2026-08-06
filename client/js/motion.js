@@ -149,6 +149,18 @@ function initGsapAnimations() {
       ease: 'power3.out',
       delay: 0.2,
     });
+    // The hero is the very first thing on the page - if this tween never
+    // completes (backgrounded tab throttling rAF, a slow/low-power device,
+    // anything), the headline/eyebrow/CTA stay invisible forever with
+    // nothing else on the page to trigger the general safety net below.
+    // Force them visible unconditionally after a short, generous timeout.
+    setTimeout(() => {
+      heroTargets.forEach((el) => {
+        if (parseFloat(getComputedStyle(el).opacity) < 1) {
+          gsap.set(el, { opacity: 1, y: 0, scale: 1, clearProps: 'transform' });
+        }
+      });
+    }, 1800);
   }
 
   // Elements already scrolled past (e.g. browser scroll-restoration jumping straight
@@ -200,7 +212,7 @@ function initGsapAnimations() {
   // fired (layout shifted after fonts/images loaded, scroll restoration, etc.),
   // force it to its final visible state rather than leaving it stuck hidden.
   const forceStuckRevealsVisible = () => {
-    document.querySelectorAll('[data-reveal="up"], [data-reveal-group] [data-reveal="item"]').forEach((el) => {
+    document.querySelectorAll('[data-reveal="up"], [data-reveal-group] [data-reveal="item"], [data-reveal="hero"]').forEach((el) => {
       const style = getComputedStyle(el);
       if (parseFloat(style.opacity) < 1 && el.getBoundingClientRect().top < window.innerHeight) {
         gsap.to(el, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: 'power2.out', overwrite: true });

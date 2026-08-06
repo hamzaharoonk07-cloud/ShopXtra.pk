@@ -679,8 +679,13 @@ a {
   min-width: 0;
 }
 
+.product-card-media-link {
+  flex: 1 1 auto;
+}
+
 .product-image {
   aspect-ratio: 1 / 1;
+  height: 100%;
   background: linear-gradient(135deg, var(--sand), var(--ivory-blush));
   border-radius: var(--radius-md);
   display: flex;
