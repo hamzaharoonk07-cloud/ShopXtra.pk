@@ -778,8 +778,8 @@ a {
 
 .quick-add-btn {
   display: block;
-  width: calc(100% - 2.2rem);
-  margin: 0.85rem 1.1rem 0;
+  width: 100%;
+  margin: 0.85rem 0 0;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.78rem;
   font-weight: 600;
