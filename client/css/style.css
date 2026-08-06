@@ -1890,7 +1890,7 @@ select:focus-visible {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(10, 7, 5, 0.35) 0%, rgba(10, 7, 5, 0.55) 55%, rgba(10, 7, 5, 0.4) 100%);
+  background: linear-gradient(180deg, rgba(10, 7, 5, 0.16) 0%, rgba(10, 7, 5, 0.3) 55%, rgba(10, 7, 5, 0.2) 100%);
   pointer-events: none;
   z-index: 1;
 }
