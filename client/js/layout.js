@@ -70,13 +70,13 @@ const ANNOUNCEMENT_ICONS = {
 
 function renderAnnouncementBar() {
   const items = `
+    <span class="announcement-item announcement-highlight">${ANNOUNCEMENT_ICONS.badge}<span>100% Organic &middot; USDA &amp; HACCP Certified</span></span>
+    <span class="dot" aria-hidden="true">&#8226;</span>
     <span class="announcement-item">${ANNOUNCEMENT_ICONS.truck}<span>Cash on Delivery nationwide</span></span>
     <span class="dot" aria-hidden="true">&#8226;</span>
-    <span class="announcement-item announcement-highlight">${ANNOUNCEMENT_ICONS.gift}<span>Free delivery over Rs 3,000</span></span>
+    <span class="announcement-item">${ANNOUNCEMENT_ICONS.gift}<span>Free delivery over Rs 3,000</span></span>
     <span class="dot" aria-hidden="true">&#8226;</span>
     <span class="announcement-item">${ANNOUNCEMENT_ICONS.globe}<span>Imported &amp; authentic products</span></span>
-    <span class="dot" aria-hidden="true">&#8226;</span>
-    <span class="announcement-item">${ANNOUNCEMENT_ICONS.badge}<span>USDA Organic &amp; HACCP certified</span></span>
     <span class="dot" aria-hidden="true">&#8226;</span>
   `;
   return `
