@@ -2076,19 +2076,31 @@ select:focus-visible {
 
 .hero-slide-copy {
   max-width: 620px;
+  position: relative;
 }
 
-/* No visible box/card behind the text (clashed with the site's flat,
-   0-radius design as a stark rectangle) - legibility comes entirely
-   from a strong, layered text-shadow instead, which reads as ink
-   sitting on the photo rather than a shape pasted over it. */
+/* A hard-edged box behind the text read as a stark rectangle (clashed
+   with the site's flat, 0-radius design); text-shadow alone still
+   wasn't reliably readable against a bright, busy photo. This splits
+   the difference: a soft radial glow with no visible edge, sized and
+   positioned to sit behind the text block without ever looking like a
+   pasted-on shape - plus the text keeps its own shadow on top. */
+.hero-slide-copy::before {
+  content: '';
+  position: absolute;
+  inset: -2rem -2.5rem;
+  background: radial-gradient(ellipse at center, rgba(8, 6, 4, 0.65) 0%, rgba(8, 6, 4, 0.35) 45%, rgba(8, 6, 4, 0) 75%);
+  z-index: -1;
+  pointer-events: none;
+}
+
 .hero-slide-eyebrow {
   display: inline-block;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.78rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--dusty-rose);
+  color: #fff;
   margin-bottom: 1rem;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 2px 10px rgba(0, 0, 0, 0.8);
 }
