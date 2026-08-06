@@ -1882,18 +1882,13 @@ select:focus-visible {
   padding: 0 0 2.5rem;
 }
 
-/* The scroll background video has no per-slide dark overlay like the old
-   carousel did, so the hero's own white text needs its own scrim behind
-   it - otherwise it goes unreadable against lighter frames of whatever
-   clip happens to be playing. Covers just the hero, not the whole page. */
-.home-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(10, 7, 5, 0.05) 0%, rgba(10, 7, 5, 0.16) 55%, rgba(10, 7, 5, 0.08) 100%);
-  pointer-events: none;
-  z-index: 1;
-}
+/* Text contrast now comes from .hero-slide-copy's own dark backdrop panel
+   (a dedicated card behind just the text) instead of a scrim over the
+   whole hero - that global darkening kept getting fought over ("too
+   dark" vs "text invisible") because it was trying to serve both the
+   photo's brightness and the text's legibility at once. Decoupled: the
+   photo/video can be as bright as it wants, the text has its own
+   guaranteed-readable backdrop regardless. */
 
 .home-hero > * {
   position: relative;
@@ -2081,6 +2076,11 @@ select:focus-visible {
 
 .hero-slide-copy {
   max-width: 620px;
+  display: inline-block;
+  background: rgba(10, 7, 5, 0.5);
+  backdrop-filter: blur(2px);
+  padding: 1.75rem 2rem;
+  border-radius: var(--radius-lg);
 }
 
 .hero-slide-eyebrow {
