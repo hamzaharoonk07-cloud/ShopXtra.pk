@@ -1960,9 +1960,16 @@ select:focus-visible {
 }
 
 @media (max-width: 640px) {
+  /* Absolute-positioned in the corner, the seal collided with the big
+     hero headline (which wraps to fill most of the narrow viewport at
+     its clamp() floor size) - taken out of the corner entirely and put
+     back in normal document flow, centered above the headline, so
+     there's no overlap regardless of how the text wraps. */
   .hero-organic-seal {
-    top: 1rem;
-    right: 1rem;
+    position: static;
+    margin: 1rem auto 0.5rem;
+    right: auto;
+    top: auto;
     width: 64px;
     height: 64px;
   }
@@ -2213,12 +2220,14 @@ select:focus-visible {
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   font-size: 1.2rem;
-  color: var(--tea-pink);
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
 }
 
 .hero-stat-label {
   font-size: 0.8rem;
-  color: var(--muted-body);
+  color: rgba(255, 255, 255, 0.82);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
 }
 
 .hero-stat-divider {
