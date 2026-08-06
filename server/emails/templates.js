@@ -48,7 +48,7 @@ function layout(bodyHtml) {
 }
 
 function itemsTableHtml(items) {
-  return items.map((item) => {
+  return items.filter((item) => Number(item.price_at_purchase) > 0).map((item) => {
     const image = (item.images && item.images[0]) || `${SITE_URL}/assets/logo.png`;
     return `
     <tr>
@@ -64,6 +64,28 @@ function itemsTableHtml(items) {
     </tr>
   `;
   }).join('');
+}
+
+// Free-gift order_items (added when a promo like SHOP100 has a gift_product_id)
+// are stored at price_at_purchase = 0 - showing them as a normal "Rs 0" line
+// item reads as a mistake, so they get their own labeled section instead.
+function giftItemsHtml(items) {
+  const giftItems = items.filter((item) => Number(item.price_at_purchase) === 0);
+  if (!giftItems.length) return '';
+  return `
+    <div style="background-color:#F1F6EE; border:1px solid #CFE0C6; border-radius: 12px; padding: 14px 18px; margin: 16px 0;">
+      <p style="color:#2E5C3B; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.04em; margin: 0 0 10px;">&#127873; Free gift with your order</p>
+      ${giftItems.map((item) => {
+        const image = (item.images && item.images[0]) || `${SITE_URL}/assets/logo.png`;
+        return `
+        <div style="display:flex; align-items:center;">
+          <img src="${image}" alt="${item.name}" width="40" height="40" style="width:40px; height:40px; object-fit:cover; border-radius:8px; border:1px solid #EFEADE; margin-right:10px;">
+          <span style="color:#1C231D; font-size: 14px;">${item.name}${item.qty > 1 ? ` &times;${item.qty}` : ''}</span>
+        </div>
+      `;
+      }).join('')}
+    </div>
+  `;
 }
 
 function orderConfirmationEmail(order) {
@@ -111,6 +133,7 @@ function orderConfirmationEmail(order) {
         <td style="padding-top: 8px; border-top: 1px solid #EFEADE; text-align: right; font-weight: bold; color:#1C231D;">${formatPKR(order.total)}</td>
       </tr>
     </table>
+    ${giftItemsHtml(order.items || [])}
 
     <table style="width: 100%; border-collapse: collapse; border-top: 1px solid #EFEADE; padding-top: 4px; margin-top: 4px;">
       <tr>
