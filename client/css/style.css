@@ -1876,6 +1876,25 @@ select:focus-visible {
   padding: 0 0 2.5rem;
 }
 
+.hero-organic-headline {
+  margin: 0;
+  padding: 0.6rem 1rem;
+  text-align: center;
+  background: var(--tea-pink);
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 480px) {
+  .hero-organic-headline {
+    font-size: 0.78rem;
+    padding: 0.55rem 0.75rem;
+  }
+}
+
 .hero-carousel {
   position: relative;
   overflow: hidden;

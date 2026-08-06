@@ -152,7 +152,14 @@ function initHeroCarousel() {
       const video = slide.querySelector('video');
       if (!video) return;
       if (si === index) {
-        video.play().catch(() => {});
+        // The video's src was just set (ensureVideoLoaded -> load()) - on a
+        // slow connection (mobile) there's no buffered data yet, so calling
+        // play() immediately fails silently and the video never starts,
+        // leaving the slide's plain dark background showing (looks black).
+        // Retry once real data is actually available.
+        const tryPlay = () => video.play().catch(() => {});
+        tryPlay();
+        if (video.readyState < 2) video.addEventListener('canplay', tryPlay, { once: true });
       } else {
         video.pause();
       }
