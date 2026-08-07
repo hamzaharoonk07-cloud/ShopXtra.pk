@@ -185,15 +185,23 @@ a {
   font-size: 1.6rem;
 }
 
+/* The navbar's top row is a fixed height, so the logo is free to bleed past it
+   without growing the bar (see the .navbar-top comment). Desktop already
+   relies on that - a 106px logo in a 72px row. Mobile sat at 50px in a 58px
+   row, well under the same ratio, leaving the wordmark too small to read.
+   68px is as far as this can go: the row also carries a 33px menu toggle and
+   166px of icon buttons, so at 68px the fixed columns come to 315px of a
+   320px screen. Anything larger overflows, and html has overflow-x: hidden,
+   so it would silently clip the cart icon rather than scroll. */
 .logo-img {
-  height: 50px;
+  height: 68px;
   width: auto;
   transition: height 0.3s ease;
   display: block;
 }
 
 .navbar-shopxtra.is-scrolled .logo-img {
-  height: 42px;
+  height: 54px;
 }
 
 .navbar-top-right {
