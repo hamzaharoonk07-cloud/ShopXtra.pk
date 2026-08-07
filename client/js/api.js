@@ -173,10 +173,34 @@ function saleDiscountPercent(product) {
   return Math.round(((compareAt - price) / compareAt) * 100);
 }
 
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, (ch) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  })[ch]);
+}
+
+/* One-line summary shown under the product name on listing cards. There is no
+   dedicated short_description column, so this trims the full description down
+   to its first sentence (capped, so a long opening sentence can't push the
+   card out of line with its neighbours). Most products have no description at
+   all yet - those simply render without a subtitle rather than a blank gap. */
+function productSubtitle(product) {
+  const raw = (product.description || '').replace(/\s+/g, ' ').trim();
+  if (!raw) return '';
+  const firstSentence = raw.split(/(?<=[.!?])\s/)[0];
+  if (firstSentence.length <= 90) return escapeHtml(firstSentence.replace(/\.$/, ''));
+  // Cut back to the last word boundary so the ellipsis never lands mid-word.
+  const clipped = raw.slice(0, 87);
+  const lastSpace = clipped.lastIndexOf(' ');
+  return `${escapeHtml((lastSpace > 40 ? clipped.slice(0, lastSpace) : clipped).replace(/[,;:.\s]+$/, ''))}…`;
+}
+
 function productCardHtml(product) {
   const discount = saleDiscountPercent(product);
   const outOfStock = product.stock <= 0;
   const lowStock = !outOfStock && Number(product.stock) <= 5;
+  const subtitle = productSubtitle(product);
+  const reviewCount = Number(product.review_count) || 0;
   return `
     <div class="col-6 col-md-4 col-lg-4" data-reveal="item">
       <div class="product-card h-100 ${outOfStock ? 'is-out-of-stock' : ''}">
@@ -190,23 +214,28 @@ function productCardHtml(product) {
             ${lowStock ? `<span class="product-card-urgency">Only ${product.stock} left</span>` : ''}
           </div>
         </a>
-        <button type="button" class="quick-add-btn" aria-label="${outOfStock ? `${product.name} is out of stock` : `Add ${product.name} to bag`}"
+        <a href="/pages/product.html?slug=${encodeURIComponent(product.slug)}" class="product-card-link">
+          <div class="product-body">
+            <div class="product-name">${product.name}</div>
+            ${subtitle ? `<p class="product-card-subtitle">${subtitle}</p>` : ''}
+            ${reviewCount > 0 ? `
+              <div class="product-card-rating">${starsHtml(product.avg_rating, '0.8rem')}<span class="product-card-rating-count">${reviewCount} review${reviewCount === 1 ? '' : 's'}</span></div>
+            ` : ''}
+          </div>
+        </a>
+        <!-- Add to cart comes AFTER the name, and carries the price inside it.
+             Shoppers (and anyone tabbing through with a keyboard) used to reach
+             the buy button before they had read what the product was or what it
+             cost, which put the loudest element on the card in front of the
+             information needed to act on it. When the product is on sale the
+             struck-through original sits just above, so the saving is still
+             legible without duplicating the live price outside the button. -->
+        ${discount ? `<div class="product-card-compare-row"><span class="compare-price">${formatPrice(product.compare_at_price)}</span></div>` : ''}
+        <button type="button" class="quick-add-btn" aria-label="${outOfStock ? `${product.name} is out of stock` : `Add ${product.name} to bag, ${formatPrice(product.price)}`}"
           data-slug="${product.slug}" data-name="${product.name.replace(/"/g, '&quot;')}"
           data-price="${product.price}" data-category="${product.category}"
           data-image="${(product.images && product.images[0]) || ''}"
-          ${outOfStock ? 'disabled' : ''}>${outOfStock ? 'Out of stock' : 'Add to cart'}</button>
-        <a href="/pages/product.html?slug=${encodeURIComponent(product.slug)}" class="product-card-link">
-          <div class="product-body">
-            ${Number(product.review_count) > 0 ? `
-              <div class="product-card-rating">${starsHtml(product.avg_rating, '0.8rem')}<span class="product-card-rating-count">${Number(product.avg_rating).toFixed(1)}/5</span></div>
-            ` : ''}
-            <div class="product-name">${product.name}</div>
-            <div class="product-card-price-row">
-              <span class="price">${formatPrice(product.price)}</span>
-              ${discount ? `<span class="compare-price">${formatPrice(product.compare_at_price)}</span>` : ''}
-            </div>
-          </div>
-        </a>
+          ${outOfStock ? 'disabled' : ''}><span class="quick-add-btn-label">${outOfStock ? 'Sold out' : 'Add to cart'}</span><span class="quick-add-btn-price">${formatPrice(product.price)}</span></button>
       </div>
     </div>
   `;

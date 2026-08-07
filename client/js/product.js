@@ -95,8 +95,14 @@ async function loadProduct() {
           <span class="eyebrow">${categoryText}${product.is_bestseller ? ' · Bestseller' : ''}</span>
           <h1 class="pdp-title">${product.name}</h1>
           <div class="pdp-stars-row" id="reviews-summary-inline"></div>
+          <!-- The listing card shows a struck-through original and a "Save N%"
+               badge on a discounted product; this page used to show the sale
+               price alone, so the saving silently disappeared at exactly the
+               point the shopper decides to buy. -->
           <div class="pdp-price-row">
             <span class="pdp-price" id="product-price">${formatPrice(product.price)}</span>
+            <span class="compare-price" id="product-compare-price"${saleDiscountPercent(product) ? '' : ' hidden'}>${product.compare_at_price ? formatPrice(product.compare_at_price) : ''}</span>
+            ${saleDiscountPercent(product) ? `<span class="pdp-save-badge" id="product-save-badge">Save ${saleDiscountPercent(product)}%</span>` : ''}
             <span class="pdp-stock${product.stock > 0 && product.stock <= 5 ? ' pdp-stock-urgent' : ''}">${product.stock > 0 ? (product.stock <= 5 ? `Only ${product.stock} left, order soon` : `${product.stock} in stock`) : 'Out of stock'}</span>
           </div>
           <p class="pdp-desc">${product.description || ''}</p>
@@ -125,7 +131,7 @@ async function loadProduct() {
               <button type="button" class="pdp-qty-btn" data-step="1" aria-label="Increase quantity">+</button>
             </div>
             <button class="btn btn-plum flex-grow-1" id="add-to-cart-btn" ${product.stock <= 0 ? 'disabled' : ''}>
-              ${product.stock <= 0 ? 'Out of stock' : `Add to bag for ${formatPrice(product.price)}`}
+              ${product.stock <= 0 ? 'Sold out' : `Add to cart &nbsp;${formatPrice(product.price)}`}
             </button>
             <button class="btn btn-outline-plum" id="wishlist-btn" aria-label="Add to wishlist" aria-pressed="false">
               <span id="wishlist-icon" aria-hidden="true">&#9825;</span>
@@ -206,11 +212,27 @@ async function loadProduct() {
       const modifier = selectedVariant ? Number(selectedVariant.price_modifier) : 0;
       const finalPrice = Number(product.price) + modifier;
       document.getElementById('product-price').textContent = formatPrice(finalPrice);
+
+      // A variant modifier shifts the live price, so the discount has to be
+      // recomputed against it - otherwise picking a pricier variant leaves a
+      // "Save 25%" badge on screen that no longer describes what's charged.
+      const compareEl = document.getElementById('product-compare-price');
+      const badgeEl = document.getElementById('product-save-badge');
+      if (compareEl || badgeEl) {
+        const percent = saleDiscountPercent({ price: finalPrice, compare_at_price: product.compare_at_price });
+        if (compareEl) compareEl.hidden = !percent;
+        if (badgeEl) {
+          badgeEl.hidden = !percent;
+          if (percent) badgeEl.textContent = `Save ${percent}%`;
+        }
+      }
       const btn = document.getElementById('add-to-cart-btn');
       const outOfStock = selectedVariant ? Number(selectedVariant.stock) <= 0 : product.stock <= 0;
       if (btn) {
         btn.disabled = outOfStock;
-        btn.textContent = outOfStock ? 'Out of stock' : `Add to bag for ${formatPrice(finalPrice)}`;
+        // textContent, so use a real non-breaking space rather than the &nbsp;
+        // entity the initial markup above can rely on.
+        btn.textContent = outOfStock ? 'Sold out' : `Add to cart  ${formatPrice(finalPrice)}`;
       }
       return finalPrice;
     }

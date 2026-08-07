@@ -1,0 +1,137 @@
+{
+  "version": 1,
+  "project": {
+    "name": "ShopXtra",
+    "productType": "ecommerce",
+    "stack": [
+      "html",
+      "css",
+      "vanilla-js",
+      "bootstrap-5",
+      "express",
+      "postgres"
+    ]
+  },
+  "sources": {
+    "tokens": [
+      "client/css/style.css"
+    ],
+    "components": [
+      "client/js/layout.js",
+      "client/js/home.js",
+      "client/js/api.js"
+    ],
+    "assets": [
+      "client/assets"
+    ],
+    "instructions": [
+      "CLAUDE.md"
+    ]
+  },
+  "design": {
+    "colorMode": "light",
+    "colors": {
+      "background": "#F7F9F6",
+      "surface": "#FFFFFF",
+      "surfaceMuted": "#EEF3E8",
+      "primary": "#1F5C3E",
+      "primaryHover": "#164A30",
+      "ink": "#12291E",
+      "accentMint": "#8FD19E",
+      "accentGold": "#E6A935",
+      "muted": "#6B7970",
+      "mutedBody": "#4C5A52",
+      "hairline": "#E4E9DF",
+      "hairlineStrong": "#D7E0D1",
+      "tintElectrolytes": "#E7F0DD",
+      "tintCoffee": "#EFE7DB",
+      "tintShampoo": "#DFEEE7",
+      "tintCosmetics": "#F0E4E6"
+    },
+    "typography": {
+      "family": "Montserrat (self-hosted variable woff2, weights 400-900)",
+      "headings": "Montserrat, weights 600-800",
+      "body": "Montserrat, weight 400",
+      "note": "CLAUDE.md describes Newsreader/Cormorant + Instrument Sans, but the implemented CSS uses Montserrat everywhere. Trust the CSS."
+    },
+    "spacing": {
+      "sectionRhythm": "Bootstrap py-5 between homepage sections",
+      "container": "Bootstrap .container"
+    },
+    "radius": {
+      "sm": "0",
+      "md": "0",
+      "lg": "0",
+      "note": "Deliberately square. CLAUDE.md's 'no sharp 0px radius' rule is outdated; the shipped design is fully squared."
+    },
+    "shadows": {
+      "soft": "0 1px 2px rgba(18,41,30,0.06), 0 14px 30px -14px rgba(18,41,30,0.25)",
+      "softLg": "0 2px 6px rgba(18,41,30,0.07), 0 24px 44px -26px rgba(18,41,30,0.35)",
+      "lift": "0 1px 2px rgba(18,41,30,0.05), 0 32px 60px -28px rgba(18,41,30,0.4)"
+    },
+    "motion": {
+      "library": "GSAP + ScrollTrigger",
+      "pattern": "data-reveal / data-reveal-group scroll reveals driven by client/js/motion.js",
+      "reducedMotion": "must be respected"
+    },
+    "density": "comfortable"
+  },
+  "components": {
+    "installed": [],
+    "preferredPrimitives": [
+      "Bootstrap 5 utilities and grid",
+      "hand-written classes in client/css/style.css"
+    ],
+    "patterns": [
+      "category-tile",
+      "trust-band-item",
+      "review-card-v2",
+      "certification-card",
+      "faq-accordion (native <details>)",
+      "section-head + section-head-link"
+    ]
+  },
+  "constraints": {
+    "must": [
+      "Plain HTML/CSS/JS only — no React, no JSX, no Tailwind, no build step on the client",
+      "Style with existing CSS custom properties from client/css/style.css, not new hard-coded hex values",
+      "Bump the ?v= query on the style.css <link> in every page when style.css changes (cache busting)",
+      "Responsive down to mobile — Pakistan is a mobile-heavy market",
+      "Visible keyboard focus states on all interactive elements",
+      "Respect prefers-reduced-motion",
+      "Prices in PKR formatted as Rs 1,450"
+    ],
+    "avoid": [
+      "Rounded corners — the shipped design is squared (radius tokens are 0)",
+      "Pink/plum 'Soft Tea' palette from CLAUDE.md — the live brand is forest green",
+      "Supplier marketing images with baked-in headline text or competitor watermarks as hero/tile art",
+      "Decorative gradients, glassmorphism, and oversized display headlines"
+    ]
+  },
+  "decisions": [
+    {
+      "date": "2026-08-07",
+      "decision": "Category tiles use curated /assets/hero photography, not product marketing graphics. The 5/4 tile crop cuts through baked-in supplier text.",
+      "source": "client/js/home.js"
+    }
+  ],
+  "evidence": [
+    {
+      "fact": "design.colors",
+      "source": "client/css/style.css:14-64"
+    },
+    {
+      "fact": "design.radius",
+      "source": "client/css/style.css:50-52"
+    },
+    {
+      "fact": "design.typography",
+      "source": "client/css/style.css:1-12,78"
+    },
+    {
+      "fact": "project.instructions",
+      "source": "CLAUDE.md"
+    }
+  ],
+  "generatedAt": "2026-08-07T11:55:01.833Z"
+}

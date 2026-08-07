@@ -11,7 +11,12 @@ function categoryIcon(slug) {
 
 const HOME_CATEGORIES = [
   { slug: 'electrolytes', name: 'Electrolytes', desc: 'Wake up faster, stay hydrated with green apple, peach, pineapple &amp; strawberry. Imported electrolytes.', image: '/assets/hero/electrolytes-category.webp', hoverImage: '/assets/hero/electrolytes-flavors.jpg' },
-  { slug: 'shampoo', name: 'Shampoo', desc: "Clean that doesn't dry you out. Shampoo bars for an everyday routine that actually works." },
+  // Most shampoo products' photos are supplier ad graphics with headline text
+  // baked across the top and the bar at the bottom, so the 5/4 tile crop sliced
+  // through both. These two are real photographs with no baked-in marketing
+  // copy, curated into /assets/hero so the tile doesn't depend on whichever
+  // product happens to sort first out of the API.
+  { slug: 'shampoo', name: 'Shampoo', desc: "Clean that doesn't dry you out. Shampoo bars for an everyday routine that actually works.", image: '/assets/hero/shampoo-rice-soap.webp', hoverImage: '/assets/hero/shampoo-rosemary.jpg' },
   { slug: 'coffee', name: 'Coffee', desc: 'Rich roast, one scoop away. Instant coffee that actually tastes brewed, over ice or milk.', image: '/assets/hero/coffee-pour.jpg' },
   { slug: 'cosmetics', name: 'Cosmetics', desc: 'Shades that match what you expect. Authentic cosmetics, delivered nationwide with Cash on Delivery.' },
 ];
@@ -20,7 +25,7 @@ function applyCategoryImagesFromProducts(products) {
   HOME_CATEGORIES.forEach((c) => {
     const inCategory = products.filter((p) => p.category === c.slug && p.images && p.images[0]);
     if (!c.image && inCategory[0]) c.image = inCategory[0].images[0];
-    if (!c.hoverImage) {
+    if (c.hoverImage === undefined) {
       const sameProduct = inCategory.find((p) => p.images[0] === c.image && p.images[1]);
       const otherProduct = inCategory.find((p) => p.images[0] !== c.image);
       c.hoverImage = (sameProduct && sameProduct.images[1]) || (otherProduct && otherProduct.images[0]) || null;

@@ -289,23 +289,51 @@ const NAV_CATEGORY_SUBGROUPS = {
   ],
 };
 
-function renderNavDropdownItems(category, items) {
+const NAV_DROPDOWN_MAX_ITEMS = 4;
+
+/* Orders a category's products by the subgroup table above, so the products
+   that surface in the menu are the representative ones rather than whatever
+   the API happened to return first. Subgroup order is preserved; anything not
+   matching a subgroup follows. */
+function orderedNavProducts(category, items) {
   const subgroups = NAV_CATEGORY_SUBGROUPS[category] || [];
   const remaining = [...items];
-  let html = '';
+  const ordered = [];
 
   subgroups.forEach((group) => {
-    const matched = [];
     for (let i = remaining.length - 1; i >= 0; i--) {
-      if (group.match(remaining[i].name)) matched.unshift(...remaining.splice(i, 1));
+      if (group.match(remaining[i].name)) ordered.push(...remaining.splice(i, 1));
     }
-    if (!matched.length) return;
-    html += `<span class="nav-dropdown-subhead">${group.label}</span>`;
-    html += matched.map((p) => `<a href="/pages/product.html?slug=${encodeURIComponent(p.slug)}" class="nav-dropdown-item" role="menuitem">${p.name}</a>`).join('');
   });
 
-  html += remaining.map((p) => `<a href="/pages/product.html?slug=${encodeURIComponent(p.slug)}" class="nav-dropdown-item" role="menuitem">${p.name}</a>`).join('');
-  return html;
+  return [...ordered, ...remaining];
+}
+
+/* The menu shows real product photos rather than a list of names - a shopper
+   recognises a shampoo tin far faster than they read "Rosemary Plant Shampoo
+   Bar". Capped at NAV_DROPDOWN_MAX_ITEMS so the panel stays a glanceable strip
+   instead of a scrolling list; "View all" carries the rest. */
+function renderNavDropdownItems(category, items) {
+  const shown = orderedNavProducts(category, items).slice(0, NAV_DROPDOWN_MAX_ITEMS);
+
+  return `
+    <div class="nav-dropdown-products">
+      ${shown.map((p) => {
+        const image = p.images && p.images[0];
+        return `
+          <a href="/pages/product.html?slug=${encodeURIComponent(p.slug)}" class="nav-dropdown-product" role="menuitem">
+            <span class="nav-dropdown-product-media">
+              ${image
+                ? `<img src="${thumbSrc(image)}" ${thumbFallbackAttr(image)} alt="" loading="lazy" decoding="async">`
+                : ''}
+            </span>
+            <span class="nav-dropdown-product-name">${p.name}</span>
+            <span class="nav-dropdown-product-price">${formatPrice(p.price)}</span>
+          </a>
+        `;
+      }).join('')}
+    </div>
+  `;
 }
 
 function initNavCategoryDropdowns() {
