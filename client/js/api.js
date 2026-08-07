@@ -166,6 +166,18 @@ function categoryLabel(category) {
   return labels[category] || category;
 }
 
+/* Storefront listings skip products with no photo at all. The card falls back
+   to a generic category icon, which sits next to real product photography
+   looking like a broken or half-finished listing. They stay visible in the
+   admin table so an image can be added (or the product removed) there. */
+function hasProductImage(product) {
+  return Boolean(product && product.images && product.images[0]);
+}
+
+function withProductImages(products) {
+  return (products || []).filter(hasProductImage);
+}
+
 function saleDiscountPercent(product) {
   const compareAt = Number(product.compare_at_price);
   const price = Number(product.price);
@@ -173,33 +185,10 @@ function saleDiscountPercent(product) {
   return Math.round(((compareAt - price) / compareAt) * 100);
 }
 
-function escapeHtml(str) {
-  return String(str).replace(/[&<>"']/g, (ch) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-  })[ch]);
-}
-
-/* One-line summary shown under the product name on listing cards. There is no
-   dedicated short_description column, so this trims the full description down
-   to its first sentence (capped, so a long opening sentence can't push the
-   card out of line with its neighbours). Most products have no description at
-   all yet - those simply render without a subtitle rather than a blank gap. */
-function productSubtitle(product) {
-  const raw = (product.description || '').replace(/\s+/g, ' ').trim();
-  if (!raw) return '';
-  const firstSentence = raw.split(/(?<=[.!?])\s/)[0];
-  if (firstSentence.length <= 90) return escapeHtml(firstSentence.replace(/\.$/, ''));
-  // Cut back to the last word boundary so the ellipsis never lands mid-word.
-  const clipped = raw.slice(0, 87);
-  const lastSpace = clipped.lastIndexOf(' ');
-  return `${escapeHtml((lastSpace > 40 ? clipped.slice(0, lastSpace) : clipped).replace(/[,;:.\s]+$/, ''))}…`;
-}
-
 function productCardHtml(product) {
   const discount = saleDiscountPercent(product);
   const outOfStock = product.stock <= 0;
   const lowStock = !outOfStock && Number(product.stock) <= 5;
-  const subtitle = productSubtitle(product);
   const reviewCount = Number(product.review_count) || 0;
   return `
     <div class="col-6 col-md-4 col-lg-4" data-reveal="item">
@@ -217,7 +206,6 @@ function productCardHtml(product) {
         <a href="/pages/product.html?slug=${encodeURIComponent(product.slug)}" class="product-card-link">
           <div class="product-body">
             <div class="product-name">${product.name}</div>
-            ${subtitle ? `<p class="product-card-subtitle">${subtitle}</p>` : ''}
             ${reviewCount > 0 ? `
               <div class="product-card-rating">${starsHtml(product.avg_rating, '0.8rem')}<span class="product-card-rating-count">${reviewCount} review${reviewCount === 1 ? '' : 's'}</span></div>
             ` : ''}

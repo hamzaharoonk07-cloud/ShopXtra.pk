@@ -102,7 +102,9 @@ function sortCatalog(products, sort) {
 }
 
 function filterCatalog(products, params) {
-  let list = products;
+  // Drop photo-less products before any other filter, so the result count and
+  // the "no products match" message both reflect what is actually shown.
+  let list = withProductImages(products);
   if (params.category) list = list.filter((p) => p.category === params.category);
   if (params.minPrice) list = list.filter((p) => Number(p.price) >= Number(params.minPrice));
   if (params.maxPrice) list = list.filter((p) => Number(p.price) <= Number(params.maxPrice));

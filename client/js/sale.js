@@ -9,7 +9,7 @@ async function loadSaleItems() {
   try {
     const query = new URLSearchParams({ sale: 'true', sort });
     if (currentCategory) query.set('category', currentCategory);
-    const products = await apiGet(`/products?${query.toString()}`);
+    const products = withProductImages(await apiGet(`/products?${query.toString()}`));
 
     if (!products.length) {
       grid.innerHTML = '<p class="text-center py-5">No sale items in this category right now.</p>';

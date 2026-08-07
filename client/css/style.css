@@ -917,13 +917,6 @@ a {
   text-align: center;
 }
 
-.product-card-subtitle {
-  font-size: 0.82rem;
-  line-height: 1.4;
-  color: var(--muted-body);
-  margin: 0;
-}
-
 /* Struck-through original, shown only on sale. The live price lives inside the
    button, so this row is the saving and nothing else. */
 .product-card-compare-row {
@@ -2334,15 +2327,8 @@ select:focus-visible {
    frame of the background video (pale green/yellow) - "Rated by buyers"
    etc. washed out. A blurred (not hard-edged) backdrop behind the whole
    row fixes it without reading as a visible box. */
-.hero-trust-bar::before {
-  content: '';
-  position: absolute;
-  inset: -0.85rem -1.25rem -0.6rem;
-  background: rgba(8, 6, 4, 0.48);
-  filter: blur(20px);
-  z-index: -1;
-  pointer-events: none;
-}
+/* Blurred dark patch removed: the site-wide backdrop scrim now provides this
+   contrast, and stacking a second dark blob on top of it read as a smudge. */
 
 .hero-stat {
   display: flex;
@@ -2589,27 +2575,12 @@ select:focus-visible {
   margin: 0.25rem 0 0.6rem;
 }
 
-/* On the homepage this heading sits directly on the scroll video - a
-   busy frame (e.g. a product tube's own printed brand text) can land
-   right behind "100%" and turn into clutter/read as a stray logo.
-   fit-content + a blurred backdrop (no hard edges) fixes it regardless
-   of which video frame is showing, same approach as the hero trust-bar -
-   scoped to just the heading text, not the full-width block, so it
-   doesn't turn into a wide bar with empty space on the right. */
+/* The blurred patch that used to sit behind this heading is gone - the
+   site-wide backdrop scrim handles contrast now, and a second dark blob on
+   top of it read as a smudge. */
 .home-main .certifications-section h2 {
-  position: relative;
   width: fit-content;
   max-width: 100%;
-}
-
-.home-main .certifications-section h2::before {
-  content: '';
-  position: absolute;
-  inset: -0.5rem -0.85rem;
-  background: rgba(8, 6, 4, 0.42);
-  filter: blur(18px);
-  z-index: -1;
-  pointer-events: none;
 }
 
 .certifications-intro {
@@ -3855,6 +3826,92 @@ select:focus-visible {
   color: var(--ink-hover);
   font-family: 'Montserrat', sans-serif;
   font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Product page: featured review + benefit list ---------- */
+.pdp-featured-review {
+  margin: 0 0 1.1rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--hairline-strong);
+  background: var(--paper);
+}
+
+.pdp-featured-review blockquote {
+  margin: 0 0 0.7rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--plum);
+}
+
+.pdp-featured-review figcaption {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  font-size: 0.82rem;
+}
+
+.pdp-featured-review-name {
+  font-weight: 700;
+  color: var(--plum);
+}
+
+.pdp-featured-review-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  color: var(--tea-pink);
+  font-weight: 600;
+}
+
+.pdp-featured-review-verified svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.pdp-featured-review-stars {
+  margin-left: auto;
+  color: var(--gold);
+  letter-spacing: 1px;
+}
+
+.pdp-benefits {
+  list-style: none;
+  margin: 0 0 1.4rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.pdp-benefits li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--muted-body);
+}
+
+.pdp-benefits svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 0.12rem;
+  color: var(--tea-pink);
+}
+
+.pdp-benefits strong {
+  color: var(--plum);
+  font-weight: 700;
+}
+
+@media (max-width: 575.98px) {
+  .pdp-featured-review-stars {
+    margin-left: 0;
+    width: 100%;
+  }
 }
 
 .pdp-save-badge {
@@ -5920,7 +5977,28 @@ select:focus-visible {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(1.1) saturate(1.03);
+  /* Was brightness(1.1), which lifted the backdrop straight into the range
+     where white body copy stops being legible. */
+  filter: brightness(0.94) saturate(1.03);
+}
+
+/* Homepage text sits directly on this backdrop, and a per-element shadow
+   cannot hold contrast against an arbitrarily bright video frame - which is
+   why individual headings had grown their own blurred dark patches. One scrim
+   across the whole backdrop gives every section the same predictable contrast
+   floor, so the patches are no longer needed. Slightly stronger top and bottom
+   where the hero copy and the category intro sit. */
+.site-bg-video-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 26, 18, 0.58) 0%,
+    rgba(10, 26, 18, 0.44) 45%,
+    rgba(10, 26, 18, 0.58) 100%
+  );
 }
 
 /* The poster <img> is a real, always-rendered image - it's what's visible
@@ -5960,27 +6038,49 @@ select:focus-visible {
   color: #fff;
 }
 
+/* The caret keeps its default dark ink, which on the homepage's transparent
+   navbar means a near-black chevron against the dark backdrop - invisible.
+   Match the white the links next to it already use. */
+:root:has(.home-main) .nav-dropdown-caret {
+  color: #fff;
+}
+
+:root:has(.home-main) .nav-dropdown-caret:hover,
+:root:has(.home-main) .nav-dropdown-caret:focus-visible {
+  background-color: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
 /* The category dropdown panel (Electrolytes/Coffee/Shampoo/Cosmetics) is
    its own opaque white card, not the transparent video navbar - the
    white-text override above was bleeding into it and making every item
-   white-on-white. Reset it back to the normal dropdown colors. */
-:root:has(.home-main) .nav-dropdown-menu .nav-dropdown-item,
+   white-on-white, and dropping a hard drop-shadow behind text sitting on
+   white. Reset both back to the normal dropdown treatment. */
+:root:has(.home-main) .nav-dropdown-menu,
+:root:has(.home-main) .nav-dropdown-menu a,
+:root:has(.home-main) .nav-dropdown-menu span,
 :root:has(.home-main) .nav-dropdown-viewall {
-  color: var(--tea-pink);
   text-shadow: none;
 }
 
-:root:has(.home-main) .nav-dropdown-item:hover,
-:root:has(.home-main) .nav-dropdown-item:focus-visible {
-  background-color: var(--sand);
+/* Needs the .nav-dropdown-menu step to outrank
+   `:root:has(.home-main) .navbar-links-row a`, which is also an anchor rule
+   and would otherwise paint this white on the panel's white background. */
+:root:has(.home-main) .nav-dropdown-menu .nav-dropdown-viewall {
+  color: var(--tea-pink);
+}
+
+:root:has(.home-main) .nav-dropdown-menu .nav-dropdown-product-name {
   color: var(--plum);
 }
 
-:root:has(.home-main) .nav-dropdown-subhead,
+:root:has(.home-main) .nav-dropdown-menu .nav-dropdown-product-price {
+  color: var(--ink-hover);
+}
+
 :root:has(.home-main) .nav-dropdown-loading,
 :root:has(.home-main) .nav-dropdown-empty {
   color: var(--muted);
-  text-shadow: none;
 }
 
 /* On mobile the transparent navbar's collapsed menu has no panel of its

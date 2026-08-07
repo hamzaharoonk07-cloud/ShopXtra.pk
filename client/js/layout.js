@@ -380,7 +380,9 @@ function initNavCategoryDropdowns() {
         navLinksRow?.classList.add('has-open-dropdown');
         try {
           const byCategory = await loadProductsByCategory();
-          const items = byCategory[category] || [];
+          // The menu is a strip of photos, so a product with no image has
+          // nothing to show here at all.
+          const items = withProductImages(byCategory[category]);
           menu.innerHTML = items.length
             ? renderNavDropdownItems(category, items)
               + `<a href="/pages/shop.html?category=${encodeURIComponent(category)}" class="nav-dropdown-viewall" role="menuitem">View all &rarr;</a>`

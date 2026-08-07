@@ -95,6 +95,11 @@ async function loadProduct() {
           <span class="eyebrow">${categoryText}${product.is_bestseller ? ' · Bestseller' : ''}</span>
           <h1 class="pdp-title">${product.name}</h1>
           <div class="pdp-stars-row" id="reviews-summary-inline"></div>
+          <!-- Era Organics leads its product page with one real customer quote
+               above the fold. Filled in by loadReviews() from the product's own
+               best review; stays empty when the product has none, rather than
+               reserving a blank frame. -->
+          <div id="pdp-featured-review"></div>
           <!-- The listing card shows a struck-through original and a "Save N%"
                badge on a discounted product; this page used to show the sale
                price alone, so the saving silently disappeared at exactly the
@@ -106,6 +111,26 @@ async function loadProduct() {
             <span class="pdp-stock${product.stock > 0 && product.stock <= 5 ? ' pdp-stock-urgent' : ''}">${product.stock > 0 ? (product.stock <= 5 ? `Only ${product.stock} left, order soon` : `${product.stock} in stock`) : 'Out of stock'}</span>
           </div>
           <p class="pdp-desc">${product.description || ''}</p>
+
+          <!-- Check-mark benefit list, the shape Era Organics uses. The three
+               points are the site's own published facts (the certifications
+               listed on the homepage, the COD promise in the announcement bar
+               and the delivery terms in the FAQ) rather than per-product
+               marketing copy, which ShopXtra has no field for. -->
+          <ul class="pdp-benefits">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m8 12 2.8 2.8L16 9.5"/></svg>
+              <span><strong>100% certified organic</strong> &mdash; made in a USDA Organic (CERES), HACCP and ISO 22000:2018 certified facility.</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m8 12 2.8 2.8L16 9.5"/></svg>
+              <span><strong>Cash on Delivery</strong> &mdash; pay only once the order is in your hands, anywhere in Pakistan.</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m8 12 2.8 2.8L16 9.5"/></svg>
+              <span><strong>Delivered in 5&ndash;7 working days</strong> &mdash; free delivery on orders over Rs 3,000.</span>
+            </li>
+          </ul>
 
           ${product.category === 'cosmetics' ? `
             <p class="pdp-note-hint">Have a shade or colour preference? Let us know in the notes at checkout.</p>
@@ -299,7 +324,7 @@ async function loadRelatedProducts(product) {
   const section = document.getElementById('pdp-related-section');
   const grid = document.getElementById('pdp-related-grid');
   try {
-    const products = await apiGet(`/products?category=${encodeURIComponent(product.category)}`);
+    const products = withProductImages(await apiGet(`/products?category=${encodeURIComponent(product.category)}`));
     const related = products.filter((p) => p.slug !== product.slug).slice(0, 4);
     if (!related.length) return;
     grid.innerHTML = related.map(productCardHtml).join('');
@@ -410,6 +435,43 @@ function animateReviewsSection() {
   }
 }
 
+/* Picks the single review to surface above the fold: the highest-rated one
+   that actually says something, preferring verified purchases and then the
+   most recent. Deliberately never invents or edits a quote - if no review has
+   a comment, the slot stays empty. */
+function renderFeaturedReview(reviews) {
+  const slot = document.getElementById('pdp-featured-review');
+  if (!slot) return;
+
+  const candidates = (reviews || []).filter((r) => r.comment && r.comment.trim());
+  if (!candidates.length) {
+    slot.innerHTML = '';
+    return;
+  }
+
+  const best = candidates.slice().sort((a, b) => (
+    b.rating - a.rating
+    || Number(Boolean(b.verified_purchase)) - Number(Boolean(a.verified_purchase))
+    || new Date(b.created_at) - new Date(a.created_at)
+  ))[0];
+
+  slot.innerHTML = `
+    <figure class="pdp-featured-review">
+      <blockquote>“${best.comment.trim()}”</blockquote>
+      <figcaption>
+        <span class="pdp-featured-review-name">&mdash; ${best.user_name || 'ShopXtra customer'}</span>
+        ${best.verified_purchase ? `
+          <span class="pdp-featured-review-verified">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m8 12 2.8 2.8L16 9.5"/></svg>
+            Verified buyer
+          </span>
+        ` : ''}
+        <span class="pdp-featured-review-stars">${starsHtml(best.rating, '0.85rem')}</span>
+      </figcaption>
+    </figure>
+  `;
+}
+
 async function loadReviews(slug) {
   const summaryEl = document.getElementById('reviews-summary');
   const listEl = document.getElementById('reviews-list');
@@ -451,6 +513,8 @@ async function loadReviews(slug) {
         ? `${starsHtml(average, '0.95rem')}<a href="#reviews-summary">${count} review${count === 1 ? '' : 's'}</a>`
         : `${starsHtml(0, '0.95rem')}<a href="#reviews-summary">Be the first to review</a>`;
     }
+
+    renderFeaturedReview(reviews);
 
     listEl.innerHTML = reviews.map((r) => `
       <div class="review-card-v2" data-reveal="item">
