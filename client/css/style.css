@@ -679,13 +679,18 @@ a {
   min-width: 0;
 }
 
-.product-card-media-link {
-  flex: 1 1 auto;
-}
-
+/* Deliberately NOT flex-grow: when cards in the same Bootstrap row get
+   stretched to equal height (one card has a longer, wrapping name), a
+   flex-grown media link combined with the image's aspect-ratio:1/1 +
+   height:100% below would derive the square's WIDTH from that taller
+   grown height - overflowing the card and making images inconsistent
+   sizes across a row. Sizing the square from width instead (100% of
+   the fixed-width column) keeps every card's image identical regardless
+   of how much text sits below it; any leftover stretched height just
+   becomes blank space under the price row, which is harmless. */
 .product-image {
+  width: 100%;
   aspect-ratio: 1 / 1;
-  height: 100%;
   background: linear-gradient(135deg, var(--sand), var(--ivory-blush));
   border-radius: var(--radius-md);
   display: flex;
