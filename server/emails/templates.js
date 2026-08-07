@@ -185,18 +185,14 @@ function orderStatusEmail(order, status, cancelReason) {
   `);
 }
 
+/* One product photo rather than a four-up collage, and the route picks a
+   different product at random on every send so two people signing up minutes
+   apart don't get the same email. Sized with width/height only - no
+   object-fit, which Outlook ignores - so the photo is never cropped. */
 function newsletterWelcomeEmail(products = []) {
-  const images = products.filter((p) => p.images && p.images[0]).slice(0, 4).map((p) => p.images[0]);
-  const collage = images.length ? `
-    <table style="width:100%; border-collapse:collapse; margin: 20px 0;">
-      <tr>
-        ${images.map((img) => `
-          <td style="width:${Math.floor(100 / images.length)}%; padding:4px; vertical-align:top;">
-            <img src="${img}" alt="" style="width:100%; height:110px; object-fit:cover; border-radius:10px; display:block; border:1px solid #EFEADE;">
-          </td>
-        `).join('')}
-      </tr>
-    </table>
+  const image = (products.find((p) => p && p.images && p.images[0]) || {}).images?.[0];
+  const collage = image ? `
+    <img src="${image}" alt="" style="width:100%; max-width:100%; height:auto; border-radius:12px; display:block; margin: 20px 0; border:1px solid #EFEADE;">
   ` : '';
   return layout(`
     <h1 style="color:#1C231D; font-size: 22px; margin-bottom: 4px; font-family: 'Montserrat', Arial, sans-serif; font-weight: 700; letter-spacing: -0.01em;">Welcome to the family.</h1>

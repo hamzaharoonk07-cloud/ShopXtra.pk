@@ -6038,6 +6038,17 @@ select:focus-visible {
   color: #fff;
 }
 
+/* The "ShopXtra" wordmark inside logo-full.png is near-black. That read fine
+   when the homepage backdrop was bright, but the backdrop scrim now darkens
+   what sits behind it, so the wordmark disappears - worst on mobile, where the
+   logo is 50px rather than the 106px it gets from 992px up. A light halo
+   separates it from the backdrop without recolouring the artwork, which is
+   gold and purple and would be lost to an invert. */
+:root:has(.home-main) .logo-img {
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.95))
+          drop-shadow(0 0 7px rgba(255, 255, 255, 0.5));
+}
+
 /* The caret keeps its default dark ink, which on the homepage's transparent
    navbar means a near-black chevron against the dark backdrop - invisible.
    Match the white the links next to it already use. */
