@@ -21,10 +21,25 @@ router.post('/', async (req, res, next) => {
 
     let emailSent = true;
     if (rowCount > 0) {
+      /* The collage is the first thing a new subscriber sees, so it should be
+         the shop at its best rather than whatever sorted first. DISTINCT ON
+         takes the strongest product from each category - bestsellers first,
+         then newest - so the four tiles show the whole range instead of four
+         near-identical shots from one category. Bundles and sold-out items are
+         excluded: there is no point leading with something nobody can buy. */
       const { rows: products } = await pool.query(
-        `SELECT images FROM products WHERE images IS NOT NULL AND array_length(images, 1) > 0
-         ORDER BY is_bestseller DESC, created_at DESC LIMIT 4`
+        `SELECT DISTINCT ON (category) images, category, is_bestseller, created_at
+         FROM products
+         WHERE images IS NOT NULL
+           AND array_length(images, 1) > 0
+           AND is_bundle = false
+           AND stock > 0
+         ORDER BY category, is_bestseller DESC, created_at DESC`
       );
+      products.sort((a, b) => (
+        Number(Boolean(b.is_bestseller)) - Number(Boolean(a.is_bestseller))
+        || new Date(b.created_at) - new Date(a.created_at)
+      ));
       const info = await sendMail({
         to: email,
         subject: 'Welcome to the ShopXtra list',
