@@ -168,30 +168,55 @@ async function remove(req, res, next) {
   }
 }
 
+/* Normalises the target of a sale operation into either null ("every product")
+   or an array of ids. Accepts the older single `productId` shape as well as the
+   newer `productIds` list, so an admin page cached in someone's browser keeps
+   working after this deploys. Returns { error } for the caller to surface. */
+function saleTargetIds({ scope, productId, productIds }) {
+  if (!['all', 'product', 'products'].includes(scope)) {
+    return { error: 'scope must be "all", "product" or "products"' };
+  }
+  if (scope === 'all') return { ids: null };
+
+  const raw = scope === 'products' ? productIds : [productId];
+  const ids = (Array.isArray(raw) ? raw : [raw])
+    .map(Number)
+    .filter((n) => Number.isInteger(n) && n > 0);
+
+  if (!ids.length) {
+    return { error: scope === 'products' ? 'Select at least one product.' : 'productId is required when scope is "product"' };
+  }
+  return { ids };
+}
+
 async function applySale(req, res, next) {
   try {
-    const { scope, productId, discountType, discountValue } = req.body;
-    if (!['all', 'product'].includes(scope)) {
-      return res.status(400).json({ error: 'scope must be "all" or "product"' });
+    const { scope, discountType, discountValue, maxDiscount } = req.body;
+    if (!['flat', 'percent', 'percent_capped'].includes(discountType)) {
+      return res.status(400).json({ error: 'discountType must be "flat", "percent" or "percent_capped"' });
     }
-    if (!['flat', 'percent'].includes(discountType)) {
-      return res.status(400).json({ error: 'discountType must be "flat" or "percent"' });
-    }
-    if (scope === 'product' && !productId) {
-      return res.status(400).json({ error: 'productId is required when scope is "product"' });
-    }
+
+    const target = saleTargetIds(req.body);
+    if (target.error) return res.status(400).json({ error: target.error });
+
     const value = Number(discountValue);
     if (!value || value <= 0) {
       return res.status(400).json({ error: 'discountValue must be greater than 0' });
     }
-    if (discountType === 'percent' && value >= 100) {
+    if (discountType !== 'flat' && value >= 100) {
       return res.status(400).json({ error: 'Percent discount must be less than 100' });
     }
 
+    const cap = Number(maxDiscount);
+    if (discountType === 'percent_capped' && (!cap || cap <= 0)) {
+      return res.status(400).json({ error: 'maxDiscount must be greater than 0 for a capped percent sale' });
+    }
+
     const updated = await productModel.applySale({
-      productId: scope === 'product' ? Number(productId) : null,
+      productIds: target.ids,
       discountType,
       discountValue: value,
+      maxDiscount: discountType === 'percent_capped' ? cap : null,
     });
     res.json({ updated });
   } catch (err) {
@@ -201,14 +226,10 @@ async function applySale(req, res, next) {
 
 async function removeSale(req, res, next) {
   try {
-    const { scope, productId } = req.body;
-    if (!['all', 'product'].includes(scope)) {
-      return res.status(400).json({ error: 'scope must be "all" or "product"' });
-    }
-    if (scope === 'product' && !productId) {
-      return res.status(400).json({ error: 'productId is required when scope is "product"' });
-    }
-    const updated = await productModel.removeSale({ productId: scope === 'product' ? Number(productId) : null });
+    const target = saleTargetIds(req.body);
+    if (target.error) return res.status(400).json({ error: target.error });
+
+    const updated = await productModel.removeSale({ productIds: target.ids });
     res.json({ updated });
   } catch (err) {
     next(err);

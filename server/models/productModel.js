@@ -106,17 +106,27 @@ async function remove(id) {
 // current price. That way re-running a sale (e.g. bumping a percent from
 // 10% to 20%) always discounts off the original price, not off an already-
 // discounted one.
-async function applySale({ productId, discountType, discountValue }) {
+async function applySale({ productIds, discountType, discountValue, maxDiscount }) {
   const baseExpr = 'CASE WHEN compare_at_price IS NOT NULL AND compare_at_price > price THEN compare_at_price ELSE price END';
-  const newPriceExpr = discountType === 'percent'
-    ? `GREATEST(1, ROUND(${baseExpr} * (1 - $1::numeric / 100), 2))`
-    : `GREATEST(1, ROUND(${baseExpr} - $1::numeric, 2))`;
 
   const values = [discountValue];
+  let newPriceExpr;
+  if (discountType === 'percent') {
+    newPriceExpr = `GREATEST(1, ROUND(${baseExpr} * (1 - $1::numeric / 100), 2))`;
+  } else if (discountType === 'percent_capped') {
+    // "Flat X% off, up to Rs Y": take the percentage, but never subtract more
+    // than the cap - so cheap products get the full percentage and expensive
+    // ones stop at Y. LEAST() does the capping per row.
+    values.push(maxDiscount);
+    newPriceExpr = `GREATEST(1, ROUND(${baseExpr} - LEAST(${baseExpr} * $1::numeric / 100, $${values.length}::numeric), 2))`;
+  } else {
+    newPriceExpr = `GREATEST(1, ROUND(${baseExpr} - $1::numeric, 2))`;
+  }
+
   let where = 'is_bundle = false';
-  if (productId) {
-    values.push(productId);
-    where += ` AND id = $${values.length}`;
+  if (productIds && productIds.length) {
+    values.push(productIds);
+    where += ` AND id = ANY($${values.length}::int[])`;
   }
 
   const { rows } = await pool.query(
@@ -130,12 +140,12 @@ async function applySale({ productId, discountType, discountValue }) {
   return rows.length;
 }
 
-async function removeSale({ productId }) {
+async function removeSale({ productIds }) {
   const values = [];
   let where = 'is_bundle = false AND compare_at_price IS NOT NULL';
-  if (productId) {
-    values.push(productId);
-    where += ` AND id = $${values.length}`;
+  if (productIds && productIds.length) {
+    values.push(productIds);
+    where += ` AND id = ANY($${values.length}::int[])`;
   }
 
   const { rows } = await pool.query(

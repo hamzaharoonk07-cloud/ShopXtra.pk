@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" href="/assets/favicon.png">
 <link href="/css/vendor/bootstrap.min.css" rel="stylesheet">
 <link href="/css/vendor/cropper.min.css" rel="stylesheet">
-<link href="/css/style.css?v=20260807o" rel="stylesheet">
+<link href="/css/style.css?v=20260807q" rel="stylesheet">
 
 <div id="admin-loading" class="text-center py-5">Loading…</div>
 <div id="admin-denied" class="d-none filter-panel text-center py-5" style="max-width: 480px; margin: 3rem auto;">
@@ -137,22 +137,36 @@
             <select class="form-select" id="sale-scope">
               <option value="all">All products</option>
               <option value="product">One product</option>
+              <option value="products">Several products</option>
             </select>
           </div>
           <div class="col-md-3 d-none" id="sale-product-field">
             <label class="form-label mono" style="font-size:0.7rem;" for="sale-product">Product</label>
             <select class="form-select" id="sale-product"></select>
           </div>
+          <div class="col-md-3 d-none" id="sale-products-field">
+            <label class="form-label mono" style="font-size:0.7rem;" for="sale-products">Products <span id="sale-products-count" style="color:var(--muted);"></span></label>
+            <select class="form-select" id="sale-products" multiple size="6"></select>
+            <div class="mt-1 d-flex gap-2">
+              <button type="button" class="btn btn-outline-plum btn-sm" id="sale-products-all">Select all</button>
+              <button type="button" class="btn btn-outline-plum btn-sm" id="sale-products-none">Clear</button>
+            </div>
+          </div>
           <div class="col-md-2">
             <label class="form-label mono" style="font-size:0.7rem;" for="sale-type">Discount type</label>
             <select class="form-select" id="sale-type">
               <option value="flat">Flat (Rs off)</option>
               <option value="percent">Percent (up to X% off)</option>
+              <option value="percent_capped">Flat % off, capped in Rs</option>
             </select>
           </div>
           <div class="col-md-2">
             <label class="form-label mono" style="font-size:0.7rem;" for="sale-value">Value</label>
             <input type="number" class="form-control" id="sale-value" min="1" placeholder="e.g. 200 or 20">
+          </div>
+          <div class="col-md-2 d-none" id="sale-max-discount-field">
+            <label class="form-label mono" style="font-size:0.7rem;" for="sale-max-discount">Max discount (Rs)</label>
+            <input type="number" class="form-control" id="sale-max-discount" min="1" placeholder="e.g. 500">
           </div>
           <div class="col-md-2 d-flex gap-2">
             <button type="button" class="btn btn-plum w-100" id="apply-sale-btn">Apply</button>

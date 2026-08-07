@@ -670,22 +670,66 @@ async function loadProducts() {
   }
 }
 
+function saleOptionLabel(p) {
+  const onSale = p.compare_at_price && Number(p.compare_at_price) > Number(p.price);
+  return `${p.name}${onSale ? ' (on sale)' : ''}`;
+}
+
 function populateSaleProductSelect() {
   const select = document.getElementById('sale-product');
-  if (!select) return;
-  const current = select.value;
-  select.innerHTML = allProducts
-    .map((p) => `<option value="${p.id}">${p.name}${p.compare_at_price && Number(p.compare_at_price) > Number(p.price) ? ' (on sale)' : ''}</option>`)
-    .join('');
-  if (current && allProducts.some((p) => String(p.id) === current)) select.value = current;
+  const multi = document.getElementById('sale-products');
+  const options = allProducts.map((p) => `<option value="${p.id}">${saleOptionLabel(p)}</option>`).join('');
+
+  if (select) {
+    const current = select.value;
+    select.innerHTML = options;
+    if (current && allProducts.some((p) => String(p.id) === current)) select.value = current;
+  }
+
+  if (multi) {
+    const chosen = new Set([...multi.selectedOptions].map((o) => o.value));
+    multi.innerHTML = options;
+    [...multi.options].forEach((o) => { o.selected = chosen.has(o.value); });
+    updateSaleProductsCount();
+  }
+}
+
+function updateSaleProductsCount() {
+  const multi = document.getElementById('sale-products');
+  const label = document.getElementById('sale-products-count');
+  if (multi && label) label.textContent = `(${multi.selectedOptions.length} selected)`;
 }
 
 document.getElementById('sale-scope').addEventListener('change', (e) => {
   document.getElementById('sale-product-field').classList.toggle('d-none', e.target.value !== 'product');
+  document.getElementById('sale-products-field').classList.toggle('d-none', e.target.value !== 'products');
+});
+
+document.getElementById('sale-type').addEventListener('change', (e) => {
+  document.getElementById('sale-max-discount-field').classList.toggle('d-none', e.target.value !== 'percent_capped');
+});
+
+document.getElementById('sale-products').addEventListener('change', updateSaleProductsCount);
+
+document.getElementById('sale-products-all').addEventListener('click', () => {
+  [...document.getElementById('sale-products').options].forEach((o) => { o.selected = true; });
+  updateSaleProductsCount();
+});
+
+document.getElementById('sale-products-none').addEventListener('click', () => {
+  [...document.getElementById('sale-products').options].forEach((o) => { o.selected = false; });
+  updateSaleProductsCount();
 });
 
 function currentSaleSelection() {
   const scope = document.getElementById('sale-scope').value;
+
+  if (scope === 'products') {
+    const productIds = [...document.getElementById('sale-products').selectedOptions].map((o) => o.value);
+    if (!productIds.length) throw new Error('Select at least one product.');
+    return { scope, productIds };
+  }
+
   const productId = document.getElementById('sale-product').value;
   if (scope === 'product' && !productId) {
     throw new Error('Pick a product first.');
@@ -693,24 +737,53 @@ function currentSaleSelection() {
   return { scope, productId: scope === 'product' ? productId : undefined };
 }
 
+/* Human-readable name for whatever currentSaleSelection() returned, used in the
+   confirm() prompts so an admin can see they are about to reprice 30 products
+   rather than the one they had in mind. */
+function saleTargetLabel({ scope, productId, productIds }) {
+  if (scope === 'all') return 'ALL products';
+  if (scope === 'products') {
+    const names = productIds
+      .map((id) => allProducts.find((p) => String(p.id) === String(id))?.name)
+      .filter(Boolean);
+    const preview = names.slice(0, 3).join(', ');
+    return names.length > 3
+      ? `these ${names.length} products (${preview}, +${names.length - 3} more)`
+      : `these ${names.length} product${names.length === 1 ? '' : 's'} (${preview})`;
+  }
+  return allProducts.find((p) => String(p.id) === productId)?.name || 'this product';
+}
+
 document.getElementById('apply-sale-btn').addEventListener('click', async (e) => {
   const btn = e.currentTarget;
   const errorEl = document.getElementById('sale-error');
   errorEl.classList.add('d-none');
   try {
-    const { scope, productId } = currentSaleSelection();
+    const selection = currentSaleSelection();
+    const { scope, productId, productIds } = selection;
     const discountType = document.getElementById('sale-type').value;
     const discountValue = Number(document.getElementById('sale-value').value);
     if (!discountValue || discountValue <= 0) throw new Error('Enter a discount value greater than 0.');
 
-    const label = discountType === 'flat' ? `Rs ${discountValue} off` : `up to ${discountValue}% off`;
-    const target = scope === 'all' ? 'ALL products' : (allProducts.find((p) => String(p.id) === productId)?.name || 'this product');
-    if (!confirm(`Apply ${label} to ${target}?`)) return;
+    let maxDiscount;
+    if (discountType === 'percent_capped') {
+      maxDiscount = Number(document.getElementById('sale-max-discount').value);
+      if (!maxDiscount || maxDiscount <= 0) throw new Error('Enter a max discount in Rs greater than 0.');
+    }
+
+    const label = discountType === 'flat'
+      ? `Rs ${discountValue} off`
+      : discountType === 'percent_capped'
+        ? `${discountValue}% off, capped at Rs ${maxDiscount}`
+        : `up to ${discountValue}% off`;
+    if (!confirm(`Apply ${label} to ${saleTargetLabel(selection)}?`)) return;
 
     btn.disabled = true;
     btn.textContent = 'Applying…';
     const body = { scope, discountType, discountValue };
     if (productId) body.productId = productId;
+    if (productIds) body.productIds = productIds;
+    if (maxDiscount) body.maxDiscount = maxDiscount;
     const res = await fetch('/api/products/apply-sale', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -734,15 +807,16 @@ document.getElementById('remove-sale-btn').addEventListener('click', async (e) =
   const errorEl = document.getElementById('sale-error');
   errorEl.classList.add('d-none');
   try {
-    const { scope, productId } = currentSaleSelection();
-    const target = scope === 'all' ? 'ALL products' : (allProducts.find((p) => String(p.id) === productId)?.name || 'this product');
-    if (!confirm(`Remove sale pricing from ${target}? Prices revert to their "was" price.`)) return;
+    const selection = currentSaleSelection();
+    const { scope, productId, productIds } = selection;
+    if (!confirm(`Remove sale pricing from ${saleTargetLabel(selection)}? Prices revert to their "was" price.`)) return;
 
     btn.disabled = true;
     const originalText = btn.textContent;
     btn.textContent = 'Removing…';
     const body = { scope };
     if (productId) body.productId = productId;
+    if (productIds) body.productIds = productIds;
     const res = await fetch('/api/products/remove-sale', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
