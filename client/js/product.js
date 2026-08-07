@@ -120,15 +120,15 @@ async function loadProduct() {
           <ul class="pdp-benefits">
             <li>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m8 12 2.8 2.8L16 9.5"/></svg>
-              <span><strong>100% certified organic</strong> &mdash; made in a USDA Organic (CERES), HACCP and ISO 22000:2018 certified facility.</span>
+              <span><strong>100% certified organic.</strong> Made in a USDA Organic (CERES), HACCP and ISO 22000:2018 certified facility.</span>
             </li>
             <li>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m8 12 2.8 2.8L16 9.5"/></svg>
-              <span><strong>Cash on Delivery</strong> &mdash; pay only once the order is in your hands, anywhere in Pakistan.</span>
+              <span><strong>Cash on Delivery.</strong> Pay only once the order is in your hands, anywhere in Pakistan.</span>
             </li>
             <li>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m8 12 2.8 2.8L16 9.5"/></svg>
-              <span><strong>Delivered in 5&ndash;7 working days</strong> &mdash; free delivery on orders over Rs 3,000.</span>
+              <span><strong>Delivered in 5 to 7 working days.</strong> Free delivery on orders over Rs 3,000.</span>
             </li>
           </ul>
 
@@ -459,7 +459,7 @@ function renderFeaturedReview(reviews) {
     <figure class="pdp-featured-review">
       <blockquote>“${best.comment.trim()}”</blockquote>
       <figcaption>
-        <span class="pdp-featured-review-name">&mdash; ${best.user_name || 'ShopXtra customer'}</span>
+        <span class="pdp-featured-review-name">${best.user_name || 'ShopXtra customer'}</span>
         ${best.verified_purchase ? `
           <span class="pdp-featured-review-verified">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m8 12 2.8 2.8L16 9.5"/></svg>
