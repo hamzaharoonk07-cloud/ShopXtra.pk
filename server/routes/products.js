@@ -21,6 +21,8 @@ router.get('/:slug', productController.getBySlug);
 router.post('/:slug/view', attachUserIfPresent, productController.recordView);
 router.post('/:slug/cart-add', attachUserIfPresent, productController.recordCartAdd);
 router.post('/reprocess-images', requireAuth, requireRole('admin'), productController.reprocessImages);
+router.post('/apply-sale', requireAuth, requireRole('admin'), productController.applySale);
+router.post('/remove-sale', requireAuth, requireRole('admin'), productController.removeSale);
 router.post('/', requireAuth, requireRole('admin'), productMedia, productController.create);
 router.put('/:id', requireAuth, requireRole('admin'), productMedia, productController.update);
 router.delete('/:id', requireAuth, requireRole('admin'), productController.remove);

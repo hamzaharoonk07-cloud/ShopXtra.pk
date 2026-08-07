@@ -168,6 +168,53 @@ async function remove(req, res, next) {
   }
 }
 
+async function applySale(req, res, next) {
+  try {
+    const { scope, productId, discountType, discountValue } = req.body;
+    if (!['all', 'product'].includes(scope)) {
+      return res.status(400).json({ error: 'scope must be "all" or "product"' });
+    }
+    if (!['flat', 'percent'].includes(discountType)) {
+      return res.status(400).json({ error: 'discountType must be "flat" or "percent"' });
+    }
+    if (scope === 'product' && !productId) {
+      return res.status(400).json({ error: 'productId is required when scope is "product"' });
+    }
+    const value = Number(discountValue);
+    if (!value || value <= 0) {
+      return res.status(400).json({ error: 'discountValue must be greater than 0' });
+    }
+    if (discountType === 'percent' && value >= 100) {
+      return res.status(400).json({ error: 'Percent discount must be less than 100' });
+    }
+
+    const updated = await productModel.applySale({
+      productId: scope === 'product' ? Number(productId) : null,
+      discountType,
+      discountValue: value,
+    });
+    res.json({ updated });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function removeSale(req, res, next) {
+  try {
+    const { scope, productId } = req.body;
+    if (!['all', 'product'].includes(scope)) {
+      return res.status(400).json({ error: 'scope must be "all" or "product"' });
+    }
+    if (scope === 'product' && !productId) {
+      return res.status(400).json({ error: 'productId is required when scope is "product"' });
+    }
+    const updated = await productModel.removeSale({ productId: scope === 'product' ? Number(productId) : null });
+    res.json({ updated });
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function createVariant(req, res, next) {
   try {
     const { variant_name, color_name, color_hex, price_modifier, stock } = req.body;
@@ -223,4 +270,4 @@ async function reprocessImages(req, res, next) {
   }
 }
 
-module.exports = { list, getBySlug, recordView, recordCartAdd, listCartEvents, resetInsights, create, update, remove, createVariant, updateVariant, removeVariant, reprocessImages };
+module.exports = { list, getBySlug, recordView, recordCartAdd, listCartEvents, resetInsights, create, update, remove, applySale, removeSale, createVariant, updateVariant, removeVariant, reprocessImages };

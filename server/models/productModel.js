@@ -101,6 +101,54 @@ async function remove(id) {
   return rowCount > 0;
 }
 
+// Applying a sale is idempotent, not stacking: the "base" price it discounts
+// from is compare_at_price if the product is already on sale, otherwise the
+// current price. That way re-running a sale (e.g. bumping a percent from
+// 10% to 20%) always discounts off the original price, not off an already-
+// discounted one.
+async function applySale({ productId, discountType, discountValue }) {
+  const baseExpr = 'CASE WHEN compare_at_price IS NOT NULL AND compare_at_price > price THEN compare_at_price ELSE price END';
+  const newPriceExpr = discountType === 'percent'
+    ? `GREATEST(1, ROUND(${baseExpr} * (1 - $1::numeric / 100), 2))`
+    : `GREATEST(1, ROUND(${baseExpr} - $1::numeric, 2))`;
+
+  const values = [discountValue];
+  let where = 'is_bundle = false';
+  if (productId) {
+    values.push(productId);
+    where += ` AND id = $${values.length}`;
+  }
+
+  const { rows } = await pool.query(
+    `UPDATE products
+     SET compare_at_price = ${baseExpr},
+         price = ${newPriceExpr}
+     WHERE ${where}
+     RETURNING id`,
+    values
+  );
+  return rows.length;
+}
+
+async function removeSale({ productId }) {
+  const values = [];
+  let where = 'is_bundle = false AND compare_at_price IS NOT NULL';
+  if (productId) {
+    values.push(productId);
+    where += ` AND id = $${values.length}`;
+  }
+
+  const { rows } = await pool.query(
+    `UPDATE products
+     SET price = compare_at_price,
+         compare_at_price = NULL
+     WHERE ${where}
+     RETURNING id`,
+    values
+  );
+  return rows.length;
+}
+
 async function createVariant(productId, data) {
   const { variant_name, price_modifier, stock, color_name, color_hex, image_url } = data;
   const { rows } = await pool.query(
@@ -141,6 +189,8 @@ module.exports = {
   create,
   update,
   remove,
+  applySale,
+  removeSale,
   createVariant,
   updateVariant,
   removeVariant,

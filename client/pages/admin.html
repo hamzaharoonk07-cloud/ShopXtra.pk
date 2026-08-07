@@ -128,6 +128,42 @@
         <p class="text-danger d-none mt-2" id="add-product-error"></p>
       </div>
 
+      <div class="admin-panel mb-4">
+        <h2>Apply sale</h2>
+        <p style="font-size:0.85rem; color:var(--muted-body); margin-bottom:0.75rem;">Sets each product's "was" price to its current price, then discounts from there - so running this again (e.g. raising 10% to 20%) always discounts off the original price, never off an already-discounted one.</p>
+        <div class="row g-2 align-items-end">
+          <div class="col-md-3">
+            <label class="form-label mono" style="font-size:0.7rem;" for="sale-scope">Apply to</label>
+            <select class="form-select" id="sale-scope">
+              <option value="all">All products</option>
+              <option value="product">One product</option>
+            </select>
+          </div>
+          <div class="col-md-3 d-none" id="sale-product-field">
+            <label class="form-label mono" style="font-size:0.7rem;" for="sale-product">Product</label>
+            <select class="form-select" id="sale-product"></select>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label mono" style="font-size:0.7rem;" for="sale-type">Discount type</label>
+            <select class="form-select" id="sale-type">
+              <option value="flat">Flat (Rs off)</option>
+              <option value="percent">Percent (up to X% off)</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label mono" style="font-size:0.7rem;" for="sale-value">Value</label>
+            <input type="number" class="form-control" id="sale-value" min="1" placeholder="e.g. 200 or 20">
+          </div>
+          <div class="col-md-2 d-flex gap-2">
+            <button type="button" class="btn btn-plum w-100" id="apply-sale-btn">Apply</button>
+          </div>
+        </div>
+        <div class="mt-2">
+          <button type="button" class="btn btn-outline-plum btn-sm" id="remove-sale-btn">Remove sale from selection above</button>
+        </div>
+        <p class="text-danger d-none mt-2" id="sale-error"></p>
+      </div>
+
       <div class="admin-panel">
         <div class="admin-table-toolbar">
           <input type="search" id="product-search" class="admin-table-search" placeholder="Search products…">

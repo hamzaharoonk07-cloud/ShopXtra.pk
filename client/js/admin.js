@@ -664,10 +664,103 @@ async function loadProducts() {
   try {
     allProducts = await apiGet('/products');
     renderProductsTable();
+    populateSaleProductSelect();
   } catch (err) {
     tbody.innerHTML = `<tr><td colspan="6" class="text-danger">Could not load products: ${err.message}</td></tr>`;
   }
 }
+
+function populateSaleProductSelect() {
+  const select = document.getElementById('sale-product');
+  if (!select) return;
+  const current = select.value;
+  select.innerHTML = allProducts
+    .map((p) => `<option value="${p.id}">${p.name}${p.compare_at_price && Number(p.compare_at_price) > Number(p.price) ? ' (on sale)' : ''}</option>`)
+    .join('');
+  if (current && allProducts.some((p) => String(p.id) === current)) select.value = current;
+}
+
+document.getElementById('sale-scope').addEventListener('change', (e) => {
+  document.getElementById('sale-product-field').classList.toggle('d-none', e.target.value !== 'product');
+});
+
+function currentSaleSelection() {
+  const scope = document.getElementById('sale-scope').value;
+  const productId = document.getElementById('sale-product').value;
+  if (scope === 'product' && !productId) {
+    throw new Error('Pick a product first.');
+  }
+  return { scope, productId: scope === 'product' ? productId : undefined };
+}
+
+document.getElementById('apply-sale-btn').addEventListener('click', async (e) => {
+  const btn = e.currentTarget;
+  const errorEl = document.getElementById('sale-error');
+  errorEl.classList.add('d-none');
+  try {
+    const { scope, productId } = currentSaleSelection();
+    const discountType = document.getElementById('sale-type').value;
+    const discountValue = Number(document.getElementById('sale-value').value);
+    if (!discountValue || discountValue <= 0) throw new Error('Enter a discount value greater than 0.');
+
+    const label = discountType === 'flat' ? `Rs ${discountValue} off` : `up to ${discountValue}% off`;
+    const target = scope === 'all' ? 'ALL products' : (allProducts.find((p) => String(p.id) === productId)?.name || 'this product');
+    if (!confirm(`Apply ${label} to ${target}?`)) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Applying…';
+    const body = { scope, discountType, discountValue };
+    if (productId) body.productId = productId;
+    const res = await fetch('/api/products/apply-sale', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Request failed');
+    alert(`Sale applied to ${result.updated} product${result.updated === 1 ? '' : 's'}.`);
+    loadProducts();
+  } catch (err) {
+    errorEl.textContent = err.message;
+    errorEl.classList.remove('d-none');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Apply';
+  }
+});
+
+document.getElementById('remove-sale-btn').addEventListener('click', async (e) => {
+  const btn = e.currentTarget;
+  const errorEl = document.getElementById('sale-error');
+  errorEl.classList.add('d-none');
+  try {
+    const { scope, productId } = currentSaleSelection();
+    const target = scope === 'all' ? 'ALL products' : (allProducts.find((p) => String(p.id) === productId)?.name || 'this product');
+    if (!confirm(`Remove sale pricing from ${target}? Prices revert to their "was" price.`)) return;
+
+    btn.disabled = true;
+    const originalText = btn.textContent;
+    btn.textContent = 'Removing…';
+    const body = { scope };
+    if (productId) body.productId = productId;
+    const res = await fetch('/api/products/remove-sale', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Request failed');
+    alert(`Sale removed from ${result.updated} product${result.updated === 1 ? '' : 's'}.`);
+    loadProducts();
+    btn.textContent = originalText;
+  } catch (err) {
+    errorEl.textContent = err.message;
+    errorEl.classList.remove('d-none');
+    btn.textContent = 'Remove sale from selection above';
+  } finally {
+    btn.disabled = false;
+  }
+});
 
 document.getElementById('product-search').addEventListener('input', renderProductsTable);
 
