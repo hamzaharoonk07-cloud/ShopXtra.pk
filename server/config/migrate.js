@@ -296,6 +296,35 @@ async function runMigrations() {
      WHERE btrim(name) = 'Mirror Moisturising 6 Color Lip'
        AND shade_count = 3;
 
+    /* Corrected from the swatch charts in each product's own photos - the
+       numbered "01#.. 0N#" arm tests, which are the only place the real shade
+       count is actually stated. The seed above had taken its numbers from the
+       old Colour 1..N variants, and those turned out to be one per uploaded
+       image rather than one per shade, so they were wrong wherever a product
+       had more shades than photos.
+
+       Each is guarded on the exact value the seed wrote, so it corrects once
+       and leaves any number set in admin alone. */
+    -- Matte Lip Gloss: 01#..06#COLOR swatch chart
+    UPDATE products SET shade_count = 6
+     WHERE btrim(name) = 'Matte Lip Gloss' AND shade_count = 3;
+
+    -- Tinted Lip Gloss: 01#Stealing Peach..05#Dawn tea
+    UPDATE products SET shade_count = 5
+     WHERE btrim(name) = 'Tinted Lip Gloss' AND shade_count = 3;
+
+    -- Gloss Lipstick: 01#Cold honey..08#Peach rose
+    UPDATE products SET shade_count = 8
+     WHERE btrim(name) = 'Gloss Lipstick' AND shade_count = 4;
+
+    -- Lip Liquid Velvet Liquid Pigment: 01#Pink Peach..06#peach wood
+    UPDATE products SET shade_count = 6
+     WHERE btrim(name) = 'Lip Liquid Velvet Liquid Pigment' AND shade_count = 4;
+
+    -- Jelly Blusher Cream: 01#Spring Powder..05#Cinnamon Tea
+    UPDATE products SET shade_count = 5
+     WHERE btrim(name) = 'Jelly Blusher Cream' AND shade_count = 4;
+
   `, 'core');
 
   /* Kept out of the core batch: these are the columns that went missing the
