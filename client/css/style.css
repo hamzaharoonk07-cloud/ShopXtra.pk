@@ -2204,6 +2204,9 @@ select:focus-visible {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  /* Biases the centred block upward: padding at the foot shortens the box the
+     copy centres inside, lifting it without pinning it back to the top. */
+  padding-bottom: 2.75rem;
 }
 
 .hero-slide-copy {
