@@ -18,7 +18,14 @@ function saveCart(cart) {
    customer has already forgotten the product by, the choice is asked for at
    the moment of adding to the cart. It rides along on the cart line and is
    composed into the order notes at checkout. */
-const SHADE_COUNT = 6;
+const DEFAULT_SHADE_COUNT = 6;
+
+function shadeCountFor(product) {
+  const n = Number(product.shadeCount ?? product.shade_count);
+  if (Number.isFinite(n) && n > 0) return Math.min(n, 30);
+  if (n === 0) return 0;
+  return DEFAULT_SHADE_COUNT;
+}
 
 function ensureShadeModal() {
   let modal = document.getElementById('shade-modal');
@@ -36,8 +43,13 @@ function ensureShadeModal() {
       <button type="button" class="shade-modal-close" data-shade-dismiss aria-label="Close">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
       </button>
-      <h2 id="shade-modal-title">Have you checked the shade?</h2>
-      <p class="shade-modal-sub" id="shade-modal-product"></p>
+      <div class="shade-modal-head">
+        <img class="shade-modal-thumb" id="shade-modal-thumb" alt="" hidden>
+        <div>
+          <h2 id="shade-modal-title">Have you checked the shade?</h2>
+          <p class="shade-modal-sub" id="shade-modal-product"></p>
+        </div>
+      </div>
 
       <div id="shade-modal-confirm-step">
         <p class="shade-modal-help">The shades are shown on the product photos. If you haven't seen them yet, take a look first.</p>
@@ -48,7 +60,9 @@ function ensureShadeModal() {
       </div>
 
       <div id="shade-modal-pick-step" hidden>
+        <p class="shade-modal-progress" id="shade-modal-progress" hidden></p>
         <div class="shade-modal-options" id="shade-modal-options"></div>
+        <p class="shade-modal-chosen" id="shade-modal-chosen" hidden></p>
         <p class="shade-modal-error" id="shade-modal-error" hidden>Pick a shade to continue.</p>
         <button type="button" class="btn btn-plum w-100" id="shade-modal-confirm">Add to cart</button>
       </div>
@@ -59,24 +73,31 @@ function ensureShadeModal() {
 }
 
 /* Two steps. First it asks whether the shopper has actually looked at the
-   shades - adding a numbered shade blind, from a grid thumbnail, is how you
-   get an exchange request later. Answering no sends them to the product page
-   to see the photos instead of adding anything.
+   shades - picking a number blind off a grid thumbnail is how you get an
+   exchange request later. Answering no sends them to the product page instead
+   of adding anything. The question is skipped on that product's own page,
+   where the photos are already on screen.
 
-   The question is skipped when they are already on that product's own page,
-   since the shades are on screen in front of them.
-
-   Resolves to the chosen shade, or null if they backed out or went to look -
-   in which case nothing is added to the cart. */
-function askForShade(product) {
+   With a quantity above one it then asks per unit, so someone buying three
+   can take three different shades. Resolves to an array of chosen shades, or
+   null if they backed out. */
+function askForShades(product, qty) {
   return new Promise((resolve) => {
+    const count = shadeCountFor(product);
+    if (!count) { resolve([]); return; }
+
     const modal = ensureShadeModal();
     const confirmStep = modal.querySelector('#shade-modal-confirm-step');
     const pickStep = modal.querySelector('#shade-modal-pick-step');
     const title = modal.querySelector('#shade-modal-title');
     const options = modal.querySelector('#shade-modal-options');
     const error = modal.querySelector('#shade-modal-error');
+    const progress = modal.querySelector('#shade-modal-progress');
+    const chosenEl = modal.querySelector('#shade-modal-chosen');
     const confirmBtn = modal.querySelector('#shade-modal-confirm');
+    const thumb = modal.querySelector('#shade-modal-thumb');
+
+    const picked = [];
     let selected = null;
 
     const productUrl = `/pages/product.html?slug=${encodeURIComponent(product.slug)}`;
@@ -84,15 +105,33 @@ function askForShade(product) {
       && new URLSearchParams(window.location.search).get('slug') === product.slug;
 
     modal.querySelector('#shade-modal-product').textContent = product.name;
-    error.hidden = true;
-    options.innerHTML = Array.from({ length: SHADE_COUNT }, (_, i) => `
-      <button type="button" class="shade-option" data-shade="Shade ${i + 1}">${i + 1}</button>
+    const image = (product.images && product.images[0]) || null;
+    thumb.hidden = !image;
+    if (image) thumb.src = image;
+
+    options.innerHTML = Array.from({ length: count }, (_, i) => `
+      <button type="button" class="shade-option" data-shade="Shade ${i + 1}">
+        <span class="shade-option-num">${i + 1}</span>
+      </button>
     `).join('');
 
+    const renderStep = () => {
+      const isLast = picked.length === qty - 1;
+      progress.hidden = qty <= 1;
+      progress.textContent = `Item ${picked.length + 1} of ${qty}`;
+      chosenEl.hidden = picked.length === 0;
+      chosenEl.textContent = picked.length ? `Chosen so far: ${picked.join(', ')}` : '';
+      confirmBtn.textContent = isLast ? 'Add to cart' : 'Next item';
+      options.querySelectorAll('.shade-option').forEach((b) => b.classList.remove('is-selected'));
+      selected = null;
+      error.hidden = true;
+    };
+
     const showPickStep = () => {
-      title.textContent = 'Choose your shade';
+      title.textContent = qty > 1 ? 'Choose a shade for each' : 'Choose your shade';
       confirmStep.hidden = true;
       pickStep.hidden = false;
+      renderStep();
       options.querySelector('.shade-option').focus();
     };
 
@@ -123,12 +162,13 @@ function askForShade(product) {
     };
     confirmBtn.onclick = () => {
       if (!selected) { error.hidden = false; return; }
-      close(selected);
+      picked.push(selected);
+      if (picked.length >= qty) { close(picked); return; }
+      renderStep();
     };
     modal.querySelectorAll('[data-shade-dismiss]').forEach((el) => { el.onclick = () => close(null); });
     document.addEventListener('keydown', onKey);
 
-    // Reset to step one each time it opens, unless we can skip straight past it.
     title.textContent = 'Have you checked the shade?';
     confirmStep.hidden = false;
     pickStep.hidden = true;
@@ -140,13 +180,37 @@ function askForShade(product) {
 }
 
 async function addToCart(product, qty = 1) {
-  let shade = product.shade || null;
-  if (!shade && product.category === 'cosmetics') {
-    shade = await askForShade(product);
-    if (!shade) return;
+  const cart = getCart();
+
+  // Cosmetics are asked for a shade per unit, so three of the same gloss can
+  // be three different shades - each distinct shade becomes its own cart line.
+  if (!product.shade && product.category === 'cosmetics') {
+    const shades = await askForShades(product, qty);
+    if (shades === null) return;
+    if (shades.length) {
+      shades.forEach((shade) => {
+        const line = cart.find((item) => item.slug === product.slug && item.shade === shade);
+        if (line) line.qty += 1;
+        else {
+          cart.push({
+            slug: product.slug,
+            name: `${product.name} (${shade})`,
+            shade,
+            price: Number(product.price),
+            category: product.category,
+            images: product.images || [],
+            qty: 1,
+          });
+        }
+      });
+      saveCart(cart);
+      openCartDrawer();
+      if (typeof showCartToast === 'function') showCartToast(product);
+      return;
+    }
   }
 
-  const cart = getCart();
+  const shade = product.shade || null;
   const existing = cart.find((item) => item.slug === product.slug && (item.shade || null) === shade);
   if (existing) {
     existing.qty += qty;
@@ -342,6 +406,7 @@ document.addEventListener('click', (e) => {
     price: Number(btn.dataset.price),
     category: btn.dataset.category,
     images: btn.dataset.image ? [btn.dataset.image] : [],
+    shadeCount: btn.dataset.shadeCount === '' ? null : Number(btn.dataset.shadeCount),
   });
 
   if (typeof bounceButton === 'function') bounceButton(btn);

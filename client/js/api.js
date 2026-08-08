@@ -229,6 +229,7 @@ function productCardHtml(product) {
         ${discount ? `<div class="product-card-compare-row"><span class="compare-price">${formatPrice(product.compare_at_price)}</span></div>` : ''}
         <button type="button" class="quick-add-btn" aria-label="${outOfStock ? `${product.name} is out of stock` : `Add ${product.name} to bag, ${formatPrice(product.price)}`}"
           data-slug="${product.slug}" data-name="${product.name.replace(/"/g, '&quot;')}"
+          data-shade-count="${product.shade_count == null ? '' : product.shade_count}"
           data-price="${product.price}" data-category="${product.category}"
           data-image="${(product.images && product.images[0]) || ''}"
           ${outOfStock ? 'disabled' : ''}><span class="quick-add-btn-label">${outOfStock ? 'Sold out' : 'Add to cart'}</span><span class="quick-add-btn-price">${formatPrice(product.price)}</span></button>

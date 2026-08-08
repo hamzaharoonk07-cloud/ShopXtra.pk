@@ -6410,22 +6410,25 @@ select:focus-visible {
 .shade-modal-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(10, 26, 18, 0.55);
+  background: rgba(10, 26, 18, 0.6);
+  backdrop-filter: blur(2px);
 }
 
 .shade-modal-panel {
   position: relative;
-  width: min(420px, 100%);
+  width: min(440px, 100%);
+  max-height: 88vh;
+  overflow-y: auto;
   background: var(--paper);
   border: 1px solid var(--hairline);
   box-shadow: var(--shadow-lift);
-  padding: 1.75rem 1.5rem 1.5rem;
+  padding: 1.6rem 1.5rem 1.5rem;
 }
 
 .shade-modal-close {
   position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
+  top: 0.55rem;
+  right: 0.55rem;
   width: 32px;
   height: 32px;
   display: flex;
@@ -6437,75 +6440,42 @@ select:focus-visible {
   cursor: pointer;
 }
 
+.shade-modal-close:hover {
+  color: var(--plum);
+}
+
+/* Thumbnail alongside the title, so it's obvious which product is being
+   picked for when the modal opens over a grid of similar-looking items. */
+.shade-modal-head {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1.1rem;
+  padding-right: 2rem;
+}
+
+.shade-modal-thumb {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border: 1px solid var(--hairline);
+  background: var(--sand);
+}
+
 .shade-modal-panel h2 {
-  margin: 0 0 0.2rem;
-  font-size: 1.25rem;
+  margin: 0 0 0.15rem;
+  font-size: 1.15rem;
+  line-height: 1.25;
   color: var(--plum);
 }
 
 .shade-modal-sub {
-  margin: 0 0 1.1rem;
-  font-size: 0.88rem;
+  margin: 0;
+  font-size: 0.85rem;
   color: var(--muted-body);
 }
 
-.shade-modal-options {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.shade-option {
-  aspect-ratio: 1 / 1;
-  border: 1px solid var(--hairline-strong);
-  background: var(--sand);
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: var(--plum);
-  cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
-}
-
-.shade-option:hover {
-  border-color: var(--tea-pink);
-}
-
-.shade-option.is-selected {
-  background: var(--tea-pink);
-  border-color: var(--tea-pink);
-  color: #fff;
-}
-
-.shade-option:focus-visible {
-  outline: 2px solid var(--tea-pink);
-  outline-offset: 2px;
-}
-
-.shade-modal-error {
-  margin: 0 0 0.7rem;
-  font-size: 0.83rem;
-  color: #A4342B;
-}
-
-body.shade-modal-open {
-  overflow: hidden;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .shade-option {
-    transition: none;
-  }
-}
-
-@media (max-width: 400px) {
-  .shade-modal-options {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-/* Step one of the shade modal: the "have you checked" question. */
 .shade-modal-help {
   margin: 0 0 1.1rem;
   font-size: 0.86rem;
@@ -6525,5 +6495,83 @@ body.shade-modal-open {
 @media (min-width: 420px) {
   .shade-modal-actions {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+.shade-modal-progress {
+  margin: 0 0 0.7rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tea-pink);
+}
+
+/* auto-fit rather than a fixed column count: a product with 3 shades and one
+   with 12 both lay out sensibly without a breakpoint per case. */
+.shade-modal-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(58px, 1fr));
+  gap: 0.55rem;
+  margin-bottom: 0.85rem;
+}
+
+.shade-option {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--hairline-strong);
+  background: var(--sand);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.shade-option-num {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--plum);
+}
+
+.shade-option:hover {
+  border-color: var(--tea-pink);
+  background: var(--paper);
+}
+
+.shade-option.is-selected {
+  background: var(--tea-pink);
+  border-color: var(--tea-pink);
+}
+
+.shade-option.is-selected .shade-option-num {
+  color: #fff;
+}
+
+.shade-option:focus-visible {
+  outline: 2px solid var(--tea-pink);
+  outline-offset: 2px;
+}
+
+.shade-modal-chosen {
+  margin: 0 0 0.7rem;
+  font-size: 0.82rem;
+  color: var(--muted-body);
+}
+
+.shade-modal-error {
+  margin: 0 0 0.7rem;
+  font-size: 0.83rem;
+  color: #A4342B;
+}
+
+body.shade-modal-open {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shade-option {
+    transition: none;
   }
 }

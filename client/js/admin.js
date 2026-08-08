@@ -617,6 +617,7 @@ async function openEditProductModal(product) {
   document.getElementById('ep-price').value = product.price;
   document.getElementById('ep-compare-price').value = product.compare_at_price || '';
   document.getElementById('ep-stock').value = product.stock;
+  document.getElementById('ep-shade-count').value = product.shade_count == null ? '' : product.shade_count;
   document.getElementById('ep-bestseller').checked = !!product.is_bestseller;
   document.getElementById('ep-new-images').value = '';
   clearImagePreview('ep-new-images-preview', 'ep-new-images');
@@ -656,6 +657,9 @@ document.getElementById('edit-product-form').addEventListener('submit', async (e
     formData.append('price', document.getElementById('ep-price').value);
     formData.append('compare_at_price', document.getElementById('ep-compare-price').value);
     formData.append('stock', document.getElementById('ep-stock').value);
+    // Empty clears it back to null rather than storing 0, so "no value set"
+    // and "explicitly zero shades" stay distinguishable.
+    formData.append('shade_count', document.getElementById('ep-shade-count').value.trim());
     formData.append('is_bestseller', document.getElementById('ep-bestseller').checked);
     formData.append('existingImages', JSON.stringify(editingProductImages));
     [...document.getElementById('ep-new-images').files].forEach((file) => formData.append('images', file));

@@ -139,6 +139,11 @@ async function update(req, res, next) {
       data.video_url = null;
     }
     delete data.removeVideo;
+    if ('shade_count' in data) {
+      const raw = String(data.shade_count).trim();
+      data.shade_count = raw === '' ? null : Number(raw);
+      if (Number.isNaN(data.shade_count)) data.shade_count = null;
+    }
     if (data.price != null && data.price !== '') data.price = Number(data.price);
     if (data.compare_at_price === '') data.compare_at_price = null;
     else if (data.compare_at_price != null) data.compare_at_price = Number(data.compare_at_price);

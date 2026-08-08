@@ -80,7 +80,7 @@ async function create(data) {
   return rows[0];
 }
 
-const UPDATABLE_FIELDS = ['name', 'category', 'description', 'price', 'compare_at_price', 'stock', 'images', 'video_url', 'is_bestseller'];
+const UPDATABLE_FIELDS = ['name', 'category', 'description', 'price', 'compare_at_price', 'stock', 'images', 'video_url', 'is_bestseller', 'shade_count'];
 
 async function update(id, data) {
   const fields = UPDATABLE_FIELDS.filter((key) => Object.prototype.hasOwnProperty.call(data, key));

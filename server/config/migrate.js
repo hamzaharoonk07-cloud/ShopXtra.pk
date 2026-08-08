@@ -190,6 +190,11 @@ async function runMigrations() {
 
     ALTER TABLE reviews ADD COLUMN IF NOT EXISTS image_url TEXT;
 
+    -- How many numbered shades the shade picker offers for this product.
+    -- Null means the picker's own default; cosmetics differ (some have 3,
+    -- some 5), so it can't be one number for the whole category.
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS shade_count INTEGER;
+
     -- Caps how many orders a code can be redeemed on (e.g. "first 100
     -- orders") - null means unlimited. Usage is counted live from
     -- orders.promo_code rather than a separate counter column, so it

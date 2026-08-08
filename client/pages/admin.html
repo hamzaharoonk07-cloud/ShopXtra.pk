@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" href="/assets/favicon.png">
 <link href="/css/vendor/bootstrap.min.css" rel="stylesheet">
 <link href="/css/vendor/cropper.min.css" rel="stylesheet">
-<link href="/css/style.css?v=20260808r" rel="stylesheet">
+<link href="/css/style.css?v=20260808s" rel="stylesheet">
 
 <div id="admin-loading" class="text-center py-5">Loading…</div>
 <div id="admin-denied" class="d-none filter-panel text-center py-5" style="max-width: 480px; margin: 3rem auto;">
@@ -462,6 +462,11 @@
             <div class="col-md-4">
               <label class="form-label mono" style="font-size:0.75rem;">Stock</label>
               <input type="number" class="form-control" id="ep-stock" min="0" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label mono" style="font-size:0.75rem;" for="ep-shade-count">Shades</label>
+              <input type="number" class="form-control" id="ep-shade-count" min="0" max="30" placeholder="e.g. 3">
+              <small style="font-size:0.7rem; color:var(--muted);">Cosmetics only. Blank or 0 means no shade prompt.</small>
             </div>
           </div>
           <div class="form-check mb-3">
