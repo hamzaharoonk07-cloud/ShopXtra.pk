@@ -246,6 +246,49 @@ async function runMigrations() {
                               'Shade 4', 'Shade 5', 'Shade 6')
        AND NOT EXISTS (SELECT 1 FROM order_items oi WHERE oi.variant_id = v.id);
 
+    -- Shade counts, taken from the "Colour 1..N" variants that were configured
+    -- on each of these before variants were dropped - the shop's own numbers
+    -- rather than anything inferred from a product photo, which shows how many
+    -- units were styled for the shot and not how many shades are stocked.
+    -- Hydrating Lip Gloss is 3 per the shop owner, overriding its 5 variants.
+    --
+    -- Matched on trimmed name because several rows carry stray leading spaces.
+    -- Only fills rows still unset, so editing a count in admin sticks instead
+    -- of being overwritten on the next cold start.
+    UPDATE products p
+       SET shade_count = v.count
+      FROM (VALUES
+             ('Tinted Lip Gloss', 3),
+             ('Silver Lip Sticks', 2),
+             ('Rabbit Lipstick Pen', 3),
+             ('Hydrating Lip Gloss Colorless Makeup', 3),
+             ('Lip and Cheek Cream Blush', 3),
+             ('Matte Lip Gloss', 3),
+             ('Mirror Moisturising 6 Color Lip', 3),
+             ('Korean Tint', 2),
+             ('Slim Pencil Eyeliner', 3),
+             ('Lip Liquid Velvet Liquid Pigment', 4),
+             ('Gloss Lipstick', 4),
+             ('Cushion Blush', 1),
+             ('Colorful Sweet Blush Cream', 3),
+             ('Liquid Concealer Cream', 4),
+             ('Long Lasting BB Cream', 3),
+             ('Brightening Vegan Cheek Face Makeup', 4),
+             ('Lip and Cheek Matte Powder', 3),
+             ('Pigmented Face Cheek Lip Cream', 4),
+             ('Concealers', 3),
+             ('Bow Powder Blushes', 3),
+             ('Blish Stick', 5),
+             ('Cushion Cream', 4),
+             ('Jelly Blusher Cream', 4),
+             ('Lip Gloss Vegan Soft Matte', 3),
+             ('Air Cushion Blush', 4),
+             ('Velvet Fog Lip and Cheek (pod)', 3)
+           ) AS v(name, count)
+     WHERE btrim(p.name) = v.name
+       AND p.category = 'cosmetics'
+       AND p.shade_count IS NULL;
+
   `, 'core');
 
   /* Kept out of the core batch: these are the columns that went missing the
