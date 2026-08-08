@@ -2107,7 +2107,11 @@ select:focus-visible {
      keeps it clear of the headline, not the centring. */
   .hero-organic-seal {
     position: static;
-    margin: 1rem auto 0.5rem 0;
+    /* The seal is a direct child of .home-hero, not of the .container the
+       copy sits in, so a zero left margin puts it against the viewport edge.
+       0.75rem is Bootstrap's half-gutter, which lines it up with the headline
+       below it. */
+    margin: 1rem auto 0.5rem 0.75rem;
     right: auto;
     top: auto;
     width: 64px;
