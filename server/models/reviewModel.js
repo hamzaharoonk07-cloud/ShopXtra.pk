@@ -1,9 +1,37 @@
 const pool = require('../config/db');
 
+/* admin_reply/admin_replied_at are added by migrate.js, which sends its whole
+   batch as one statement - so if any single statement in that batch fails,
+   none of it applies and these columns silently do not exist. Selecting them
+   unconditionally took the customer-facing reviews list down with a 500 when
+   exactly that happened. The reply is an admin nicety; the reviews themselves
+   are not, so a missing column degrades to "no replies" instead of no reviews.
+   The flag is cached after the first check, so this costs one extra query per
+   cold start at most. */
+let reviewsHaveReplyColumn = null;
+
+async function hasReplyColumn() {
+  if (reviewsHaveReplyColumn !== null) return reviewsHaveReplyColumn;
+  try {
+    const { rows } = await pool.query(
+      `SELECT 1 FROM information_schema.columns
+       WHERE table_name = 'reviews' AND column_name = 'admin_reply'`
+    );
+    reviewsHaveReplyColumn = rows.length > 0;
+  } catch {
+    reviewsHaveReplyColumn = false;
+  }
+  return reviewsHaveReplyColumn;
+}
+
 async function findByProductSlug(slug) {
+  const replyCols = (await hasReplyColumn())
+    ? 'r.admin_reply, r.admin_replied_at,'
+    : 'NULL AS admin_reply, NULL AS admin_replied_at,';
+
   const { rows } = await pool.query(
     `SELECT r.id, r.rating, r.comment, r.image_url, r.created_at, r.verified_purchase,
-            r.admin_reply, r.admin_replied_at, u.name AS user_name
+            ${replyCols} u.name AS user_name
      FROM reviews r
      JOIN products p ON p.id = r.product_id
      JOIN users u ON u.id = r.user_id
@@ -48,9 +76,12 @@ async function create({ slug, userId, rating, comment, imageUrl }) {
 /* Admin moderation: every review across the catalogue, newest first, with
    enough product context to know what is being replied to or removed. */
 async function findAllForAdmin() {
+  const replyCols = (await hasReplyColumn())
+    ? 'r.admin_reply, r.admin_replied_at,'
+    : 'NULL AS admin_reply, NULL AS admin_replied_at,';
   const { rows } = await pool.query(
     `SELECT r.id, r.rating, r.comment, r.image_url, r.created_at,
-            r.verified_purchase, r.admin_reply, r.admin_replied_at,
+            r.verified_purchase, ${replyCols}
             u.name AS user_name, p.name AS product_name, p.slug AS product_slug
      FROM reviews r
      JOIN products p ON p.id = r.product_id

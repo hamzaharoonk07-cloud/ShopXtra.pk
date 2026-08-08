@@ -157,10 +157,22 @@ async function runMigrations() {
     -- can never drift out of sync with what actually got redeemed.
     ALTER TABLE promo_codes ADD COLUMN IF NOT EXISTS max_uses INTEGER;
 
-    -- Shop's public answer to a review, shown under it on the product page.
-    ALTER TABLE reviews ADD COLUMN IF NOT EXISTS admin_reply TEXT;
-    ALTER TABLE reviews ADD COLUMN IF NOT EXISTS admin_replied_at TIMESTAMPTZ;
+
   `);
+
+  /* Deliberately outside the batch above. That batch is a single statement, so
+     one failing line silently rolls back every other line in it - which is how
+     these two columns ended up missing while the storefront had already
+     shipped a query selecting them, 500-ing the reviews list. Kept separate
+     and individually guarded so an unrelated failure can't take them out. */
+  try {
+    await pool.query(`
+      ALTER TABLE reviews ADD COLUMN IF NOT EXISTS admin_reply TEXT;
+      ALTER TABLE reviews ADD COLUMN IF NOT EXISTS admin_replied_at TIMESTAMPTZ;
+    `);
+  } catch (err) {
+    console.error('[migrate] reviews reply columns failed:', err.message);
+  }
 }
 
 module.exports = { runMigrations };

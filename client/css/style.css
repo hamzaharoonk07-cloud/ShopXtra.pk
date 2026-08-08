@@ -2224,9 +2224,7 @@ select:focus-visible {
   font-size: clamp(2.3rem, 4.8vw, 3.85rem);
   line-height: 1.05;
   font-weight: 800;
-  /* Was uppercase, which shouted "STAY HYDRATED." at every visitor. The
-     markup already carries the sentence case we want. */
-  text-transform: none;
+  text-transform: uppercase;
   letter-spacing: -0.01em;
   margin: 0 0 1.1rem;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 4px 18px rgba(0, 0, 0, 0.85);
