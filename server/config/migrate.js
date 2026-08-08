@@ -49,45 +49,29 @@ async function runMigrations() {
     ALTER TABLE promo_codes ADD CONSTRAINT promo_codes_discount_type_check
       CHECK (discount_type IN ('percent', 'flat', 'free_gift'));
 
-    -- Reinstate shampoo as the category name (a later decision reversed an
-    -- earlier discontinuation): rename every existing 'soaps' product to
-    -- 'shampoo' and update the allowed category list to match. Safe to
-    -- re-run - once no rows are 'soaps', the UPDATE is a no-op.
+    -- Category renames, historical and current. Each is a plain UPDATE run
+    -- while NO check constraint is in force, and the final constraint is added
+    -- once at the end.
     --
-    -- The constraint must allow BOTH values while the UPDATE runs - the old
-    -- constraint (only 'soaps') would reject the UPDATE's new 'shampoo'
-    -- value, and a constraint that only allows 'shampoo' would reject the
-    -- ADD CONSTRAINT itself (it validates existing rows, which are still
-    -- 'soaps' at that point).
+    -- This used to re-add an intermediate constraint between the renames, with
+    -- the value list frozen at whatever the categories were that day. Once a
+    -- row existed carrying a newer category, ADD CONSTRAINT - which validates
+    -- existing rows - rejected it and threw. Everything in this file is sent as
+    -- one batched statement, so that single failure silently rolled back every
+    -- other migration behind it, including unrelated column additions. Dropping
+    -- first and adding once at the end cannot go stale that way.
     ALTER TABLE products DROP CONSTRAINT IF EXISTS products_category_check;
-
-    ALTER TABLE products ADD CONSTRAINT products_category_check
-      CHECK (category IN ('electrolytes', 'soaps', 'shampoo', 'coffee', 'cosmetics'));
 
     UPDATE products SET category = 'shampoo' WHERE category = 'soaps';
 
-    ALTER TABLE products DROP CONSTRAINT IF EXISTS products_category_check;
-
-    -- A fifth category for things that clean the home rather than the person.
-    -- It started as 'detergents' (laundry pods were filed under shampoo, which
-    -- is where the nav sent anyone looking for hair care) and was renamed to
-    -- 'home-care' so it also covers mosquito repellent and similar.
-    --
-    -- The constraint has to allow BOTH names while the UPDATE runs, for the
-    -- same reason as the soaps/shampoo block above: the old constraint would
-    -- reject the new value, and the new one would reject the existing rows.
-    ALTER TABLE products ADD CONSTRAINT products_category_check
-      CHECK (category IN ('electrolytes', 'shampoo', 'detergents', 'home-care', 'coffee', 'cosmetics'));
-
-    -- Move the laundry products off shampoo. Matched on name rather than id so
-    -- it works against any environment, and re-running is a no-op once the
-    -- rows already carry the new category.
+    -- Laundry products were filed under shampoo, which is where the nav sent
+    -- anyone looking for hair care.
     UPDATE products SET category = 'home-care'
       WHERE category = 'shampoo' AND name ILIKE '%laundry%';
 
+    -- 'detergents' only described the laundry pods; renamed so the category
+    -- also covers mosquito repellent and anything else for the home.
     UPDATE products SET category = 'home-care' WHERE category = 'detergents';
-
-    ALTER TABLE products DROP CONSTRAINT IF EXISTS products_category_check;
 
     ALTER TABLE products ADD CONSTRAINT products_category_check
       CHECK (category IN ('electrolytes', 'shampoo', 'home-care', 'coffee', 'cosmetics'));
