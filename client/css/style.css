@@ -135,7 +135,12 @@ a {
   grid-template-rows: 48px;
 }
 
-@media (min-width: 992px) {
+/* Navbar desktop layout starts at 1200px, not 992px. With five category
+   dropdowns the links row needs ~896px; the container only frees ~656px at
+   992px and ~836px at 1200px. Below 1200 the row was overflowing into its
+   own overflow-x:auto and clipping items, which looked like the bar
+   collapsing. Under 1200 the hamburger menu is used instead. */
+@media (min-width: 1200px) {
   .navbar-top {
     grid-template-rows: 72px;
     column-gap: 1rem;
@@ -214,7 +219,7 @@ a {
   gap: 0.3rem;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   .navbar-toggler-dm {
     display: none;
   }
@@ -288,7 +293,10 @@ a {
   justify-content: flex-start;
   flex-wrap: nowrap;
   overflow-x: auto;
-  gap: 0.25rem;
+  /* Trimmed with the link padding so eight items clear the 836px the container
+     frees at the 1200px breakpoint with room to spare, rather than landing 2px
+     under it and tipping over on a font-metric difference. */
+  gap: 0.15rem;
   list-style: none;
   margin: 0;
   padding: 0.6rem 0.25rem;
@@ -311,7 +319,10 @@ a {
   font-size: 0.8rem;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  padding: 0.4rem 0.75rem;
+  /* Side padding is what makes eight nav items fit. At the original 0.75rem the
+     row measured 896px against the 836px the container frees at 1200px; 0.4rem
+     brings it to ~826px. */
+  padding: 0.4rem 0.4rem;
   border-radius: 999px;
   white-space: nowrap;
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -323,7 +334,7 @@ a {
   color: var(--plum);
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   .navbar-links-collapse {
     display: contents !important;
   }
@@ -547,7 +558,7 @@ a {
   transition: border-color 0.2s ease;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   .nav-icon-btn {
     width: 38px;
     height: 38px;
@@ -573,7 +584,7 @@ a {
   transition: background 0.2s ease;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   .nav-bag-btn {
     width: 38px;
     height: 38px;
