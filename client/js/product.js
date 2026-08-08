@@ -297,7 +297,7 @@ async function loadProduct() {
     });
 
     const addToCartBtn = document.getElementById('add-to-cart-btn');
-    addToCartBtn?.addEventListener('click', (e) => {
+    addToCartBtn?.addEventListener('click', async (e) => {
       const qty = Number(document.getElementById('qty-input').value) || 1;
       const cartProduct = selectedVariant ? {
         ...product,
@@ -306,7 +306,7 @@ async function loadProduct() {
         price: Number(product.price) + Number(selectedVariant.price_modifier || 0),
         images: selectedVariant.image_url ? [selectedVariant.image_url] : product.images,
       } : product;
-      addToCart(cartProduct, qty);
+      await addToCart(cartProduct, qty);
       const msg = document.getElementById('add-to-cart-msg');
       msg.textContent = 'Added to bag.';
       msg.style.color = 'var(--tea-pink)';

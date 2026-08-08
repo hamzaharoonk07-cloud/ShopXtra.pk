@@ -20,11 +20,16 @@ function saveCart(cart) {
    composed into the order notes at checkout. */
 const DEFAULT_SHADE_COUNT = 6;
 
+/* Number(null) is 0, not NaN - so reading an unset shade_count straight
+   through Number() said "this product has zero shades" and skipped the picker
+   entirely. Unset has to be ruled out before any numeric coercion; only a
+   deliberate 0 turns the prompt off. */
 function shadeCountFor(product) {
-  const n = Number(product.shadeCount ?? product.shade_count);
-  if (Number.isFinite(n) && n > 0) return Math.min(n, 30);
-  if (n === 0) return 0;
-  return DEFAULT_SHADE_COUNT;
+  const raw = product.shadeCount ?? product.shade_count;
+  if (raw === null || raw === undefined || raw === '') return DEFAULT_SHADE_COUNT;
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n < 0) return DEFAULT_SHADE_COUNT;
+  return n === 0 ? 0 : Math.min(n, 30);
 }
 
 function ensureShadeModal() {
