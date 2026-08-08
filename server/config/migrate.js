@@ -264,7 +264,7 @@ async function runMigrations() {
              ('Hydrating Lip Gloss Colorless Makeup', 3),
              ('Lip and Cheek Cream Blush', 3),
              ('Matte Lip Gloss', 3),
-             ('Mirror Moisturising 6 Color Lip', 3),
+             ('Mirror Moisturising 6 Color Lip', 6),
              ('Korean Tint', 2),
              ('Slim Pencil Eyeliner', 3),
              ('Lip Liquid Velvet Liquid Pigment', 4),
@@ -288,6 +288,13 @@ async function runMigrations() {
      WHERE btrim(p.name) = v.name
        AND p.category = 'cosmetics'
        AND p.shade_count IS NULL;
+
+    -- Seeded as 3 from its old colour variants, but the product is a six
+    -- colour lip and offers six. Guarded on the exact value the seed wrote so
+    -- it corrects once; setting any other number in admin is left alone.
+    UPDATE products SET shade_count = 6
+     WHERE btrim(name) = 'Mirror Moisturising 6 Color Lip'
+       AND shade_count = 3;
 
   `, 'core');
 
