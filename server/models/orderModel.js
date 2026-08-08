@@ -191,26 +191,44 @@ async function getOverview() {
   return { ...totals[0], byStatus, topProducts, mostViewed, mostWishlisted };
 }
 
-/* Clears the order book and restarts numbering, so the next order placed is
-   #1 again. A plain DELETE would leave the SERIAL sequence where it was and
-   the next order would carry on from the old high-water mark, which is the
-   opposite of a reset. TRUNCATE ... RESTART IDENTITY does both in one pass,
-   and order_items is named explicitly rather than relying on CASCADE so the
-   statement fails loudly if the schema ever gains another child table.
-   Returns the row counts that were removed, for the confirmation message. */
-async function resetAll() {
+/* Clears the store's transactional and customer data, restarting numbering so
+   the next order placed is #1 again. A plain DELETE would leave the SERIAL
+   sequence at its old high-water mark and the next order would carry on from
+   there, which is the opposite of a reset.
+
+   Kept deliberately: promo codes, products, bundles, variants, site banners
+   and admin accounts.
+
+   Deleting non-admin users cascades to their addresses, wishlists and reviews
+   (see the ON DELETE CASCADE in schema.sql), so those are not named here -
+   but they are counted first so the confirmation reports what actually went.
+   Admins are matched by role, so an admin's own order history goes with the
+   orders table while their login survives. */
+async function resetStoreData() {
   const { rows } = await pool.query(
     `SELECT
        (SELECT COUNT(*)::int FROM orders) AS orders,
-       (SELECT COUNT(*)::int FROM order_items) AS order_items`
+       (SELECT COUNT(*)::int FROM order_items) AS order_items,
+       (SELECT COUNT(*)::int FROM users WHERE role != 'admin') AS customers,
+       (SELECT COUNT(*)::int FROM wishlists) AS wishlists,
+       (SELECT COUNT(*)::int FROM reviews) AS reviews,
+       (SELECT COUNT(*)::int FROM addresses) AS addresses,
+       (SELECT COUNT(*)::int FROM newsletter_signups) AS subscribers`
   );
-  await pool.query('TRUNCATE order_items, orders RESTART IDENTITY');
+
+  await pool.query(`
+    TRUNCATE order_items, orders RESTART IDENTITY;
+    TRUNCATE newsletter_signups RESTART IDENTITY;
+    TRUNCATE product_views, cart_events RESTART IDENTITY;
+    DELETE FROM users WHERE role != 'admin';
+  `);
+
   return rows[0];
 }
 
 module.exports = {
   createOrder,
-  resetAll,
+  resetStoreData,
   computeShippingFee,
   FREE_SHIPPING_THRESHOLD,
   KARACHI_SHIPPING_FEE,

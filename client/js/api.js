@@ -160,6 +160,7 @@ function categoryLabel(category) {
   const labels = {
     electrolytes: 'Electrolytes',
     shampoo: 'Shampoo',
+    detergents: 'Detergents',
     coffee: 'Coffee',
     cosmetics: 'Cosmetics',
   };

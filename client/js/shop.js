@@ -2,6 +2,7 @@ const SHOP_BANNER_PHOTOS = {
   electrolytes: '/assets/hero/electrolytes-flavors.jpg',
   coffee: '/assets/hero/coffee-pour.jpg',
   shampoo: '/assets/hero/shampoo-rosemary.jpg',
+  detergents: '/assets/hero/shampoo-rosemary.jpg',
   cosmetics: '/assets/hero/cosmetics-flatlay.jpg',
 };
 
@@ -9,6 +10,7 @@ const SHOP_BANNER_VIDEOS = {
   electrolytes: '/assets/bg/bg-electrolytes.mp4',
   coffee: '/assets/bg/bg-coffee.mp4',
   shampoo: '/assets/bg/bg-shampoo.mp4',
+  detergents: '/assets/bg/bg-shampoo.mp4',
   cosmetics: '/assets/bg/bg-cosmetics.mp4',
 };
 

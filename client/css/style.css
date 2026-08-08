@@ -44,6 +44,8 @@
   --tint-coffee-ink: #4A3F2E;
   --tint-shampoo-bg: #DFEEE7;
   --tint-shampoo-ink: #2E4A3F;
+  --tint-detergents-bg: #E2EAF2;
+  --tint-detergents-ink: #33465C;
   --tint-cosmetics-bg: #F0E4E6;
   --tint-cosmetics-ink: #5C3A44;
 
@@ -463,7 +465,12 @@ a {
   display: block;
 }
 
-.nav-dropdown[data-category="shampoo"] .nav-dropdown-menu,
+/* The panel is 440px wide, so items in the right half of the nav have to hang
+   their menu off their right edge or it runs past the viewport. Which items
+   those are moved when Detergents was added as a fifth category: the last
+   three now need it, where previously it was shampoo and cosmetics. */
+.nav-dropdown[data-category="detergents"] .nav-dropdown-menu,
+.nav-dropdown[data-category="coffee"] .nav-dropdown-menu,
 .nav-dropdown[data-category="cosmetics"] .nav-dropdown-menu {
   left: auto;
   right: 0;
@@ -2071,11 +2078,13 @@ select:focus-visible {
   /* Absolute-positioned in the corner, the seal collided with the big
      hero headline (which wraps to fill most of the narrow viewport at
      its clamp() floor size) - taken out of the corner entirely and put
-     back in normal document flow, centered above the headline, so
-     there's no overlap regardless of how the text wraps. */
+     back in normal document flow, so there's no overlap regardless of
+     how the text wraps. Pushed to the right edge rather than centred,
+     matching the corner it occupies on desktop; staying in flow is what
+     keeps it clear of the headline, not the centring. */
   .hero-organic-seal {
     position: static;
-    margin: 1rem auto 0.5rem;
+    margin: 1rem 0 0.5rem auto;
     right: auto;
     top: auto;
     width: 64px;
@@ -2971,9 +2980,11 @@ select:focus-visible {
 }
 
 /* ---------- Category grid ---------- */
+/* Five categories: a four-column grid would strand the fifth tile alone on
+   its own row. The narrower breakpoints below already wrap to 3 and 2. */
 .category-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 1.1rem;
 }
 
@@ -3021,6 +3032,8 @@ select:focus-visible {
 .category-tile-coffee .category-tile-image { background: linear-gradient(150deg, var(--tint-coffee-bg), #F2EBE0); color: var(--tint-coffee-ink); }
 .category-tile-shampoo { background: #E4EEDB; }
 .category-tile-shampoo .category-tile-image { background: linear-gradient(150deg, #D6E8BF, #EAF3DF); color: var(--tint-shampoo-ink); }
+.category-tile-detergents { background: var(--tint-detergents-bg); }
+.category-tile-detergents .category-tile-image { background: linear-gradient(150deg, var(--tint-detergents-bg), #EFF4F9); color: var(--tint-detergents-ink); }
 .category-tile-cosmetics { background: var(--tint-cosmetics-bg); }
 .category-tile-cosmetics .category-tile-image { background: linear-gradient(150deg, var(--tint-cosmetics-bg), #F4E7EA); color: var(--tint-cosmetics-ink); }
 
@@ -6057,9 +6070,14 @@ select:focus-visible {
           drop-shadow(0 0 7px rgba(255, 255, 255, 0.5));
 }
 
-/* The caret keeps its default dark ink, which on the homepage's transparent
-   navbar means a near-black chevron against the dark backdrop - invisible.
-   Match the white the links next to it already use. */
+/* Same problem as the caret below: these keep their default dark ink, which on
+   the homepage's transparent navbar puts near-black on the dark backdrop. The
+   icon buttons to their right are fine because they carry a white pill
+   background of their own; these two do not. */
+:root:has(.home-main) .navbar-toggler-dm {
+  color: #fff;
+}
+
 :root:has(.home-main) .nav-dropdown-caret {
   color: #fff;
 }

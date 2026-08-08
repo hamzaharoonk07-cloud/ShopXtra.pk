@@ -1279,13 +1279,17 @@ document.getElementById('reset-insights-btn').addEventListener('click', async (e
 });
 
 /* "Reset insights" only clears view and cart-activity tracking. This clears the
-   order book itself and restarts numbering at #1, which is a different and far
-   more destructive thing - hence typing the word rather than an OK button, and
-   a second confirm naming the exact row count about to go. */
+   store's whole customer and transactional history, which is a different and
+   far more destructive thing - hence typing the word rather than an OK button,
+   and a report of exactly what went afterwards. */
 document.getElementById('reset-orders-btn').addEventListener('click', async (e) => {
   const typed = prompt(
-    'This permanently deletes EVERY order and its items, and restarts order numbering at #1.\n\n'
-    + 'Promo codes, products, bundles, customer accounts, reviews and newsletter subscribers are NOT touched.\n\n'
+    'This permanently deletes:\n'
+    + '  - every order and order item (numbering restarts at #1)\n'
+    + '  - every customer account, and with it their addresses, wishlists and reviews\n'
+    + '  - every newsletter subscriber\n'
+    + '  - all product-view and cart-activity tracking\n\n'
+    + 'KEPT: promo codes, products, bundles, variants, sale banners, admin logins.\n\n'
     + 'This cannot be undone. Type RESET to continue:'
   );
   if (typed === null) return;
@@ -1306,7 +1310,14 @@ document.getElementById('reset-orders-btn').addEventListener('click', async (e) 
     });
     if (!res.ok) throw new Error((await safeJson(res)).error || 'Request failed');
     const { removed } = await res.json();
-    alert(`Order book reset. Removed ${removed.orders} order${removed.orders === 1 ? '' : 's'} and ${removed.order_items} line item${removed.order_items === 1 ? '' : 's'}. The next order will be #1.`);
+    alert(
+      'Store data reset. Removed:\n'
+      + `  ${removed.orders} orders (${removed.order_items} line items)\n`
+      + `  ${removed.customers} customer accounts\n`
+      + `  ${removed.addresses} addresses, ${removed.wishlists} wishlist items, ${removed.reviews} reviews\n`
+      + `  ${removed.subscribers} newsletter subscribers\n\n`
+      + 'The next order will be #1.'
+    );
     await loadOverview();
     if (typeof loadOrders === 'function') loadOrders();
   } catch (err) {

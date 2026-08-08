@@ -135,7 +135,7 @@ async function resetAll(req, res, next) {
     if (req.body?.confirm !== 'RESET') {
       return res.status(400).json({ error: 'Send { "confirm": "RESET" } to reset the order book.' });
     }
-    const removed = await orderModel.resetAll();
+    const removed = await orderModel.resetStoreData();
     res.json({ removed });
   } catch (err) {
     next(err);

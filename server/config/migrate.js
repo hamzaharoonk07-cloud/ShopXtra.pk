@@ -68,8 +68,18 @@ async function runMigrations() {
 
     ALTER TABLE products DROP CONSTRAINT IF EXISTS products_category_check;
 
+    -- 'detergents' added as a fifth category: laundry pods were filed under
+    -- shampoo, which is where the nav sent anyone looking for hair care.
+    -- Widening the constraint here rather than in a later block keeps one
+    -- statement as the single source of truth for the allowed list.
     ALTER TABLE products ADD CONSTRAINT products_category_check
-      CHECK (category IN ('electrolytes', 'shampoo', 'coffee', 'cosmetics'));
+      CHECK (category IN ('electrolytes', 'shampoo', 'detergents', 'coffee', 'cosmetics'));
+
+    -- Move the laundry products off shampoo. Matched on name rather than id so
+    -- it works against any environment, and re-running is a no-op once the
+    -- rows already carry the new category.
+    UPDATE products SET category = 'detergents'
+      WHERE category = 'shampoo' AND name ILIKE '%laundry%';
 
     CREATE TABLE IF NOT EXISTS product_views (
       id SERIAL PRIMARY KEY,
