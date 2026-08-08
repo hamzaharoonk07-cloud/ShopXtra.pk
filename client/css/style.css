@@ -2232,7 +2232,7 @@ select:focus-visible {
 
 .hero-slide-copy h1 {
   color: #fff;
-  font-size: clamp(2.3rem, 4.8vw, 3.85rem);
+  font-size: clamp(1.9rem, 3.6vw, 2.9rem);
   line-height: 1.05;
   font-weight: 800;
   text-transform: uppercase;
