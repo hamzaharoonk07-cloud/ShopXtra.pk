@@ -18,7 +18,7 @@ const HOME_CATEGORIES = [
   // copy, curated into /assets/hero so the tile doesn't depend on whichever
   // product happens to sort first out of the API.
   { slug: 'shampoo', name: 'Shampoo', desc: "Clean that doesn't dry you out. Shampoo bars for an everyday routine that actually works.", image: '/assets/hero/shampoo-rice-soap.webp', hoverImage: '/assets/hero/shampoo-rosemary.jpg' },
-  { slug: 'detergents', name: 'Detergents', desc: 'Laundry that pulls its weight. 4-in-1 pods for a deep clean and a scent that lasts.' },
+  { slug: 'detergents', name: 'Detergents', desc: 'Laundry that pulls its weight. 4-in-1 pods for a deep clean and a scent that lasts.', image: '/assets/hero/detergents-laundry.webp', hoverImage: null },
   { slug: 'coffee', name: 'Coffee', desc: 'Rich roast, one scoop away. Instant coffee that actually tastes brewed, over ice or milk.', image: '/assets/hero/coffee-pour.jpg' },
   { slug: 'cosmetics', name: 'Cosmetics', desc: 'Shades that match what you expect. Authentic cosmetics, delivered nationwide with Cash on Delivery.' },
 ];

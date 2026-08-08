@@ -3902,6 +3902,10 @@ select:focus-visible {
   flex-shrink: 0;
 }
 
+.pdp-featured-review-date {
+  color: var(--muted);
+}
+
 .pdp-featured-review-stars {
   margin-left: auto;
   color: var(--gold);

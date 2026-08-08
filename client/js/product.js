@@ -435,6 +435,12 @@ function animateReviewsSection() {
   }
 }
 
+function reviewDate(value) {
+  return new Date(value).toLocaleDateString('en-PK', {
+    day: 'numeric', month: 'short', year: 'numeric',
+  });
+}
+
 /* Picks the single review to surface above the fold: the highest-rated one
    that actually says something, preferring verified purchases and then the
    most recent. Deliberately never invents or edits a quote - if no review has
@@ -460,6 +466,7 @@ function renderFeaturedReview(reviews) {
       <blockquote>“${best.comment.trim()}”</blockquote>
       <figcaption>
         <span class="pdp-featured-review-name">${best.user_name || 'ShopXtra customer'}</span>
+        <span class="pdp-featured-review-date">${reviewDate(best.created_at)}</span>
         ${best.verified_purchase ? `
           <span class="pdp-featured-review-verified">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m8 12 2.8 2.8L16 9.5"/></svg>
@@ -531,7 +538,7 @@ async function loadReviews(slug) {
           <span class="review-avatar">${(r.user_name || '?').charAt(0).toUpperCase()}</span>
           <div class="d-flex flex-column">
             <span class="review-author-name">${r.user_name}</span>
-            <span class="review-author-meta">${r.verified_purchase ? 'Verified buyer · ' : ''}${new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+            <span class="review-author-meta">${r.verified_purchase ? 'Verified buyer · ' : ''}${reviewDate(r.created_at)}</span>
           </div>
         </div>
       </div>
