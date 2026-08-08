@@ -105,37 +105,6 @@ function renderCategoryGrid() {
   `).join('');
 }
 
-/* Real customer reviews on the homepage. The section ships hidden and only
-   appears once there is something genuine to show - it previously carried
-   three named testimonials hardcoded into index.html, which presented invented
-   people as customers. */
-async function loadHomeReviews() {
-  const section = document.getElementById('home-reviews-section');
-  const grid = document.getElementById('home-reviews-grid');
-  if (!section || !grid) return;
-  try {
-    const reviews = await apiGet('/products/reviews/recent');
-    if (!reviews.length) return;
-    grid.innerHTML = reviews.map((r) => `
-      <div class="review-card-v2" data-reveal="item">
-        <span class="review-stars">${starsHtml(r.rating, '0.95rem')}</span>
-        <p class="review-quote">"${r.comment}"</p>
-        <div class="review-author-row">
-          <span class="review-avatar">${(r.user_name || '?').charAt(0).toUpperCase()}</span>
-          <div class="d-flex flex-column">
-            <span class="review-author-name">${r.user_name}</span>
-            <span class="review-author-meta">${r.verified_purchase ? 'Verified buyer &middot; ' : ''}${r.product_name}</span>
-          </div>
-        </div>
-      </div>
-    `).join('');
-    section.hidden = false;
-    document.dispatchEvent(new CustomEvent('shopxtra:products-rendered'));
-  } catch {
-    // Social proof is a nice-to-have; leave the section hidden on failure.
-  }
-}
-
 async function loadCategoryImages() {
   try {
     const products = await apiGet('/products');
@@ -338,5 +307,4 @@ function initSiteBgVideo() {
 initSiteBgVideo();
 renderCategoryGrid();
 loadCategoryImages();
-loadHomeReviews();
 showSaleBannerIfAny();

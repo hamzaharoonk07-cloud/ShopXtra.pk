@@ -22,7 +22,11 @@ async function loadProduct() {
       });
     }
 
-    const variants = product.category === 'cosmetics' ? [] : (product.variants || []);
+    // Cosmetics used to have their variants discarded here, leaving shade
+    // choice to a free-text note at checkout. Admin can create variants for
+    // any product, so a cosmetic with shades now gets real selectable options
+    // and only falls back to the note hint when it has none.
+    const variants = product.variants || [];
     const swatchVariants = variants.filter((v) => v.color_hex || v.image_url);
     const plainVariants = swatchVariants.length ? [] : variants;
     const isColorSwatches = swatchVariants.length > 0 && Boolean(swatchVariants[0].color_hex);
@@ -132,7 +136,7 @@ async function loadProduct() {
             </li>
           </ul>
 
-          ${product.category === 'cosmetics' ? `
+          ${product.category === 'cosmetics' && !variants.length ? `
             <p class="pdp-note-hint">Have a shade or colour preference? Let us know in the notes at checkout.</p>
           ` : product.is_bundle ? `
             <p class="pdp-note-hint">Have a flavour or shade preference for this kit? Let us know in the notes at checkout.</p>
