@@ -100,7 +100,7 @@ function askForShades(product, qty) {
     const picked = [];
     let selected = null;
 
-    const productUrl = `/pages/product.html?slug=${encodeURIComponent(product.slug)}`;
+    const productUrl = `/pages/product.html?slug=${encodeURIComponent(product.slug)}&chooseShade=1`;
     const onOwnPage = window.location.pathname.includes('/product')
       && new URLSearchParams(window.location.search).get('slug') === product.slug;
 

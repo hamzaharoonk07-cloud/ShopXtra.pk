@@ -315,6 +315,17 @@ async function loadProduct() {
     });
 
     initStickyAddBar(product, addToCartBtn);
+
+    /* Arrived here from the shade modal's "show me the shades" - the shopper
+       has now seen the photos, so pick the flow back up rather than making
+       them hunt for Add to cart again. The flag is stripped from the URL so a
+       refresh or a shared link doesn't re-trigger it. */
+    if (new URLSearchParams(window.location.search).get('chooseShade') === '1') {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('chooseShade');
+      window.history.replaceState(null, '', url);
+      setTimeout(() => addToCartBtn.click(), 400);
+    }
   } catch (err) {
     main.innerHTML = `<p class="text-center py-5 text-danger">Could not load product: ${err.message}</p>`;
   }
