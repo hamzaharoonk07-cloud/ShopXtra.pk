@@ -5,3 +5,6 @@ uploads/*
 *.log
 .vercel
 .env*
+
+# One-time destructive maintenance route, kept locally but never deployed.
+server/routes/storeReset.js
