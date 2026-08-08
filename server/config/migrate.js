@@ -9,15 +9,59 @@ const pool = require('./db');
 // shampoo product with no order history), so it has been removed now that
 // it has already served its purpose.
 //
-// All statements are sent as a single multi-statement query instead of one
-// await per statement - 14 separate round-trips to Neon were adding roughly
-// a second to every cold start (confirmed by direct timing), on top of the
-// connection handshake itself. Postgres runs a semicolon-separated batch
-// like this as one simple-query message, so this is one round-trip instead
-// of 14. Do not add parameterized ($1-style) statements to this batch - the
-// simple query protocol used here doesn't support bind parameters.
+// Do not add parameterized ($1-style) statements here - the simple query
+// protocol used for the batch doesn't support bind parameters.
+
+/* Splits a batch into single statements. Comment lines go first so a `--`
+   containing a semicolon can't cut a statement in half. */
+function splitStatements(sql) {
+  return sql
+    .split('\n')
+    .filter((line) => !line.trim().startsWith('--'))
+    .join('\n')
+    .split(';')
+    .map((statement) => statement.trim())
+    .filter(Boolean);
+}
+
+/* Sends the batch as one round-trip first: 20-odd separate awaits against Neon
+   add roughly a second to every cold start, and the batch is a single
+   simple-query message.
+
+   But Postgres rolls the whole batch back if any statement in it fails, so one
+   bad line silently reverts every unrelated migration behind it. That bit
+   twice - a category constraint frozen with a stale value list threw once a
+   newer category existed, which also stopped the reviews columns being
+   created, and that only surfaced days later as a 500 on a different endpoint.
+
+   So on failure it retries statement by statement: the sound ones still apply,
+   and the log names the exact statement that broke instead of leaving it to be
+   inferred from symptoms. */
+async function runBatch(sql, label) {
+  try {
+    await pool.query(sql);
+    return;
+  } catch (err) {
+    console.error('[migrate] ' + label + ': batch failed (' + err.message + ') - retrying statement by statement');
+  }
+
+  const statements = splitStatements(sql);
+  let failed = 0;
+  for (let i = 0; i < statements.length; i++) {
+    try {
+      await pool.query(statements[i]);
+    } catch (err) {
+      failed++;
+      const preview = statements[i].replace(/\s+/g, ' ').slice(0, 90);
+      console.error('[migrate] ' + label + ': statement ' + (i + 1) + '/' + statements.length
+        + ' failed: ' + err.message + '\n  -> ' + preview);
+    }
+  }
+  console.error('[migrate] ' + label + ': ' + (statements.length - failed) + '/' + statements.length + ' statements applied');
+}
+
 async function runMigrations() {
-  await pool.query(`
+  await runBatch(`
     ALTER TABLE product_variants
       ADD COLUMN IF NOT EXISTS color_name VARCHAR(60),
       ADD COLUMN IF NOT EXISTS color_hex VARCHAR(7),
@@ -153,21 +197,15 @@ async function runMigrations() {
     ALTER TABLE promo_codes ADD COLUMN IF NOT EXISTS max_uses INTEGER;
 
 
-  `);
+  `, 'core');
 
-  /* Deliberately outside the batch above. That batch is a single statement, so
-     one failing line silently rolls back every other line in it - which is how
-     these two columns ended up missing while the storefront had already
-     shipped a query selecting them, 500-ing the reviews list. Kept separate
-     and individually guarded so an unrelated failure can't take them out. */
-  try {
-    await pool.query(`
-      ALTER TABLE reviews ADD COLUMN IF NOT EXISTS admin_reply TEXT;
-      ALTER TABLE reviews ADD COLUMN IF NOT EXISTS admin_replied_at TIMESTAMPTZ;
-    `);
-  } catch (err) {
-    console.error('[migrate] reviews reply columns failed:', err.message);
-  }
+  /* Kept out of the core batch: these are the columns that went missing the
+     last time one bad statement rolled everything back, while the storefront
+     query selecting them shipped in the same release. */
+  await runBatch(`
+    ALTER TABLE reviews ADD COLUMN IF NOT EXISTS admin_reply TEXT;
+    ALTER TABLE reviews ADD COLUMN IF NOT EXISTS admin_replied_at TIMESTAMPTZ;
+  `, 'reviews-reply');
 }
 
 module.exports = { runMigrations };
