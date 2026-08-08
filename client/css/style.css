@@ -6594,3 +6594,24 @@ body.shade-modal-open {
     transition: none;
   }
 }
+
+/* Inline shade-count entry in the admin products table. */
+.admin-shade-input {
+  width: 4.5rem;
+  padding: 0.25rem 0.4rem;
+  border: 1px solid var(--hairline-strong);
+  background: var(--paper);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  color: var(--plum);
+}
+
+.admin-shade-input:focus-visible {
+  outline: 2px solid var(--tea-pink);
+  outline-offset: 1px;
+}
+
+.admin-shade-input.is-saved {
+  border-color: var(--tea-pink);
+  background: var(--success-bg);
+}

@@ -344,6 +344,11 @@ function renderProductsTable() {
       <td><span class="category-tint tint-${p.category}">${categoryLabel(p.category)}</span></td>
       <td>${formatPrice(p.price)}${p.compare_at_price ? `<br><span style="text-decoration:line-through; color:var(--muted); font-size:0.8rem;">${formatPrice(p.compare_at_price)}</span>` : ''}</td>
       <td>${p.stock}${p.stock > 0 && p.stock <= 5 ? '<span class="admin-low-stock-tag">Low</span>' : p.stock <= 0 ? '<span class="admin-low-stock-tag">Out</span>' : ''}</td>
+      <td>${p.category === 'cosmetics'
+        ? `<input type="number" class="admin-shade-input" data-id="${p.id}" min="0" max="30"
+             value="${p.shade_count == null ? '' : p.shade_count}" placeholder="6"
+             title="Shades offered at add-to-cart. Blank means 6; 0 turns the prompt off.">`
+        : '<span style="color:var(--muted);">&mdash;</span>'}</td>
       <td class="text-end">
         <button class="btn btn-outline-plum btn-sm edit-btn">Edit</button>
         <button class="btn btn-sm btn-outline-danger delete-btn">Delete</button>
@@ -854,6 +859,37 @@ document.getElementById('remove-sale-btn').addEventListener('click', async (e) =
     btn.textContent = 'Remove sale from selection above';
   } finally {
     btn.disabled = false;
+  }
+});
+
+/* Saves on blur rather than every keystroke, and only when the value actually
+   changed - typing "12" would otherwise fire a save for "1" on the way. */
+document.getElementById('products-table-body').addEventListener('focusin', (e) => {
+  const input = e.target.closest('.admin-shade-input');
+  if (input) input.dataset.prev = input.value;
+});
+
+document.getElementById('products-table-body').addEventListener('focusout', async (e) => {
+  const input = e.target.closest('.admin-shade-input');
+  if (!input || input.value === input.dataset.prev) return;
+
+  const formData = new FormData();
+  formData.append('shade_count', input.value.trim());
+  input.disabled = true;
+  try {
+    const res = await fetch(`/api/products/${input.dataset.id}`, { method: 'PUT', body: formData });
+    if (!res.ok) throw new Error((await safeJson(res)).error || 'Request failed');
+    const updated = await res.json();
+    const local = allProducts.find((p) => String(p.id) === String(input.dataset.id));
+    if (local) local.shade_count = updated.shade_count;
+    input.dataset.prev = input.value;
+    input.classList.add('is-saved');
+    setTimeout(() => input.classList.remove('is-saved'), 1200);
+  } catch (err) {
+    alert(err.message || 'Could not save the shade count.');
+    input.value = input.dataset.prev;
+  } finally {
+    input.disabled = false;
   }
 });
 
