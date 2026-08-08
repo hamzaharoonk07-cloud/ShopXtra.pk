@@ -171,35 +171,12 @@ function categoryLabel(category) {
    to a generic category icon, which sits next to real product photography
    looking like a broken or half-finished listing. They stay visible in the
    admin table so an image can be added (or the product removed) there. */
-/* Product photos are a mix of square supplier shots and tall portrait ones,
-   while the card's image box is square. object-fit: cover fills the box but
-   crops whatever doesn't fit (the laundry detergent shot, 768x1364, lost its
-   headline and its icon row); contain shows the whole photo but leaves empty
-   bands down the sides. Neither is wanted.
-
-   So the box takes the photo's own shape instead: the aspect-ratio is set from
-   the decoded image, and cover then has nothing left to crop. Full bleed, no
-   crop, no filler. The trade-off is that a row of cards whose photos differ in
-   shape gets images of differing heights - the name and Add to cart below
-   still line up, because those are pinned to the bottom of the card.
-
-   Read off the decoded image rather than hardcoded per product, so it covers
-   every future upload. Only the main image drives the box; the hover overlay
-   is stretched to match it. */
-function fitProductImageBoxes(root) {
-  (root || document).querySelectorAll('.product-image').forEach((box) => {
-    const img = box.querySelector('img:not(.product-image-hover)');
-    if (!img) return;
-    const apply = () => {
-      if (!img.naturalWidth || !img.naturalHeight) return;
-      box.style.aspectRatio = `${img.naturalWidth} / ${img.naturalHeight}`;
-    };
-    if (img.complete) apply();
-    else img.addEventListener('load', apply, { once: true });
-  });
-}
-
-document.addEventListener('shopxtra:products-rendered', () => fitProductImageBoxes());
+/* Card image boxes are a fixed square so every card in a row is the same size
+   and each photo fills it completely. That means object-fit: cover crops
+   whatever doesn't fit the square - unavoidable while the source photos are
+   different shapes (the detergent cover is 817x1238, the coffee pods 0.66).
+   Squaring the uploads is what removes the crop; nothing here can do it
+   without either resizing the card or leaving space in it. */
 
 function hasProductImage(product) {
   return Boolean(product && product.images && product.images[0]);
