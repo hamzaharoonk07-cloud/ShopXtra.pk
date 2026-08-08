@@ -156,6 +156,10 @@ async function runMigrations() {
     -- orders.promo_code rather than a separate counter column, so it
     -- can never drift out of sync with what actually got redeemed.
     ALTER TABLE promo_codes ADD COLUMN IF NOT EXISTS max_uses INTEGER;
+
+    -- Shop's public answer to a review, shown under it on the product page.
+    ALTER TABLE reviews ADD COLUMN IF NOT EXISTS admin_reply TEXT;
+    ALTER TABLE reviews ADD COLUMN IF NOT EXISTS admin_replied_at TIMESTAMPTZ;
   `);
 }
 

@@ -521,6 +521,12 @@ async function loadReviews(slug) {
         <span class="review-stars">${starsHtml(r.rating)}</span>
         ${r.comment ? `<p class="review-quote">"${r.comment}"</p>` : ''}
         ${r.image_url ? `<img src="${thumbSrc(r.image_url)}" ${thumbFallbackAttr(r.image_url)} alt="Photo from ${r.user_name}'s review" class="review-photo" loading="lazy">` : ''}
+        ${r.admin_reply ? `
+          <div class="review-reply">
+            <span class="review-reply-label">ShopXtra replied</span>
+            <p>${r.admin_reply}</p>
+          </div>
+        ` : ''}
         <div class="review-author-row">
           <span class="review-avatar">${(r.user_name || '?').charAt(0).toUpperCase()}</span>
           <div class="d-flex flex-column">
@@ -543,8 +549,12 @@ async function loadReviews(slug) {
           </div>
           <input type="hidden" id="review-rating" value="0">
           <textarea class="form-control mb-2" id="review-comment" rows="2" placeholder="Share your thoughts (optional)"></textarea>
-          <label class="form-label mono d-block" style="font-size:0.75rem;" for="review-image">Add a photo (optional)</label>
-          <input type="file" class="form-control mb-2" id="review-image" accept="image/jpeg,image/png,image/webp,image/gif">
+          <label class="review-photo-btn" for="review-image">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5A1.5 1.5 0 0 1 4.5 7h2.2a1.5 1.5 0 0 0 1.28-.72l.74-1.2A1.5 1.5 0 0 1 10 4.4h4a1.5 1.5 0 0 1 1.28.68l.74 1.2A1.5 1.5 0 0 0 17.3 7h2.2A1.5 1.5 0 0 1 21 8.5v9A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z"/><circle cx="12" cy="12.8" r="3.6"/></svg>
+            <span>Add a photo</span>
+            <span class="review-photo-optional">optional</span>
+          </label>
+          <input type="file" class="review-photo-input" id="review-image" accept="image/jpeg,image/png,image/webp,image/gif">
           <div id="review-image-preview" class="mb-2"></div>
           <p class="text-danger d-none mb-2" id="review-error"></p>
           <button type="submit" class="btn btn-outline-plum btn-sm">Submit review</button>

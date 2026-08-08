@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" href="/assets/favicon.png">
 <link href="/css/vendor/bootstrap.min.css" rel="stylesheet">
 <link href="/css/vendor/cropper.min.css" rel="stylesheet">
-<link href="/css/style.css?v=20260808a" rel="stylesheet">
+<link href="/css/style.css?v=20260808b" rel="stylesheet">
 
 <div id="admin-loading" class="text-center py-5">Loading…</div>
 <div id="admin-denied" class="d-none filter-panel text-center py-5" style="max-width: 480px; margin: 3rem auto;">
@@ -34,6 +34,7 @@
       <button class="admin-nav-link" data-tab="bundles">Bundles</button>
       <button class="admin-nav-link" data-tab="orders">Orders</button>
       <button class="admin-nav-link" data-tab="promo">Promo codes</button>
+      <button class="admin-nav-link" data-tab="reviews">Reviews</button>
       <button class="admin-nav-link" data-tab="activity">Activity</button>
       <button class="admin-nav-link" data-tab="banner">Sale banner</button>
       <button class="admin-nav-link" data-tab="users">Users</button>
@@ -359,6 +360,16 @@
       </div>
       <div class="admin-panel">
         <div id="banner-list"></div>
+      </div>
+    </section>
+
+    <section id="tab-reviews" class="d-none">
+      <div class="admin-page-head">
+        <h1>Reviews</h1>
+        <span class="admin-page-sub" id="reviews-count"></span>
+      </div>
+      <div class="admin-panel">
+        <div id="admin-reviews-list"></div>
       </div>
     </section>
 

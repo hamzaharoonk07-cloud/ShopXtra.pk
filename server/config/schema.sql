@@ -99,6 +99,8 @@ CREATE TABLE IF NOT EXISTS reviews (
   UNIQUE (product_id, user_id)
 );
 
+-- admin_reply / admin_replied_at are added by migrate.js for existing DBs.
+
 CREATE TABLE IF NOT EXISTS newsletter_signups (
   id SERIAL PRIMARY KEY,
   email VARCHAR(255) UNIQUE NOT NULL,

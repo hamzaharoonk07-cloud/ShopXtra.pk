@@ -21,6 +21,9 @@ document.querySelectorAll('#admin-tabs [data-tab]').forEach((btn) => {
     btn.classList.add('active');
     document.querySelectorAll('.admin-main > section').forEach((s) => s.classList.add('d-none'));
     document.getElementById(`tab-${btn.dataset.tab}`).classList.remove('d-none');
+    // Reviews are fetched on first open rather than on page load - the list is
+    // unbounded and most admin visits never touch this tab.
+    if (btn.dataset.tab === 'reviews') loadAdminReviews();
   });
 });
 
@@ -1325,6 +1328,82 @@ document.getElementById('reset-orders-btn').addEventListener('click', async (e) 
   } finally {
     btn.disabled = false;
     btn.textContent = originalText;
+  }
+});
+
+function reviewStars(rating) {
+  const n = Math.round(Number(rating) || 0);
+  return '★'.repeat(n) + '☆'.repeat(Math.max(0, 5 - n));
+}
+
+async function loadAdminReviews() {
+  const list = document.getElementById('admin-reviews-list');
+  const count = document.getElementById('reviews-count');
+  list.innerHTML = '<p style="color:var(--muted);">Loading reviews…</p>';
+  try {
+    const reviews = await apiGet('/products/reviews/all');
+    count.textContent = `${reviews.length} review${reviews.length === 1 ? '' : 's'}`;
+    if (!reviews.length) {
+      list.innerHTML = '<p style="color:var(--muted);">No reviews yet.</p>';
+      return;
+    }
+    list.innerHTML = reviews.map((r) => `
+      <div class="admin-review" data-id="${r.id}">
+        <div class="admin-review-head">
+          <span class="admin-review-stars">${reviewStars(r.rating)}</span>
+          <strong>${r.user_name || 'Customer'}</strong>
+          ${r.verified_purchase ? '<span class="admin-review-verified">Verified buyer</span>' : ''}
+          <span class="admin-review-product">${r.product_name}</span>
+          <span class="admin-review-date">${new Date(r.created_at).toLocaleDateString('en-PK', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+          <button type="button" class="admin-review-delete" data-id="${r.id}">Delete</button>
+        </div>
+        ${r.comment ? `<p class="admin-review-comment">${r.comment}</p>` : '<p class="admin-review-comment" style="color:var(--muted);">No comment</p>'}
+        ${r.image_url ? `<img src="${thumbSrc(r.image_url)}" ${thumbFallbackAttr(r.image_url)} alt="" class="admin-review-photo">` : ''}
+        <div class="admin-review-reply-row">
+          <textarea class="form-control admin-review-reply-input" rows="2" data-id="${r.id}"
+            placeholder="Reply publicly as ShopXtra…">${r.admin_reply || ''}</textarea>
+          <button type="button" class="btn btn-plum btn-sm admin-review-reply-save" data-id="${r.id}">Save reply</button>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    list.innerHTML = `<p class="text-danger">Could not load reviews: ${err.message}</p>`;
+  }
+}
+
+document.getElementById('admin-reviews-list').addEventListener('click', async (e) => {
+  const del = e.target.closest('.admin-review-delete');
+  if (del) {
+    if (!confirm('Delete this review permanently? This cannot be undone.')) return;
+    try {
+      const res = await fetch(`/api/products/reviews/${del.dataset.id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error((await safeJson(res)).error || 'Request failed');
+      loadAdminReviews();
+    } catch (err) {
+      alert(err.message || 'Could not delete the review.');
+    }
+    return;
+  }
+
+  const save = e.target.closest('.admin-review-reply-save');
+  if (!save) return;
+  const input = document.querySelector(`.admin-review-reply-input[data-id="${save.dataset.id}"]`);
+  save.disabled = true;
+  const original = save.textContent;
+  save.textContent = 'Saving…';
+  try {
+    const res = await fetch(`/api/products/reviews/${save.dataset.id}/reply`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reply: input.value }),
+    });
+    if (!res.ok) throw new Error((await safeJson(res)).error || 'Request failed');
+    save.textContent = 'Saved';
+    setTimeout(() => { save.textContent = original; save.disabled = false; }, 1200);
+  } catch (err) {
+    alert(err.message || 'Could not save the reply.');
+    save.textContent = original;
+    save.disabled = false;
   }
 });
 

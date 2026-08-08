@@ -2224,7 +2224,9 @@ select:focus-visible {
   font-size: clamp(2.3rem, 4.8vw, 3.85rem);
   line-height: 1.05;
   font-weight: 800;
-  text-transform: uppercase;
+  /* Was uppercase, which shouted "STAY HYDRATED." at every visitor. The
+     markup already carries the sentence case we want. */
+  text-transform: none;
   letter-spacing: -0.01em;
   margin: 0 0 1.1rem;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 4px 18px rgba(0, 0, 0, 0.85);
@@ -6148,4 +6150,183 @@ select:focus-visible {
 .home-main .reviews-section h2 {
   color: var(--plum);
   text-shadow: none;
+}
+
+/* ---------- Review photo upload + admin replies ---------- */
+/* The raw <input type=file> is kept in the DOM so the existing change handler
+   and FormData still find it - only its chrome is replaced by the label. */
+.review-photo-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.review-photo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+  padding: 0.5rem 0.85rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--tea-pink);
+  background: var(--paper);
+  border: 1px solid var(--hairline-strong);
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.review-photo-btn:hover {
+  background: var(--sand);
+  border-color: var(--tea-pink);
+}
+
+/* The input is visually hidden, so its focus ring has nowhere to show - move
+   it onto the label the user actually sees when tabbing. */
+.review-photo-input:focus-visible + .review-photo-btn,
+.review-photo-input:focus-visible ~ .review-photo-btn,
+.review-photo-btn:focus-visible {
+  outline: 2px solid var(--tea-pink);
+  outline-offset: 2px;
+}
+
+.review-photo-btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.review-photo-optional {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 0.76rem;
+}
+
+.review-reply {
+  margin: 0.75rem 0 0;
+  padding: 0.7rem 0.9rem;
+  background: var(--sand);
+  border-left: 3px solid var(--tea-pink);
+}
+
+.review-reply-label {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--tea-pink);
+  margin-bottom: 0.25rem;
+}
+
+.review-reply p {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--muted-body);
+}
+
+/* ---------- Admin: review moderation ---------- */
+.admin-review {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.admin-review:last-child {
+  border-bottom: none;
+}
+
+.admin-review-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+}
+
+.admin-review-stars {
+  color: var(--gold);
+  letter-spacing: 1px;
+}
+
+.admin-review-verified {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--tea-pink);
+}
+
+.admin-review-product {
+  color: var(--muted-body);
+}
+
+.admin-review-date {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.admin-review-delete {
+  margin-left: auto;
+  border: 1px solid var(--hairline-strong);
+  background: none;
+  color: #A4342B;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  cursor: pointer;
+}
+
+.admin-review-delete:hover {
+  background: #FBEDEB;
+  border-color: #A4342B;
+}
+
+.admin-review-comment {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.admin-review-photo {
+  margin-top: 0.5rem;
+  max-width: 120px;
+  height: auto;
+  display: block;
+  border: 1px solid var(--hairline);
+}
+
+.admin-review-reply-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+}
+
+.admin-review-reply-input {
+  flex: 1;
+  font-size: 0.85rem;
+}
+
+.admin-review-reply-save {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+@media (max-width: 575.98px) {
+  .admin-review-reply-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .admin-review-delete {
+    margin-left: 0;
+  }
 }

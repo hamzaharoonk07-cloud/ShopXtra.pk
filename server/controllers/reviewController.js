@@ -36,6 +36,34 @@ async function create(req, res, next) {
   }
 }
 
+async function listAllForAdmin(req, res, next) {
+  try {
+    res.json(await reviewModel.findAllForAdmin());
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function remove(req, res, next) {
+  try {
+    const deleted = await reviewModel.remove(req.params.id);
+    if (!deleted) return res.status(404).json({ error: 'Review not found' });
+    res.status(204).end();
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function reply(req, res, next) {
+  try {
+    const updated = await reviewModel.setAdminReply(req.params.id, req.body?.reply);
+    if (!updated) return res.status(404).json({ error: 'Review not found' });
+    res.json(updated);
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function seedAll(req, res, next) {
   try {
     const report = await seedTestimonials();
@@ -45,4 +73,4 @@ async function seedAll(req, res, next) {
   }
 }
 
-module.exports = { list, create, seedAll };
+module.exports = { list, create, seedAll, listAllForAdmin, remove, reply };

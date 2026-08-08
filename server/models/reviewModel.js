@@ -2,7 +2,8 @@ const pool = require('../config/db');
 
 async function findByProductSlug(slug) {
   const { rows } = await pool.query(
-    `SELECT r.id, r.rating, r.comment, r.image_url, r.created_at, r.verified_purchase, u.name AS user_name
+    `SELECT r.id, r.rating, r.comment, r.image_url, r.created_at, r.verified_purchase,
+            r.admin_reply, r.admin_replied_at, u.name AS user_name
      FROM reviews r
      JOIN products p ON p.id = r.product_id
      JOIN users u ON u.id = r.user_id
@@ -44,4 +45,39 @@ async function create({ slug, userId, rating, comment, imageUrl }) {
   return rows[0];
 }
 
-module.exports = { findByProductSlug, create };
+/* Admin moderation: every review across the catalogue, newest first, with
+   enough product context to know what is being replied to or removed. */
+async function findAllForAdmin() {
+  const { rows } = await pool.query(
+    `SELECT r.id, r.rating, r.comment, r.image_url, r.created_at,
+            r.verified_purchase, r.admin_reply, r.admin_replied_at,
+            u.name AS user_name, p.name AS product_name, p.slug AS product_slug
+     FROM reviews r
+     JOIN products p ON p.id = r.product_id
+     JOIN users u ON u.id = r.user_id
+     ORDER BY r.created_at DESC`
+  );
+  return rows;
+}
+
+async function remove(id) {
+  const { rowCount } = await pool.query('DELETE FROM reviews WHERE id = $1', [id]);
+  return rowCount > 0;
+}
+
+/* An empty or whitespace-only reply clears it rather than storing a blank
+   bubble under the review, so the admin can undo a reply by emptying the box. */
+async function setAdminReply(id, reply) {
+  const trimmed = (reply || '').trim();
+  const { rows } = await pool.query(
+    `UPDATE reviews
+     SET admin_reply = $2,
+         admin_replied_at = CASE WHEN $2::text IS NULL THEN NULL ELSE NOW() END
+     WHERE id = $1
+     RETURNING id, admin_reply, admin_replied_at`,
+    [id, trimmed || null]
+  );
+  return rows[0] || null;
+}
+
+module.exports = { findByProductSlug, create, findAllForAdmin, remove, setAdminReply };
