@@ -815,9 +815,8 @@ a {
 /* Set by fitOffSquareProductImages() on photos far enough off square that a
    cover crop would cut the product out of the frame - portrait marketing
    shots, mostly. */
-.product-image img.is-contained {
-  object-fit: contain;
-}
+/* fitProductImageBoxes() overrides .product-image's aspect-ratio per card from
+   the decoded photo, so cover fills the box exactly with nothing cropped. */
 
 /* Bundle photos are admin-uploaded marketing images that often have a
    title baked into the top (same issue the Electrolytes category tile
