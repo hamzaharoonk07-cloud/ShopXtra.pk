@@ -18,7 +18,14 @@ function saveCart(cart) {
    customer has already forgotten the product by, the choice is asked for at
    the moment of adding to the cart. It rides along on the cart line and is
    composed into the order notes at checkout. */
-const DEFAULT_SHADE_COUNT = 6;
+/* Unset means "we don't know how many shades this product has", so no picker
+   is offered at all - falling back to six offered shades 5 and 6 on products
+   that only stock three, and a customer picking one of those has ordered
+   something that cannot be shipped. Those products fall through to the
+   checkout notes prompt, as they did before the picker existed. Setting a
+   count in admin switches the picker on for that product, with exactly that
+   many shades. */
+const UNSET_SHADE_COUNT = 0;
 
 /* Number(null) is 0, not NaN - so reading an unset shade_count straight
    through Number() said "this product has zero shades" and skipped the picker
@@ -26,9 +33,9 @@ const DEFAULT_SHADE_COUNT = 6;
    deliberate 0 turns the prompt off. */
 function shadeCountFor(product) {
   const raw = product.shadeCount ?? product.shade_count;
-  if (raw === null || raw === undefined || raw === '') return DEFAULT_SHADE_COUNT;
+  if (raw === null || raw === undefined || raw === '') return UNSET_SHADE_COUNT;
   const n = Number(raw);
-  if (!Number.isFinite(n) || n < 0) return DEFAULT_SHADE_COUNT;
+  if (!Number.isFinite(n) || n < 0) return UNSET_SHADE_COUNT;
   return n === 0 ? 0 : Math.min(n, 30);
 }
 
@@ -114,11 +121,11 @@ function askForShades(product, qty) {
     thumb.hidden = !image;
     if (image) thumb.src = image;
 
-    /* Shades beyond what this product stocks are still shown, greyed out
-       rather than absent. Someone hunting for "shade 5" because they saw it
-       elsewhere gets told it isn't stocked here, instead of quietly not
-       finding it and assuming the picker is broken. */
-    const shown = Math.min(30, Math.max(count, DEFAULT_SHADE_COUNT));
+    /* A couple of extra greyed-out shades past the end, so someone hunting for
+       "shade 5" because they saw it elsewhere is told it isn't stocked here
+       rather than quietly not finding it and assuming the picker is broken.
+       Only ever padding past a real count - never inventing a range. */
+    const shown = Math.min(30, count + 2);
     options.innerHTML = Array.from({ length: shown }, (_, i) => {
       const available = i < count;
       return `

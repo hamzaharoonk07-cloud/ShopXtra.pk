@@ -347,7 +347,7 @@ function renderProductsTable() {
       <td>${p.category === 'cosmetics'
         ? `<input type="number" class="admin-shade-input" data-id="${p.id}" min="0" max="30"
              value="${p.shade_count == null ? '' : p.shade_count}" placeholder="6"
-             title="Shades offered at add-to-cart. Blank means 6; 0 turns the prompt off.">`
+             title="Shades offered at add-to-cart. Blank means no prompt; set a number to switch it on.">`
         : '<span style="color:var(--muted);">&mdash;</span>'}</td>
       <td class="text-end">
         <button class="btn btn-outline-plum btn-sm edit-btn">Edit</button>
