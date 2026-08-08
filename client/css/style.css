@@ -135,6 +135,13 @@ a {
   grid-template-rows: 48px;
 }
 
+@media (max-width: 1199.98px) {
+  .navbar-top {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
 /* Navbar desktop layout starts at 1200px, not 992px. With five category
    dropdowns the links row needs ~896px; the container only frees ~656px at
    992px and ~836px at 1200px. Below 1200 the row was overflowing into its
@@ -2100,7 +2107,7 @@ select:focus-visible {
      keeps it clear of the headline, not the centring. */
   .hero-organic-seal {
     position: static;
-    margin: 1rem 0 0.5rem auto;
+    margin: 1rem auto 0.5rem 0;
     right: auto;
     top: auto;
     width: 64px;
