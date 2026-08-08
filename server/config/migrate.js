@@ -229,22 +229,35 @@ async function runMigrations() {
        AND (images IS NULL OR array_length(images, 1) IS NULL)
        AND stock > 0;
 
-    -- Six numbered shades on every cosmetic, so shade choice is a real
-    -- selection carrying its own stock and order line rather than a request
-    -- typed into the checkout notes.
+    -- Six numbered shades on every cosmetic, replacing the "Colour 1..N"
+    -- swatch variants that were there. Shade choice is now a real selection
+    -- carrying its own stock and order line, rather than a colour chip or a
+    -- request typed into the checkout notes.
     --
-    -- color_hex and image_url are left null on purpose: the product page only
-    -- renders swatches when one of those is set, so these come through as a
-    -- plain numbered dropdown.
+    -- Both statements are gated on the product not already having 'Shade 1',
+    -- so this runs once per product and never again. That matters because the
+    -- file re-runs on every cold start: without it, editing or deleting a
+    -- shade in admin would be undone on the next boot.
     --
-    -- Only fills products that currently have NO variants at all. That keeps
-    -- it idempotent across cold starts, and - more importantly - means editing
-    -- or deleting an individual shade in admin sticks, instead of this
-    -- statement re-creating it on the next boot.
-    --
-    -- Stock is the product's own split six ways, so the shades together never
-    -- claim more inventory than the product had. GREATEST guards a future
-    -- product too small to divide; every current cosmetic holds at least 18.
+    -- The delete skips any variant an order still references, so purchase
+    -- history is never orphaned - such a variant simply survives alongside the
+    -- new shades rather than failing the statement on a foreign key.
+    DELETE FROM product_variants v
+     USING products p
+     WHERE v.product_id = p.id
+       AND p.category = 'cosmetics'
+       AND NOT EXISTS (
+             SELECT 1 FROM product_variants sh
+              WHERE sh.product_id = p.id AND sh.variant_name = 'Shade 1'
+           )
+       AND NOT EXISTS (SELECT 1 FROM order_items oi WHERE oi.variant_id = v.id);
+
+    -- color_hex and image_url stay null on purpose: the product page only
+    -- renders swatches when one of them is set, so these come through as a
+    -- plain numbered dropdown. Stock is the product's own split six ways, so
+    -- the shades together never claim more inventory than the product held;
+    -- every current cosmetic holds at least 18, and GREATEST guards a future
+    -- one too small to divide.
     INSERT INTO product_variants (product_id, variant_name, price_modifier, stock)
     SELECT p.id, s.shade, 0, GREATEST(1, FLOOR(p.stock / 6.0))::int
       FROM products p
@@ -252,7 +265,11 @@ async function runMigrations() {
                          ('Shade 4'), ('Shade 5'), ('Shade 6')) AS s(shade)
      WHERE p.category = 'cosmetics'
        AND p.is_bundle = false
-       AND NOT EXISTS (SELECT 1 FROM product_variants v WHERE v.product_id = p.id);
+       AND NOT EXISTS (
+             SELECT 1 FROM product_variants sh
+              WHERE sh.product_id = p.id AND sh.variant_name = 'Shade 1'
+           );
+
   `, 'core');
 
   /* Kept out of the core batch: these are the columns that went missing the
