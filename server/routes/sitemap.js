@@ -3,7 +3,7 @@ const productModel = require('../models/productModel');
 
 const router = express.Router();
 const SITE_URL = process.env.SITE_URL || 'https://www.shopxtra.store';
-const CATEGORIES = ['electrolytes', 'shampoo', 'detergents', 'coffee', 'cosmetics'];
+const CATEGORIES = ['electrolytes', 'shampoo', 'home-care', 'coffee', 'cosmetics'];
 
 router.get('/sitemap.xml', async (req, res) => {
   const staticUrls = [

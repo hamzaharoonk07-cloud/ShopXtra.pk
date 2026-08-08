@@ -44,8 +44,8 @@
   --tint-coffee-ink: #4A3F2E;
   --tint-shampoo-bg: #DFEEE7;
   --tint-shampoo-ink: #2E4A3F;
-  --tint-detergents-bg: #E2EAF2;
-  --tint-detergents-ink: #33465C;
+  --tint-home-care-bg: #E2EAF2;
+  --tint-home-care-ink: #33465C;
   --tint-cosmetics-bg: #F0E4E6;
   --tint-cosmetics-ink: #5C3A44;
 
@@ -487,7 +487,7 @@ a {
    their menu off their right edge or it runs past the viewport. Which items
    those are moved when Detergents was added as a fifth category: the last
    three now need it, where previously it was shampoo and cosmetics. */
-.nav-dropdown[data-category="detergents"] .nav-dropdown-menu,
+.nav-dropdown[data-category="home-care"] .nav-dropdown-menu,
 .nav-dropdown[data-category="coffee"] .nav-dropdown-menu,
 .nav-dropdown[data-category="cosmetics"] .nav-dropdown-menu {
   left: auto;
@@ -3069,8 +3069,8 @@ select:focus-visible {
 .category-tile-coffee .category-tile-image { background: linear-gradient(150deg, var(--tint-coffee-bg), #F2EBE0); color: var(--tint-coffee-ink); }
 .category-tile-shampoo { background: #E4EEDB; }
 .category-tile-shampoo .category-tile-image { background: linear-gradient(150deg, #D6E8BF, #EAF3DF); color: var(--tint-shampoo-ink); }
-.category-tile-detergents { background: var(--tint-detergents-bg); }
-.category-tile-detergents .category-tile-image { background: linear-gradient(150deg, var(--tint-detergents-bg), #EFF4F9); color: var(--tint-detergents-ink); }
+.category-tile-home-care { background: var(--tint-home-care-bg); }
+.category-tile-home-care .category-tile-image { background: linear-gradient(150deg, var(--tint-home-care-bg), #EFF4F9); color: var(--tint-home-care-ink); }
 .category-tile-cosmetics { background: var(--tint-cosmetics-bg); }
 .category-tile-cosmetics .category-tile-image { background: linear-gradient(150deg, var(--tint-cosmetics-bg), #F4E7EA); color: var(--tint-cosmetics-ink); }
 

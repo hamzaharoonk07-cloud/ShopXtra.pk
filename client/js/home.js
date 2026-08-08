@@ -2,7 +2,7 @@ const CATEGORY_ICONS = {
   electrolytes: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5h6v3.2l2.2 3.6a3 3 0 0 1 .5 1.7V24a3 3 0 0 1-3 3h-5.4a3 3 0 0 1-3-3V13.5a3 3 0 0 1 .5-1.7L13 8.2V5z"/><path d="M13 5V3.5h6V5"/><path d="M11.5 15.5h9"/><circle cx="16" cy="19.5" r="2.2"/></svg>`,
   coffee: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 13h15v7a6 6 0 0 1-6 6h-3a6 6 0 0 1-6-6v-7z"/><path d="M22 15h2.2a3 3 0 0 1 0 6H22"/><path d="M4.5 27h20"/><path d="M12 6c0 1.3-1.3 1.3-1.3 2.6S12 10.5 12 11.8"/><path d="M17 6c0 1.3-1.3 1.3-1.3 2.6S17 10.5 17 11.8"/></svg>`,
   shampoo: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="13" width="22" height="13" rx="5.5"/><path d="M8.5 13c0-3.3 2.3-5.5 7.5-5.5s7.5 2.2 7.5 5.5"/><path d="M10 18.7q6 3 12 0"/></svg>`,
-  detergents: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="20" height="24" rx="2.5"/><path d="M6 10h20"/><circle cx="16" cy="19" r="6"/><path d="M11.5 17.5q4.5 3 9 0"/><circle cx="10" cy="7" r="0.9"/><circle cx="13" cy="7" r="0.9"/></svg>`,
+  'home-care': `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="20" height="24" rx="2.5"/><path d="M6 10h20"/><circle cx="16" cy="19" r="6"/><path d="M11.5 17.5q4.5 3 9 0"/><circle cx="10" cy="7" r="0.9"/><circle cx="13" cy="7" r="0.9"/></svg>`,
   cosmetics: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 15h6v9.5a3 3 0 0 1-3 3a3 3 0 0 1-3-3V15z"/><path d="M13.4 15L14.3 8.2a1.8 1.8 0 0 1 3.4 0L18.6 15z"/><rect x="13" y="17.5" width="6" height="4.3" rx="0.6"/></svg>`,
 };
 
@@ -18,7 +18,7 @@ const HOME_CATEGORIES = [
   // copy, curated into /assets/hero so the tile doesn't depend on whichever
   // product happens to sort first out of the API.
   { slug: 'shampoo', name: 'Shampoo', desc: "Clean that doesn't dry you out. Shampoo bars for an everyday routine that actually works.", image: '/assets/hero/shampoo-rice-soap.webp', hoverImage: '/assets/hero/shampoo-rosemary.jpg' },
-  { slug: 'detergents', name: 'Detergents', desc: 'Laundry that pulls its weight. 4-in-1 pods for a deep clean and a scent that lasts.', image: '/assets/hero/detergents-laundry.webp', hoverImage: null },
+  { slug: 'home-care', name: 'Home Care', desc: 'Keep the house fresh. Laundry pods, repellents and the everyday bits that keep a home comfortable.', image: '/assets/hero/home-care-laundry.webp', hoverImage: null },
   { slug: 'coffee', name: 'Coffee', desc: 'Rich roast, one scoop away. Instant coffee that actually tastes brewed, over ice or milk.', image: '/assets/hero/coffee-pour.jpg' },
   { slug: 'cosmetics', name: 'Cosmetics', desc: 'Shades that match what you expect. Authentic cosmetics, delivered nationwide with Cash on Delivery.' },
 ];
