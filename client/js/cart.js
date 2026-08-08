@@ -114,11 +114,20 @@ function askForShades(product, qty) {
     thumb.hidden = !image;
     if (image) thumb.src = image;
 
-    options.innerHTML = Array.from({ length: count }, (_, i) => `
-      <button type="button" class="shade-option" data-shade="Shade ${i + 1}">
-        <span class="shade-option-num">${i + 1}</span>
-      </button>
-    `).join('');
+    /* Shades beyond what this product stocks are still shown, greyed out
+       rather than absent. Someone hunting for "shade 5" because they saw it
+       elsewhere gets told it isn't stocked here, instead of quietly not
+       finding it and assuming the picker is broken. */
+    const shown = Math.min(30, Math.max(count, DEFAULT_SHADE_COUNT));
+    options.innerHTML = Array.from({ length: shown }, (_, i) => {
+      const available = i < count;
+      return `
+        <button type="button" class="shade-option${available ? '' : ' is-unavailable'}"
+          data-shade="Shade ${i + 1}"${available ? '' : ' aria-disabled="true"'}>
+          <span class="shade-option-num">${i + 1}</span>
+        </button>
+      `;
+    }).join('');
 
     const renderStep = () => {
       const isLast = picked.length === qty - 1;
@@ -129,6 +138,7 @@ function askForShades(product, qty) {
       confirmBtn.textContent = isLast ? 'Add to cart' : 'Next item';
       options.querySelectorAll('.shade-option').forEach((b) => b.classList.remove('is-selected'));
       selected = null;
+      error.textContent = 'Pick a shade to continue.';
       error.hidden = true;
     };
 
@@ -137,7 +147,7 @@ function askForShades(product, qty) {
       confirmStep.hidden = true;
       pickStep.hidden = false;
       renderStep();
-      options.querySelector('.shade-option').focus();
+      options.querySelector('.shade-option:not(.is-unavailable)')?.focus();
     };
 
     const close = (value) => {
@@ -160,9 +170,17 @@ function askForShades(product, qty) {
     options.onclick = (e) => {
       const btn = e.target.closest('.shade-option');
       if (!btn) return;
+      if (btn.classList.contains('is-unavailable')) {
+        selected = null;
+        options.querySelectorAll('.shade-option').forEach((b) => b.classList.remove('is-selected'));
+        error.textContent = `${btn.dataset.shade} isn't available for this product.`;
+        error.hidden = false;
+        return;
+      }
       options.querySelectorAll('.shade-option').forEach((b) => b.classList.remove('is-selected'));
       btn.classList.add('is-selected');
       selected = btn.dataset.shade;
+      error.textContent = 'Pick a shade to continue.';
       error.hidden = true;
     };
     confirmBtn.onclick = () => {

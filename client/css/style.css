@@ -6554,6 +6554,25 @@ select:focus-visible {
   outline-offset: 2px;
 }
 
+/* Shades this product doesn't stock. Still clickable on purpose - clicking
+   explains why, which is more use than an inert square. */
+.shade-option.is-unavailable {
+  background: var(--ivory-blush);
+  border-style: dashed;
+  border-color: var(--hairline);
+  cursor: not-allowed;
+}
+
+.shade-option.is-unavailable .shade-option-num {
+  color: var(--muted);
+  opacity: 0.6;
+}
+
+.shade-option.is-unavailable:hover {
+  border-color: var(--hairline-strong);
+  background: var(--ivory-blush);
+}
+
 .shade-modal-chosen {
   margin: 0 0 0.7rem;
   font-size: 0.82rem;
