@@ -73,6 +73,27 @@ async function create({ slug, userId, rating, comment, imageUrl }) {
   return rows[0];
 }
 
+/* Newest real reviews across the catalogue, for the homepage. Only rows that
+   actually say something are returned - a bare star rating makes a poor
+   testimonial - and no email or user id is exposed. */
+async function findRecent(limit = 3) {
+  const replyCols = (await hasReplyColumn())
+    ? 'r.admin_reply,'
+    : 'NULL AS admin_reply,';
+  const { rows } = await pool.query(
+    `SELECT r.id, r.rating, r.comment, r.created_at, r.verified_purchase, ${replyCols}
+            u.name AS user_name, p.name AS product_name, p.slug AS product_slug
+     FROM reviews r
+     JOIN products p ON p.id = r.product_id
+     JOIN users u ON u.id = r.user_id
+     WHERE r.comment IS NOT NULL AND btrim(r.comment) <> ''
+     ORDER BY r.created_at DESC
+     LIMIT $1`,
+    [limit]
+  );
+  return rows;
+}
+
 /* Admin moderation: every review across the catalogue, newest first, with
    enough product context to know what is being replied to or removed. */
 async function findAllForAdmin() {
@@ -111,4 +132,4 @@ async function setAdminReply(id, reply) {
   return rows[0] || null;
 }
 
-module.exports = { findByProductSlug, create, findAllForAdmin, remove, setAdminReply };
+module.exports = { findByProductSlug, create, findRecent, findAllForAdmin, remove, setAdminReply };

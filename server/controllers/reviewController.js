@@ -1,5 +1,4 @@
 const reviewModel = require('../models/reviewModel');
-const { seedTestimonials } = require('../utils/seedTestimonials');
 const { saveImage } = require('../utils/imageStorage');
 
 async function list(req, res, next) {
@@ -36,6 +35,14 @@ async function create(req, res, next) {
   }
 }
 
+async function listRecent(req, res, next) {
+  try {
+    res.json(await reviewModel.findRecent(3));
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function listAllForAdmin(req, res, next) {
   try {
     res.json(await reviewModel.findAllForAdmin());
@@ -64,13 +71,4 @@ async function reply(req, res, next) {
   }
 }
 
-async function seedAll(req, res, next) {
-  try {
-    const report = await seedTestimonials();
-    res.json(report);
-  } catch (err) {
-    next(err);
-  }
-}
-
-module.exports = { list, create, seedAll, listAllForAdmin, remove, reply };
+module.exports = { list, create, listRecent, listAllForAdmin, remove, reply };

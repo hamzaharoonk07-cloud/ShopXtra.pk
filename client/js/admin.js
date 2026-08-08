@@ -319,6 +319,20 @@ function renderProductsTable() {
 
   document.getElementById('product-count').textContent = `${filtered.length} of ${allProducts.length}`;
 
+  /* Storefront listings skip products with no photo, so one can sit here with
+     stock on hand and be unbuyable without anything saying so. Call that out,
+     and count only the ones that still have stock - a photo-less product at
+     zero stock is not losing a sale. */
+  const hidden = allProducts.filter((p) => !(p.images && p.images[0]) && !p.is_bundle);
+  const hiddenInStock = hidden.filter((p) => Number(p.stock) > 0);
+  const notice = document.getElementById('products-hidden-notice');
+  if (notice) {
+    notice.hidden = hiddenInStock.length === 0;
+    notice.textContent = hiddenInStock.length
+      ? `${hiddenInStock.length} product${hiddenInStock.length === 1 ? '' : 's'} with stock ${hiddenInStock.length === 1 ? 'is' : 'are'} hidden from the shop because ${hiddenInStock.length === 1 ? 'it has' : 'they have'} no photo: ${hiddenInStock.map((p) => p.name).join(', ')}. Add an image to start selling ${hiddenInStock.length === 1 ? 'it' : 'them'}.`
+      : '';
+  }
+
   tbody.innerHTML = filtered.map((p) => `
     <tr data-id="${p.id}" class="${p.stock > 0 && p.stock <= 5 ? 'admin-row-warn' : ''}">
       <td>
@@ -326,7 +340,7 @@ function renderProductsTable() {
           ${p.images && p.images[0] ? `<img src="${thumbSrc(p.images[0])}" ${thumbFallbackAttr(p.images[0])} alt="" loading="lazy" decoding="async">` : productIllustration(p.category)}
         </div>
       </td>
-      <td>${p.name}${p.compare_at_price ? `<span class="admin-low-stock-tag" style="background:var(--tea-pink); color:var(--plum);">Sale</span>` : ''}</td>
+      <td>${p.name}${p.compare_at_price ? `<span class="admin-low-stock-tag" style="background:var(--tea-pink); color:var(--plum);">Sale</span>` : ''}${!(p.images && p.images[0]) && !p.is_bundle ? '<span class="admin-low-stock-tag admin-hidden-tag" title="Storefront listings skip products with no photo">No photo &middot; hidden</span>' : ''}</td>
       <td><span class="category-tint tint-${p.category}">${categoryLabel(p.category)}</span></td>
       <td>${formatPrice(p.price)}${p.compare_at_price ? `<br><span style="text-decoration:line-through; color:var(--muted); font-size:0.8rem;">${formatPrice(p.compare_at_price)}</span>` : ''}</td>
       <td>${p.stock}${p.stock > 0 && p.stock <= 5 ? '<span class="admin-low-stock-tag">Low</span>' : p.stock <= 0 ? '<span class="admin-low-stock-tag">Out</span>' : ''}</td>
@@ -863,25 +877,6 @@ document.getElementById('compress-images-btn').addEventListener('click', async (
     alert(`Compressed ${report.processed} image(s).\n${beforeKB}KB -> ${afterKB}KB (${pct}% smaller).`);
   } catch (err) {
     alert(err.message || 'Could not compress images.');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = originalText;
-  }
-});
-
-document.getElementById('seed-testimonials-btn').addEventListener('click', async (e) => {
-  const btn = e.currentTarget;
-  if (!confirm('Add 10 testimonials to every product? Skips products/reviewers that already have one, so it\'s safe to run again.')) return;
-  const originalText = btn.textContent;
-  btn.disabled = true;
-  btn.textContent = 'Adding…';
-  try {
-    const res = await fetch('/api/products/reviews/seed-testimonials', { method: 'POST' });
-    const report = await res.json();
-    if (!res.ok) throw new Error(report.error || 'Request failed');
-    alert(`Added ${report.inserted} testimonial(s) across ${report.products} product(s).`);
-  } catch (err) {
-    alert(err.message || 'Could not add testimonials.');
   } finally {
     btn.disabled = false;
     btn.textContent = originalText;

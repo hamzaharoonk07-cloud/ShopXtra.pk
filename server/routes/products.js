@@ -14,7 +14,7 @@ const productMedia = upload.fields([
 router.get('/', productController.list);
 router.get('/cart-events', requireAuth, requireRole('admin'), productController.listCartEvents);
 router.post('/reset-insights', requireAuth, requireRole('admin'), productController.resetInsights);
-router.post('/reviews/seed-testimonials', requireAuth, requireRole('admin'), reviewController.seedAll);
+router.get('/reviews/recent', reviewController.listRecent);
 router.get('/reviews/all', requireAuth, requireRole('admin'), reviewController.listAllForAdmin);
 router.delete('/reviews/:id', requireAuth, requireRole('admin'), reviewController.remove);
 router.patch('/reviews/:id/reply', requireAuth, requireRole('admin'), reviewController.reply);

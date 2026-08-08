@@ -6375,3 +6375,19 @@ select:focus-visible {
     margin-left: 0;
   }
 }
+
+/* Admin: products the storefront filters out for having no photo. */
+.admin-hidden-tag {
+  background: #FBEDEB;
+  color: #A4342B;
+}
+
+.admin-hidden-notice {
+  margin: 0 0 0.9rem;
+  padding: 0.7rem 0.9rem;
+  background: #FBEDEB;
+  border-left: 3px solid #A4342B;
+  color: #7A2A22;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}

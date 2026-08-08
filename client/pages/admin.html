@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" href="/assets/favicon.png">
 <link href="/css/vendor/bootstrap.min.css" rel="stylesheet">
 <link href="/css/vendor/cropper.min.css" rel="stylesheet">
-<link href="/css/style.css?v=20260808o" rel="stylesheet">
+<link href="/css/style.css?v=20260808p" rel="stylesheet">
 
 <div id="admin-loading" class="text-center py-5">Loading…</div>
 <div id="admin-denied" class="d-none filter-panel text-center py-5" style="max-width: 480px; margin: 3rem auto;">
@@ -95,7 +95,6 @@
       <div class="admin-page-head">
         <h1>Products</h1>
         <button type="button" class="admin-export-btn" id="compress-images-btn">Compress product images</button>
-        <button type="button" class="admin-export-btn" id="seed-testimonials-btn">Add testimonials</button>
         <button type="button" class="admin-export-btn" id="export-products-btn">Export CSV</button>
       </div>
 
@@ -186,6 +185,7 @@
           <input type="search" id="product-search" class="admin-table-search" placeholder="Search products…">
           <span class="admin-table-count" id="product-count"></span>
         </div>
+        <p class="admin-hidden-notice" id="products-hidden-notice" hidden></p>
         <div class="table-responsive">
           <table class="table align-middle admin-table">
             <thead>
