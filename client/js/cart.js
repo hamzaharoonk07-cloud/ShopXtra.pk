@@ -36,27 +36,52 @@ function ensureShadeModal() {
       <button type="button" class="shade-modal-close" data-shade-dismiss aria-label="Close">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
       </button>
-      <h2 id="shade-modal-title">Choose your shade</h2>
+      <h2 id="shade-modal-title">Have you checked the shade?</h2>
       <p class="shade-modal-sub" id="shade-modal-product"></p>
-      <div class="shade-modal-options" id="shade-modal-options"></div>
-      <p class="shade-modal-error" id="shade-modal-error" hidden>Pick a shade to continue.</p>
-      <button type="button" class="btn btn-plum w-100" id="shade-modal-confirm">Add to cart</button>
+
+      <div id="shade-modal-confirm-step">
+        <p class="shade-modal-help">The shades are shown on the product photos. If you haven't seen them yet, take a look first.</p>
+        <div class="shade-modal-actions">
+          <button type="button" class="btn btn-outline-plum" id="shade-modal-no">No, show me the shades</button>
+          <button type="button" class="btn btn-plum" id="shade-modal-yes">Yes, I know my shade</button>
+        </div>
+      </div>
+
+      <div id="shade-modal-pick-step" hidden>
+        <div class="shade-modal-options" id="shade-modal-options"></div>
+        <p class="shade-modal-error" id="shade-modal-error" hidden>Pick a shade to continue.</p>
+        <button type="button" class="btn btn-plum w-100" id="shade-modal-confirm">Add to cart</button>
+      </div>
     </div>
   `;
   document.body.appendChild(modal);
   return modal;
 }
 
-/* Resolves to the chosen shade, or null if the shopper backed out - in which
-   case nothing is added, rather than landing an unspecified cosmetic in the
-   cart for someone to chase up later. */
+/* Two steps. First it asks whether the shopper has actually looked at the
+   shades - adding a numbered shade blind, from a grid thumbnail, is how you
+   get an exchange request later. Answering no sends them to the product page
+   to see the photos instead of adding anything.
+
+   The question is skipped when they are already on that product's own page,
+   since the shades are on screen in front of them.
+
+   Resolves to the chosen shade, or null if they backed out or went to look -
+   in which case nothing is added to the cart. */
 function askForShade(product) {
   return new Promise((resolve) => {
     const modal = ensureShadeModal();
+    const confirmStep = modal.querySelector('#shade-modal-confirm-step');
+    const pickStep = modal.querySelector('#shade-modal-pick-step');
+    const title = modal.querySelector('#shade-modal-title');
     const options = modal.querySelector('#shade-modal-options');
     const error = modal.querySelector('#shade-modal-error');
-    const confirm = modal.querySelector('#shade-modal-confirm');
+    const confirmBtn = modal.querySelector('#shade-modal-confirm');
     let selected = null;
+
+    const productUrl = `/pages/product.html?slug=${encodeURIComponent(product.slug)}`;
+    const onOwnPage = window.location.pathname.includes('/product')
+      && new URLSearchParams(window.location.search).get('slug') === product.slug;
 
     modal.querySelector('#shade-modal-product').textContent = product.name;
     error.hidden = true;
@@ -64,16 +89,29 @@ function askForShade(product) {
       <button type="button" class="shade-option" data-shade="Shade ${i + 1}">${i + 1}</button>
     `).join('');
 
+    const showPickStep = () => {
+      title.textContent = 'Choose your shade';
+      confirmStep.hidden = true;
+      pickStep.hidden = false;
+      options.querySelector('.shade-option').focus();
+    };
+
     const close = (value) => {
       modal.hidden = true;
       document.body.classList.remove('shade-modal-open');
       options.onclick = null;
-      confirm.onclick = null;
+      confirmBtn.onclick = null;
       document.removeEventListener('keydown', onKey);
       modal.querySelectorAll('[data-shade-dismiss]').forEach((el) => { el.onclick = null; });
       resolve(value);
     };
     const onKey = (e) => { if (e.key === 'Escape') close(null); };
+
+    modal.querySelector('#shade-modal-yes').onclick = showPickStep;
+    modal.querySelector('#shade-modal-no').onclick = () => {
+      close(null);
+      window.location.href = productUrl;
+    };
 
     options.onclick = (e) => {
       const btn = e.target.closest('.shade-option');
@@ -83,16 +121,21 @@ function askForShade(product) {
       selected = btn.dataset.shade;
       error.hidden = true;
     };
-    confirm.onclick = () => {
+    confirmBtn.onclick = () => {
       if (!selected) { error.hidden = false; return; }
       close(selected);
     };
     modal.querySelectorAll('[data-shade-dismiss]').forEach((el) => { el.onclick = () => close(null); });
     document.addEventListener('keydown', onKey);
 
+    // Reset to step one each time it opens, unless we can skip straight past it.
+    title.textContent = 'Have you checked the shade?';
+    confirmStep.hidden = false;
+    pickStep.hidden = true;
     modal.hidden = false;
     document.body.classList.add('shade-modal-open');
-    options.querySelector('.shade-option')?.focus();
+    if (onOwnPage) showPickStep();
+    else modal.querySelector('#shade-modal-yes').focus();
   });
 }
 

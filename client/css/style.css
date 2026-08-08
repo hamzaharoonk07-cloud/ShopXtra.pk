@@ -6504,3 +6504,26 @@ body.shade-modal-open {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+/* Step one of the shade modal: the "have you checked" question. */
+.shade-modal-help {
+  margin: 0 0 1.1rem;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: var(--muted-body);
+}
+
+.shade-modal-actions {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.shade-modal-actions .btn {
+  width: 100%;
+}
+
+@media (min-width: 420px) {
+  .shade-modal-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+}
