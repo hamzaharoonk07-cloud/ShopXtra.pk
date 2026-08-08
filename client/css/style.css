@@ -2193,10 +2193,17 @@ select:focus-visible {
   height: 100%;
 }
 
+/* Centre the copy in the reserved height. Without this the block pinned to the
+   top - headline hard against the navbar - and every pixel of slack collected
+   underneath as one empty band above the trust bar. Centring splits that slack
+   above and below, so the headline clears the nav and the buttons sit lower. */
 .hero-slide-inner {
   position: relative;
   z-index: 2;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .hero-slide-copy {
