@@ -1278,6 +1278,45 @@ document.getElementById('reset-insights-btn').addEventListener('click', async (e
   }
 });
 
+/* "Reset insights" only clears view and cart-activity tracking. This clears the
+   order book itself and restarts numbering at #1, which is a different and far
+   more destructive thing - hence typing the word rather than an OK button, and
+   a second confirm naming the exact row count about to go. */
+document.getElementById('reset-orders-btn').addEventListener('click', async (e) => {
+  const typed = prompt(
+    'This permanently deletes EVERY order and its items, and restarts order numbering at #1.\n\n'
+    + 'Promo codes, products, bundles, customer accounts, reviews and newsletter subscribers are NOT touched.\n\n'
+    + 'This cannot be undone. Type RESET to continue:'
+  );
+  if (typed === null) return;
+  if (typed.trim().toUpperCase() !== 'RESET') {
+    alert('Not reset - you need to type RESET exactly.');
+    return;
+  }
+
+  const btn = e.currentTarget;
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Resetting…';
+  try {
+    const res = await fetch('/api/orders/reset', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ confirm: 'RESET' }),
+    });
+    if (!res.ok) throw new Error((await safeJson(res)).error || 'Request failed');
+    const { removed } = await res.json();
+    alert(`Order book reset. Removed ${removed.orders} order${removed.orders === 1 ? '' : 's'} and ${removed.order_items} line item${removed.order_items === 1 ? '' : 's'}. The next order will be #1.`);
+    await loadOverview();
+    if (typeof loadOrders === 'function') loadOrders();
+  } catch (err) {
+    alert(err.message || 'Could not reset the order book.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+});
+
 async function loadCartEvents() {
   const tbody = document.getElementById('cart-events-table-body');
   try {

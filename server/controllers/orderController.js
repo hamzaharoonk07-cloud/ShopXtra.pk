@@ -126,6 +126,22 @@ async function remove(req, res, next) {
   }
 }
 
+/* Wipes the order book and restarts numbering at #1. Irreversible, so it
+   requires an explicit confirm:"RESET" in the body - an admin session alone
+   isn't enough to trigger it by accident, and a stray POST from a mistyped
+   URL or a replayed request can't empty the table. */
+async function resetAll(req, res, next) {
+  try {
+    if (req.body?.confirm !== 'RESET') {
+      return res.status(400).json({ error: 'Send { "confirm": "RESET" } to reset the order book.' });
+    }
+    const removed = await orderModel.resetAll();
+    res.json({ removed });
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function track(req, res, next) {
   try {
     const { orderId, phone } = req.body;
@@ -151,4 +167,4 @@ async function overview(req, res, next) {
   }
 }
 
-module.exports = { create, getById, listMine, listAll, updateStatus, remove, overview, track };
+module.exports = { create, getById, listMine, listAll, updateStatus, remove, resetAll, overview, track };

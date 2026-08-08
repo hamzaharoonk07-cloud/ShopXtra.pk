@@ -191,8 +191,26 @@ async function getOverview() {
   return { ...totals[0], byStatus, topProducts, mostViewed, mostWishlisted };
 }
 
+/* Clears the order book and restarts numbering, so the next order placed is
+   #1 again. A plain DELETE would leave the SERIAL sequence where it was and
+   the next order would carry on from the old high-water mark, which is the
+   opposite of a reset. TRUNCATE ... RESTART IDENTITY does both in one pass,
+   and order_items is named explicitly rather than relying on CASCADE so the
+   statement fails loudly if the schema ever gains another child table.
+   Returns the row counts that were removed, for the confirmation message. */
+async function resetAll() {
+  const { rows } = await pool.query(
+    `SELECT
+       (SELECT COUNT(*)::int FROM orders) AS orders,
+       (SELECT COUNT(*)::int FROM order_items) AS order_items`
+  );
+  await pool.query('TRUNCATE order_items, orders RESTART IDENTITY');
+  return rows[0];
+}
+
 module.exports = {
   createOrder,
+  resetAll,
   computeShippingFee,
   FREE_SHIPPING_THRESHOLD,
   KARACHI_SHIPPING_FEE,
