@@ -5133,13 +5133,17 @@ select:focus-visible {
   box-shadow: var(--shadow-soft);
 }
 
+/* Shown whole rather than cropped: this is an uploaded promo graphic with its
+   own headline and offer text baked in, so a cover crop cuts the message off.
+   Height follows the image instead of a fixed band, capped so a tall upload
+   still fits the modal. */
 #sale-banner-image-wrap img {
   width: 100%;
-  height: 100%;
-  min-height: 200px;
-  max-height: 340px;
-  object-fit: cover;
+  height: auto;
+  max-height: 60vh;
+  object-fit: contain;
   display: block;
+  background: var(--sand);
 }
 
 .promo-toast-body {
@@ -5169,8 +5173,10 @@ select:focus-visible {
   .promo-toast {
     width: 92vw;
   }
+  /* Roomier than the old 200px band, since the graphic is now shown whole
+     rather than cropped - 200px would shrink a tall promo to unreadable. */
   #sale-banner-image-wrap img {
-    max-height: 200px;
+    max-height: 45vh;
     min-height: 0;
   }
 }
