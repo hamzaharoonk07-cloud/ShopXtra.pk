@@ -6391,3 +6391,116 @@ select:focus-visible {
   font-size: 0.85rem;
   line-height: 1.5;
 }
+
+/* ---------- Shade picker (cosmetics add-to-cart) ---------- */
+.shade-modal[hidden] {
+  display: none;
+}
+
+.shade-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.shade-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 26, 18, 0.55);
+}
+
+.shade-modal-panel {
+  position: relative;
+  width: min(420px, 100%);
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow-lift);
+  padding: 1.75rem 1.5rem 1.5rem;
+}
+
+.shade-modal-close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  color: var(--muted-body);
+  cursor: pointer;
+}
+
+.shade-modal-panel h2 {
+  margin: 0 0 0.2rem;
+  font-size: 1.25rem;
+  color: var(--plum);
+}
+
+.shade-modal-sub {
+  margin: 0 0 1.1rem;
+  font-size: 0.88rem;
+  color: var(--muted-body);
+}
+
+.shade-modal-options {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.shade-option {
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--hairline-strong);
+  background: var(--sand);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--plum);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.shade-option:hover {
+  border-color: var(--tea-pink);
+}
+
+.shade-option.is-selected {
+  background: var(--tea-pink);
+  border-color: var(--tea-pink);
+  color: #fff;
+}
+
+.shade-option:focus-visible {
+  outline: 2px solid var(--tea-pink);
+  outline-offset: 2px;
+}
+
+.shade-modal-error {
+  margin: 0 0 0.7rem;
+  font-size: 0.83rem;
+  color: #A4342B;
+}
+
+body.shade-modal-open {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shade-option {
+    transition: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .shade-modal-options {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

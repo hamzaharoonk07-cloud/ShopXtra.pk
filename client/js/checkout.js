@@ -1,5 +1,21 @@
 let appliedPromo = null;
 
+/* Shades are chosen in the modal when an item is added, so they live on the
+   cart line rather than in anything the customer types. Fold them into the
+   order notes, ahead of any message they wrote, so packing sees both. */
+function composeOrderNotes(cart, typed) {
+  const shades = cart
+    .filter((item) => item.shade)
+    .map((item) => {
+      const base = item.name.replace(/\s*\([^)]*\)\s*$/, '');
+      return base + ' - ' + item.shade + (item.qty > 1 ? ' x' + item.qty : '');
+    });
+  const parts = [];
+  if (shades.length) parts.push('Shades: ' + shades.join('; '));
+  if (typed) parts.push(typed);
+  return parts.join('\n');
+}
+
 function renderCheckoutSummary() {
   const cart = getCart();
   const itemsEl = document.getElementById('checkout-items');
@@ -27,15 +43,18 @@ function renderCheckoutSummary() {
   const notesStep = document.getElementById('cosmetics-notes-step');
   const notesField = document.getElementById('ship-notes');
   const notesLabel = document.getElementById('ship-notes-label');
-  const hasCosmetics = cart.some((item) => item.category === 'cosmetics');
+  const cosmetics = cart.filter((item) => item.category === 'cosmetics');
+  // A shade picked when the item went into the cart is already recorded, so
+  // only cosmetics still missing one need asking about here.
+  const cosmeticsNeedingShade = cosmetics.filter((item) => !item.shade);
   const hasBundle = cart.some((item) => item.category === 'bundle');
-  const needsNotes = hasCosmetics || hasBundle;
+  const needsNotes = cosmeticsNeedingShade.length > 0 || hasBundle;
   notesStep.classList.toggle('d-none', !needsNotes);
   notesField.required = needsNotes;
 
   if (needsNotes) {
     const asks = [];
-    if (hasCosmetics) asks.push('shade or colour');
+    if (cosmeticsNeedingShade.length) asks.push('shade or colour');
     if (hasBundle) asks.push('flavour/shade preference for your bundle');
     notesLabel.textContent = `Tell us your ${asks.join(' and ')} for your order`;
   }
@@ -137,7 +156,7 @@ document.getElementById('checkout-form').addEventListener('submit', async (e) =>
         },
         paymentMethod: 'cod',
         promoCode: appliedPromo ? appliedPromo.code : undefined,
-        notes: document.getElementById('ship-notes').value.trim() || undefined,
+        notes: composeOrderNotes(cart, document.getElementById('ship-notes').value.trim()) || undefined,
       }),
     });
     const body = await res.json();
