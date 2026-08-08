@@ -185,9 +185,8 @@ function fitOffSquareProductImages(root) {
     const apply = () => {
       if (!img.naturalWidth || !img.naturalHeight) return;
       const ratio = img.naturalWidth / img.naturalHeight;
-      if (ratio < PRODUCT_IMAGE_RATIO_TOLERANCE.min || ratio > PRODUCT_IMAGE_RATIO_TOLERANCE.max) {
-        img.classList.add('is-contained');
-      }
+      if (ratio >= PRODUCT_IMAGE_RATIO_TOLERANCE.min && ratio <= PRODUCT_IMAGE_RATIO_TOLERANCE.max) return;
+      img.classList.add('is-contained');
     };
     if (img.complete) apply();
     else img.addEventListener('load', apply, { once: true });

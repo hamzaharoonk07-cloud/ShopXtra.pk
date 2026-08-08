@@ -814,7 +814,7 @@ a {
 
 /* Set by fitOffSquareProductImages() on photos far enough off square that a
    cover crop would cut the product out of the frame - portrait marketing
-   shots, mostly. The tinted box behind fills the sides. */
+   shots, mostly. */
 .product-image img.is-contained {
   object-fit: contain;
 }
