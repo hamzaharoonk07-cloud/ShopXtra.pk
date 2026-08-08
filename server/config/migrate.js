@@ -197,6 +197,37 @@ async function runMigrations() {
     ALTER TABLE promo_codes ADD COLUMN IF NOT EXISTS max_uses INTEGER;
 
 
+
+    -- Three catalogue rows have never had a photo, so the storefront filters
+    -- them out and they cannot be bought - one of them was sitting on 200
+    -- units of unsellable stock. Removing them here rather than by hand
+    -- because the admin panel is the only other way in.
+    --
+    -- Deliberately narrow, because this file re-runs on every cold start:
+    -- matched by exact name, only while the row still has no image, and only
+    -- when nothing references it from an order. So re-uploading a product
+    -- under the same name with a photo is safe, and a row with order history
+    -- is left alone instead of failing the statement on a foreign key.
+    DELETE FROM products p
+     WHERE p.name IN (
+             'Blush Clay Cleansing Bar',
+             'Sandalwood Scalp Renewal Shampoo',
+             'Plum Roast Whole Bean Coffee'
+           )
+       AND (p.images IS NULL OR array_length(p.images, 1) IS NULL)
+       AND NOT EXISTS (SELECT 1 FROM order_items oi WHERE oi.product_id = p.id);
+
+    -- Anything in that list that does have order history can't be deleted, so
+    -- take it out of circulation instead - this is what the admin panel tells
+    -- you to do in the same situation.
+    UPDATE products SET stock = 0
+     WHERE name IN (
+             'Blush Clay Cleansing Bar',
+             'Sandalwood Scalp Renewal Shampoo',
+             'Plum Roast Whole Bean Coffee'
+           )
+       AND (images IS NULL OR array_length(images, 1) IS NULL)
+       AND stock > 0;
   `, 'core');
 
   /* Kept out of the core batch: these are the columns that went missing the
